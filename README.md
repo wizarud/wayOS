@@ -1,5 +1,5 @@
 ## wayOS
-To be updated later
+ทดสอบภาษาไทย
 
 ## Motivation
 To be updated Later
