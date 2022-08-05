@@ -21,10 +21,20 @@ import com.wayos.command.wakeup.WAYOSWakeupCommandNode;
 import com.wayos.connector.SessionPool.ContextFactory;
 import com.wayos.context.DirectoryStorageContext;
 import com.wayos.pusher.PusherUtil;
-import com.wayos.util.Application;
 import com.wayos.util.ConsoleUtil;
 
-public class SessionPoolFactory {
+/**
+ * 
+ * Action Variable support for the following prefix if its' value is changed
+ * 
+ * #b_<name> boardcast to all session
+ * #l_<name> log as report and notify to adminSessionId
+ * #e_<contextName> fire event to another contextName as a message and push the result to adminSessionId
+ * 
+ * @author Wisarut Srisawet
+ *
+ */
+public class BLESessionPoolFactory {
 	
 	private final PathStorage storage;
 	
@@ -32,7 +42,7 @@ public class SessionPoolFactory {
 	
 	private final PusherUtil pusherUtil;
 	
-	public SessionPoolFactory(PathStorage storage, ConsoleUtil consoleUtil, PusherUtil pusherUtil) {
+	public BLESessionPoolFactory(PathStorage storage, ConsoleUtil consoleUtil, PusherUtil pusherUtil) {
 		
 		this.storage = storage;
 		
@@ -86,6 +96,10 @@ public class SessionPoolFactory {
 			@Override
 			public void onNewSession(RequestObject requestObject, Session session) {
 			
+				/**
+				 * To enable Session Persistent Variables
+				 */
+				
 				String contextName = session.context().name();
 				
 				Configuration configuration = new Configuration(contextName);
@@ -227,24 +241,45 @@ public class SessionPoolFactory {
 					//Save current state
 					storage.write((new JSONObject(prop).toString()), path);
 					
-					PathStorage storage = Application.instance().get(PathStorage.class);
-					
-					JSONObject adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());					
-					
 					/**
 					 * Process Action Variables!
 					 */
+					
+					JSONObject adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());					
+					
+					String adminChannel = adminConfigObject.getString("channel");
+					
+					String adminSessionId = adminConfigObject.getString("sessionId");
+					
 					Set<String> varChangedNameSet = session.getVariableChangedNameSet();
 					
+					String varChangedValue;
+					
+					String targetContextName;
+					
+					String targetAccountId, targetBotId;
+					
+					/**
+					 * TODO: Should be complete in async or another thread!
+					 */
 					for (String varChangedName:varChangedNameSet) {
 						
+						varChangedValue = session.vars(varChangedName);
+						
 						/**
-						 * Log if variable changed name is configured
+						 * Broadcast to all sessions that involve this contextName
+						 */
+						if (varChangedName.startsWith("#b_")) {
+							
+							pusherUtil.push(accountId, botId, varChangedValue);
+							
+						}
+						
+						/**
+						 * Log it for reporting
 						 */
 						if (varChangedName.startsWith("#l_")) {
-							
-							String varChangedValue = session.vars(varChangedName);
-							
+														
 							consoleUtil.appendVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
 							
 							/**
@@ -253,19 +288,26 @@ public class SessionPoolFactory {
 							
 							if (adminConfigObject!=null) {
 								
-								/**
-								 * TODO: Edit varChangedValue message again
-								 */
-								pusherUtil.push(accountId, botId, adminConfigObject.getString("channel"), adminConfigObject.getString("sessionId"), varChangedValue);
+								pusherUtil.push(accountId, botId, adminChannel, adminSessionId, varChangedValue);
 								
 							}
 														
 						}
-						
+												
 						/**
-						 * TODO: Broadcast to all sessions that involve this contextName
+						 * Fire event to the target contextName as a message
 						 */
-						if (varChangedName.startsWith("#b_")) {
+						if (varChangedName.startsWith("#e_")) {
+							
+							targetContextName = varChangedName.substring("#e_".length());
+							
+							tokens = targetContextName.split("/");
+							
+							targetAccountId = tokens[0];
+							
+							targetBotId = tokens[1];
+							
+							pusherUtil.parse(targetAccountId, targetBotId, adminChannel, adminSessionId, varChangedValue);
 							
 						}
 					}

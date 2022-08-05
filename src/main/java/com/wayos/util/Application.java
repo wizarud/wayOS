@@ -5,7 +5,8 @@ import java.util.Map;
 
 /**
  * Facade Helper Class for accessing single instance services
- * @author apple
+ * 
+ * @author Wisarut Srisawet
  *
  */
 public class Application {

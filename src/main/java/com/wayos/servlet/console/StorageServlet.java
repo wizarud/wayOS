@@ -11,7 +11,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  * For uploading to specific path only
- * @author apple
+ * 
+ * @author Wisarut Srisawet
  *
  */
 @SuppressWarnings("serial")

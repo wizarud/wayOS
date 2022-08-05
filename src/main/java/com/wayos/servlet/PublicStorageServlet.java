@@ -11,7 +11,8 @@ import com.wayos.servlet.console.ConsoleServlet;
 
 /**
  * Serve File in CONTEXT_HOME as Media content
- * @author apple
+ * 
+ * @author Wisarut Srisawet
  *
  */
 @SuppressWarnings("serial")
