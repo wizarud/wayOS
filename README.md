@@ -1,6 +1,6 @@
 ## wayOS
 
-..(^o^)ๆ=>
+Yum! Yum! Yum! ..(^o^)ๆ=>
 
 ## Motivation
 
@@ -47,7 +47,7 @@ To be updated later
 
 - Automatic generate UI from your logic flows such as question, slide and quick menus so you don’t need to worry about the screen design just focus on your business process.
 
-- All variables are persistent that would help you to keep status of the user’s information such as name, address, order including appointment status. You can do such a simple checking logic to prevent them from refill again.
+- All variables are persistent that would help you to keep status of the user’s information such as name, address, order including appointment status. You can do such a simple checking logic to prevent them from refilling again.
 
 - There are many tools that help you to build your own chatbot application such as catalog spreadsheet or from built-in templates. So you can customize by simply change some properties to match your business informations.
 
