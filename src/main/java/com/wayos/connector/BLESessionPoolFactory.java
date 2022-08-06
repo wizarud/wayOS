@@ -259,6 +259,8 @@ public class BLESessionPoolFactory {
 					
 					String targetAccountId, targetBotId;
 					
+					String targetChannel, targetSessionId;
+					
 					/**
 					 * TODO: Should be complete in async or another thread!
 					 */
@@ -303,11 +305,51 @@ public class BLESessionPoolFactory {
 							
 							tokens = targetContextName.split("/");
 							
-							targetAccountId = tokens[0];
+							if (tokens.length==2) {
+								
+								/**
+								 * Send varChangedValue to target context to parse and notify to adminChannel and adminSessionId
+								 * 
+								 * #e_<accountId/botId>
+								 */
+								targetAccountId = tokens[0];
+								
+								targetBotId = tokens[1];
+								
+								pusherUtil.parse(targetAccountId, targetBotId, adminChannel, adminSessionId, varChangedValue);
+								
+							} else if (tokens.length==3 && tokens[0].equals(".")) {
+									
+								/**
+								 * Send varChangedValue to this context to parse and notify to targetChannel and targetSessionId
+								 * 
+								 * #e_<./channel/sessionId>
+								 */
+								targetChannel = tokens[1];
+								
+								targetSessionId = tokens[2];
+									
+								pusherUtil.parse(accountId, botId, targetChannel, targetSessionId, varChangedValue);
+									
+							} else if (tokens.length==4) {
+								
+								/**
+								 * Send varChangedValue to target context to parse and notify to targetChannel and targetSessionId
+								 * 
+								 * #e_<accountId/botId/channel/sessionId>
+								 */
+								targetAccountId = tokens[0];
+								
+								targetBotId = tokens[1];
+								
+								targetChannel = tokens[2];
+								
+								targetSessionId = tokens[3];
+								
+								pusherUtil.parse(targetAccountId, targetBotId, targetChannel, targetSessionId, varChangedValue);
+								
+							}
 							
-							targetBotId = tokens[1];
-							
-							pusherUtil.parse(targetAccountId, targetBotId, adminChannel, adminSessionId, varChangedValue);
 							
 						}
 					}
@@ -371,6 +413,6 @@ public class BLESessionPoolFactory {
 		}
 		
 		return wakeupCommandNode;
-	}	
+	}
 
 }
