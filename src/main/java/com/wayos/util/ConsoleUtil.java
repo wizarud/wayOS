@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +16,7 @@ public class ConsoleUtil {
 		
 	static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	static final DateFormat timestampFormat = new SimpleDateFormat("hh-mm-sss");
+	static final DateFormat timestampFormat = new SimpleDateFormat("HH-mm-sss");
 	
 	private final PathStorage storage;
 	

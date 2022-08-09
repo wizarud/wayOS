@@ -37,6 +37,8 @@ public class Configuration {
 	
 	public static final String PUBLIC_PATH = "public/";
 	
+	public static final String USER_PATH = "users/";
+	
 	/**
 	 * contextName = <accountId>/<botId>
 	 */

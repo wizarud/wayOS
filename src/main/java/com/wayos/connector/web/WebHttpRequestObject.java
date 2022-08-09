@@ -1,10 +1,7 @@
 package com.wayos.connector.web;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,68 +20,48 @@ public class WebHttpRequestObject extends HttpRequestObject {
 		
         if (request.getContentType().contains("multipart/form-data")) {
         	
-        	message += "\n\n\n" + tryUpload(request);
+    		if (sessionId==null) throw new IllegalArgumentException("Null Session Id");
+    		
+        	message = uploadedPaths(request).trim();
+        	
         }
         
         messageObject.attr("channel", "web");
     }
 		
-	private String tryUpload(HttpServletRequest request) {
+	private String uploadedPaths(HttpServletRequest request) {
 		
 		StringBuilder lines = new StringBuilder();
 		
-		String accountId = (String) request.getSession().getAttribute("accountId");		
-		
-		boolean isOwner = accountId!=null && contextName.startsWith(accountId);
-		
 		String [] tokens = contextName.split("/");
 		
+		String accountId = tokens[0];
 		String botId = tokens[1];
 		
+		FileItemStream fileItem = null;
 		try {
 			
 			ServletFileUpload upload = new ServletFileUpload();
-			FileItemIterator iterator = upload.getItemIterator(request);
-										
-			FileItemStream fileItem;
 			
+			FileItemIterator iterator = upload.getItemIterator(request);
+													
+			String fileName;
 			while (iterator.hasNext()) {
 				
 				fileItem = iterator.next();
 				
-				if (isOwner) {
-					
-					//Update Context from context file
-					if (fileItem.getName().equals(botId + ".context")) {
-						
-						continue;
-					}
-					
-					//Update Context from TSV
-					if (fileItem.getName().endsWith(".tsv")) {
-						
-						lines.append("importtsv");
-						lines.append(System.lineSeparator());
-						lines.append(new BufferedReader(new InputStreamReader(fileItem.openStream(), StandardCharsets.UTF_8))
-				        .lines()
-				        .collect(Collectors.joining("\n")));
-						lines.append("\n");
-						
-						continue;
-					}
-					
-				}
+				fileName = URLEncoder.encode(fileItem.getName(), StandardCharsets.UTF_8.toString());
 				
-				String toPath = "public/" + accountId + "/" + URLEncoder.encode(fileItem.getName(), "UTF-8");
+				String toPath = "public/" + accountId + "/" + fileName;
 				storage().write(fileItem.openStream(), toPath);
 				
-				lines.append(Configuration.domain + "/public/" + accountId + "/" + URLEncoder.encode(fileItem.getName(), "UTF-8"));
+				lines.append(Configuration.domain + "/public/" + accountId + "/" + fileName);
 				lines.append("\n\n\n");
 			}
 			
 		} catch (Exception e) {
 			
-			throw new RuntimeException(e);
+			throw new RuntimeException(e + ":" + fileItem);
 		}
 		
 		return lines.toString().trim();

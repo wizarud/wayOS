@@ -60,7 +60,7 @@ public class FacebookAccountServlet extends ConsoleServlet {
 			
 			req.getSession().setAttribute("facebookAccessToken", accessToken.getAccessToken());
 			
-			JSONObject account = storage().readAsJSONObject("users/" + accountId + ".json");
+			JSONObject account = storage().readAsJSONObject(Configuration.USER_PATH + accountId + ".json");
 						
 			/**
 			 * Check If is new user,
@@ -144,7 +144,7 @@ public class FacebookAccountServlet extends ConsoleServlet {
 		/**
 		 * Save as JSON Text File
 		 */
-		storage().write(account.toString(), "users/" + accountId + ".json");
+		storage().write(account.toString(), Configuration.USER_PATH + accountId + ".json");
 		
 		/**
 		 * Create Default Chatbot
@@ -195,7 +195,7 @@ public class FacebookAccountServlet extends ConsoleServlet {
 			
 			try {
 				
-				storage().write(new URL(imageURL).openStream(), "users/" + accountId + ".PNG");
+				storage().write(new URL(imageURL).openStream(), Configuration.USER_PATH + accountId + ".PNG");
 								
 			} catch (Exception e) {
 				

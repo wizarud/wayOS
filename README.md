@@ -63,6 +63,8 @@ To be updated later
 
 **Wisarut Srisawet**
 
+Special thanks for M&D, My friends and family to help this project happens!
+
 ## License
 A free and open source project.
 MIT © [eoss-th]()

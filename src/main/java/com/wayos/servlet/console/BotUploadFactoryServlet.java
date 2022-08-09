@@ -133,7 +133,7 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 						
 						CSVPaginationCatalogImporter csvPaginationCatalogImporter = new CSVPaginationCatalogImporter(null, new ByteArrayInputStream(buffer), "\t");
 						
-			        	drawer = new CSVPaginationCatalogDrawer(csvPaginationCatalogImporter);
+			        	drawer = new CSVPaginationCatalogDrawer(contextName, csvPaginationCatalogImporter);
 			        	
 			        	/**
 			        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information

@@ -4,11 +4,13 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
@@ -119,6 +121,24 @@ public class ConsoleServlet extends HttpServlet {
 		
 		return	contextName;
 	}
-
+	
+	protected final Map<String, String> propertyMap(HttpServletRequest req) {
+		
+		Enumeration<String> parameterNames = req.getParameterNames();
+		
+		Map<String, String> propertyMap = new HashMap<>();
+		
+		String parameterName;
+		
+		while (parameterNames.hasMoreElements()) {
+			
+			parameterName = parameterNames.nextElement();
+						
+			propertyMap.put(parameterName, req.getParameter(parameterName));
+			
+		}
+		
+		return propertyMap;
+	}
 
 }

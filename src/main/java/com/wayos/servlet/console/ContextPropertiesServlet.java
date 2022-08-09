@@ -49,18 +49,7 @@ public class ContextPropertiesServlet extends ConsoleServlet {
 		
 		String contextName = contextName(req.getRequestURI(), false);
 		
-		Enumeration<String> parameterNames = req.getParameterNames();
-		
-		Map<String, String> propertyMap = new HashMap<>();
-		
-		String parameterName;
-		while (parameterNames.hasMoreElements()) {
-			
-			parameterName = parameterNames.nextElement();
-						
-			propertyMap.put(parameterName, req.getParameter(parameterName));
-			
-		}
+		Map<String, String> propertyMap = propertyMap(req);
 
 		try {
 			

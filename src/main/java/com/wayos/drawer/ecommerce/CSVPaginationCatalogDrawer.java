@@ -10,16 +10,26 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.json.JSONObject;
+
+import com.wayos.Configuration;
+import com.wayos.PathStorage;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
+import com.wayos.util.Application;
 
 public class CSVPaginationCatalogDrawer extends Drawer {
 	    
 	private static final String morePicURL = "https://wayobot.com/assets/images/More.png";	
 	
+	protected final String contextName;
+	
 	protected final PaginationCatalogImporter paginationCatalogImporter;
 
-	public CSVPaginationCatalogDrawer(PaginationCatalogImporter paginationCatalogImporter) {
+	public CSVPaginationCatalogDrawer(String contextName, PaginationCatalogImporter paginationCatalogImporter) {
+		
+		this.contextName = contextName;
+		
 		this.paginationCatalogImporter = paginationCatalogImporter;
 	}
 
@@ -302,11 +312,27 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		canvas2D.nextColumn(400);
 		
 		/**
+		 * Request Payment such as Slip from customer
+		 * TODO: Need to be validate businessInfo to skip this step???
+		 */		
+		String [] tokens = contextName.split("/");
+		String accountId = tokens[0];
+		String accountIdJsonPath = Configuration.USER_PATH + accountId + ".json";
+		
+		PathStorage storage = Application.instance().get(PathStorage.class);
+		JSONObject accountJSONObject = storage.readAsJSONObject(accountIdJsonPath);
+		String businessInfo = accountJSONObject.optString("businessInfo");
+		
+		Canvas2D.Entity requestPaymentEntity = canvas2D.newEntity(new Canvas2D.Entity[] { yesContactEntity, answerContactEntity }, "", bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "\n" + bundle.getString("cart.request.payment") + "\n\n" + businessInfo, true);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		/**
 		 * Generate Tracking Order Id & Clear Orders
 		 */
-		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
+		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
 
-		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { yesContactEntity, answerContactEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
+		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
@@ -317,14 +343,10 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		//Canvas2D.Entity thankEntity = canvas2D.newEntity(new Canvas2D.Entity[] { trackingEntity }, "", bundle.getString("cart.thanks"), null);
 		
 		canvas2D.setPosition(400, 100);
-		/**
-		 * General Commands to track & update orders
-		 */
-		String viewOrderCmd = "`?VIEW_ORDER=##`";
 		
-		Canvas2D.Entity viewOrderStatusEntity = canvas2D.newEntity(null, bundle.getString("cart.order.view"), "", viewOrderCmd, false);
-		canvas2D.nextRow(100);
-				
+		/**
+		 * General Commands For Administrator to update order status
+		 */			
 		String updateOrderParams = "`?VIEW_ORDER=#1` `?STATUS=#2`";//The last #l_ORDER_ is for protect from removing session vars policy.
 		
 		Canvas2D.Entity updateOrderParamsEntity = canvas2D.newEntity(null, bundle.getString("cart.order.remark"), "", updateOrderParams, false);
@@ -336,8 +358,19 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		Canvas2D.Entity updateOrderStatusEntity = canvas2D.newEntity(new Canvas2D.Entity[] { updateOrderParamsEntity }, "", updateOrderStatus, false);
 		canvas2D.nextRow(200);
 		
-		canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderStatusEntity, updateOrderStatusEntity }, "", "#l_ORDER_#VIEW_ORDER", null);
+		/**
+		 * General Commands For Customer to track their status
+		 */		
+		Canvas2D.Entity viewOrderStatusEntity = canvas2D.newEntity(null, bundle.getString("cart.order.view"), bundle.getString("cart.order.view.request.order.id"), true);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
 		
+		String viewOrderCmd = "`?VIEW_ORDER=##` `?result=#l_ORDER_#VIEW_ORDER`";
+		Canvas2D.Entity viewOrderAnswerEntity = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderStatusEntity, updateOrderStatusEntity }, "", "", viewOrderCmd, false);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		Canvas2D.Entity viewOrderDisplayEntity = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderAnswerEntity }, "", "#result", null);
 	}
 
 }

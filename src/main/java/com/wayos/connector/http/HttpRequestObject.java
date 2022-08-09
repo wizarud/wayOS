@@ -23,26 +23,17 @@ public class HttpRequestObject extends RequestObject {
     
 	protected String signature;
 	
-	protected String contextName;
-	
 	protected String message;
 	
 	protected String sessionId;	
+	
+	protected String contextName;
 	
 	public HttpRequestObject(HttpServletRequest request, HttpServletResponse response) {
 		
 		this.request = request;
 		this.response = response;
-		
-		try {
-			
-			contextName = new URItoContextResolver(request.getRequestURI()).contextName();
-			
-		} catch (Exception e) {
-			
-			contextName = null;
-		}
-				        
+						        
 		messageObject = MessageObject.build();
 		
     	setSignature(request.getHeader("Brainy-Signature"));
@@ -51,6 +42,25 @@ public class HttpRequestObject extends RequestObject {
 		
         sessionId = request.getParameter("sessionId");
         
+		try {
+			
+			URItoContextResolver uriToContextResolver = new URItoContextResolver(request.getRequestURI());
+			contextName = uriToContextResolver.contextName();
+			
+			/**
+			 * For URI <accountId/botId/sessionId>
+			 * Ex. upload file by XHR
+			 */
+			if (sessionId==null && uriToContextResolver.sessionId!=null) {
+				
+				sessionId = uriToContextResolver.sessionId;				
+			}
+			
+		} catch (Exception e) {
+			
+			contextName = null;
+		}
+		
     }
 	
 	public HttpServletRequest httpServletRequest() {
