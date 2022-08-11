@@ -55,13 +55,10 @@ To be updated later
 
 - BLESessionPoolFactory supports four types of Action Variable. You can send the message to the target context to parse and push the result to the target session in the following patterns
 
-#e_. - Send value to current context to parse and push result to admin Session
-#e_<accountId/botId> - Send value to target <accountId/botId> to parse and push result to admin Session
-#e_<./channel/sessionId> - Send value to current context to parse and push result to target <channel/sessionId>
-
-and
-
-#e_<accountId/botId/channel/sessionId> - Send value to target <accountId/botId> to parse and push result to target <channel/sessionId>
+1. #e_. - Send value to current context to parse and push result to admin Session
+2. #e_<accountId/botId> - Send value to target <accountId/botId> to parse and push result to admin Session
+3. #e_<./channel/sessionId> - Send value to current context to parse and push result to target <channel/sessionId>
+4. #e_<accountId/botId/channel/sessionId> - Send value to target <accountId/botId> to parse and push result to target <channel/sessionId>
 
 ## Installation
 To be updated later
