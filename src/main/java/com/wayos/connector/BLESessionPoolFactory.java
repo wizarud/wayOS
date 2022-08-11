@@ -285,10 +285,10 @@ public class BLESessionPoolFactory {
 							consoleUtil.appendVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
 							
 							/**
-							 * Notify to registered admin channel / sessionId to notify
+							 * Notify to registered admin channel / sessionId to notify if this session is not from admin
 							 */
 							
-							if (adminConfigObject!=null) {
+							if (adminConfigObject!=null && !adminSessionId.equals(sessionId)) {
 								
 								pusherUtil.push(accountId, botId, adminChannel, adminSessionId, varChangedValue);
 								
@@ -301,11 +301,25 @@ public class BLESessionPoolFactory {
 						 */
 						if (varChangedName.startsWith("#e_")) {
 							
+							//For Debugging
+							//if (true)
+								//throw new UnsupportedOperationException(varChangedName + "=" + varChangedValue);
+							
 							targetContextName = varChangedName.substring("#e_".length());
 							
 							tokens = targetContextName.split("/");
-							
-							if (tokens.length==2) {
+														
+							if (tokens.length==1 && tokens[0].equals(".")) {
+								
+								/**
+								 * Send varChangedValue to this context to parse and notify to adminChannel and adminSessionId
+								 * 
+								 * #e_.
+								 */
+								
+								pusherUtil.parse(accountId, botId, adminChannel, adminSessionId, varChangedValue);
+								
+							} else if (tokens.length==2) {
 								
 								/**
 								 * Send varChangedValue to target context to parse and notify to adminChannel and adminSessionId
@@ -349,7 +363,6 @@ public class BLESessionPoolFactory {
 								pusherUtil.parse(targetAccountId, targetBotId, targetChannel, targetSessionId, varChangedValue);
 								
 							}
-							
 							
 						}
 					}

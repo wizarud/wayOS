@@ -15,20 +15,19 @@ import com.wayos.util.ConsoleUtil;
 
 public class PusherUtil {
 	
-	private final SessionPool sessionPool;
-	
-	private final ConsoleUtil consoleUtil;
-	
-	public PusherUtil() {
-		
-		this.sessionPool = Application.instance().get(SessionPool.class);
-		
-		this.consoleUtil = Application.instance().get(ConsoleUtil.class);
-	}
-	
 	private Pusher pusher(String channel) {
 		
 		return (Pusher) Application.instance().get(channel);
+	}
+	
+	private SessionPool sessionPool() {
+		
+		return Application.instance().get(SessionPool.class);
+	}
+	
+	private ConsoleUtil consoleUtil() {
+		
+		return Application.instance().get(ConsoleUtil.class);
 	}
 	
     public List<String> push(String accountId, String botId, String message) {
@@ -48,7 +47,7 @@ public class PusherUtil {
         
     public List<String> push(String accountId, String botId, String channel, String message) {
     	
-        JSONArray sessionArray = consoleUtil.sessionIdList(accountId, botId, channel);
+        JSONArray sessionArray = consoleUtil().sessionIdList(accountId, botId, channel);
                 
         List<String> sessionIdList = new ArrayList<>();
         for (int i=0; i<sessionArray.length(); i++) {
@@ -58,11 +57,18 @@ public class PusherUtil {
         List<String> successIdList = new ArrayList<>();
 		for (String sessionId:sessionIdList) {
 			
+			if (channel.equals("web") && !sessionId.startsWith("fcm:")) continue;
+			
     		try {
     			
     			successIdList.add(push(accountId, botId, channel, sessionId, message));
     			
     		} catch (Exception e) {
+    			
+    			if (channel.equals("web") && sessionId.startsWith("fcm:")) {
+    				
+    				throw new RuntimeException(e);
+    			}
     			
     			continue;
     			
@@ -83,7 +89,7 @@ public class PusherUtil {
 			
 		} catch (Exception e) {
 			
-			throw new RuntimeException(e + ":" + sessionId);
+			throw new RuntimeException(e);
 		}
         
 		return sessionId;
@@ -106,7 +112,7 @@ public class PusherUtil {
         
     public List<String> parse(String accountId, String botId, String channel, String keywords) {
     	
-        JSONArray sessionArray = consoleUtil.sessionIdList(accountId, botId, channel);
+        JSONArray sessionArray = consoleUtil().sessionIdList(accountId, botId, channel);
                 
         List<String> sessionIdList = new ArrayList<>();        
         for (int i=0; i<sessionArray.length(); i++) {
@@ -135,7 +141,7 @@ public class PusherUtil {
     	
     	String contextName = accountId + "/" + botId;
     	
-    	Session session = sessionPool.get(RequestObject.create(channel, sessionId, contextName));
+    	Session session = sessionPool().get(RequestObject.create(channel, sessionId, contextName));
     	
     	session.clearProblem();//Clear problem to reset flow
     	
@@ -149,7 +155,7 @@ public class PusherUtil {
 			
 		} catch (Exception e) {
 			
-			throw new RuntimeException(e + ":" + sessionId);
+			throw new RuntimeException(e + ":" + channel + "/" + sessionId);
 		}
 		
 		return sessionId;

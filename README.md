@@ -53,6 +53,16 @@ To be updated later
 
 - Users can access your chatbot via many channels such as LINE/Facebook/Http (REST API) or even from another chatbot. You can push a logic that directly notify to some user, all users or only administrator who got the authorization. This process can be done by single step of flow that manipulate value of the Action Variable.
 
+- BLESessionPoolFactory supports four types of Action Variable. You can send the message to the target context to parse and push the result to the target session in the following patterns
+
+#e_. - Send value to current context to parse and push result to admin Session
+#e_<accountId/botId> - Send value to target <accountId/botId> to parse and push result to admin Session
+#e_<./channel/sessionId> - Send value to current context to parse and push result to target <channel/sessionId>
+
+and
+
+#e_<accountId/botId/channel/sessionId> - Send value to target <accountId/botId> to parse and push result to target <channel/sessionId>
+
 ## Installation
 To be updated later
 

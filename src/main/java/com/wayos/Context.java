@@ -195,7 +195,7 @@ public abstract class Context implements Serializable {
         	
         	for (Hook hook:node.hookList()) {
         		
-        		key = hook.toString();
+        		key = hook.toString().toLowerCase(); //MessageOblect is splitt to lowercase, So prevent the capital letters
         		memberList = indexMap.get(key);
         		
         		if (memberList==null) {

@@ -330,7 +330,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		/**
 		 * Generate Tracking Order Id & Clear Orders
 		 */
-		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
+		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`" + " " + "`?e_.=" + bundle.getString("cart.order.notify") + " #contact,#channel/#sessionId,#THE_ORDER`";
 
 		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
 		canvas2D.nextRow(100);
@@ -345,8 +345,8 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		canvas2D.setPosition(400, 100);
 		
 		/**
-		 * General Commands For Administrator to update order status
-		 */			
+		 * Callback command for Admin Menu
+		 */
 		String updateOrderParams = "`?VIEW_ORDER=#1` `?STATUS=#2`";//The last #l_ORDER_ is for protect from removing session vars policy.
 		
 		Canvas2D.Entity updateOrderParamsEntity = canvas2D.newEntity(null, bundle.getString("cart.order.remark"), "", updateOrderParams, false);
@@ -365,12 +365,44 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
-		String viewOrderCmd = "`?VIEW_ORDER=##` `?result=#l_ORDER_#VIEW_ORDER`";
-		Canvas2D.Entity viewOrderAnswerEntity = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderStatusEntity, updateOrderStatusEntity }, "", "", viewOrderCmd, false);
+		String viewOrderCmd = "`?VIEW_ORDER=##`";
+		Canvas2D.Entity viewOrderAnswerEntity1 = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderStatusEntity }, "", "", viewOrderCmd, false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
-		Canvas2D.Entity viewOrderDisplayEntity = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderAnswerEntity }, "", "#result", null);
+		viewOrderCmd = "`?result=#l_ORDER_#VIEW_ORDER`";
+		Canvas2D.Entity viewOrderAnswerEntity2 = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderAnswerEntity1, updateOrderStatusEntity }, "", "", viewOrderCmd, false);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		Canvas2D.Entity viewOrderDisplayEntity = canvas2D.newEntity(new Canvas2D.Entity[] { viewOrderAnswerEntity2 }, "", "#result", null);
+		
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		/**
+		 * Simple update Commands For Administrator to update order status
+		 * Redirect to target session to parse e's value command
+		 */
+		String updateOrderParamsForAdmin = "`?$=,` `?contact=#1` `?target=#2` `?THE_ORDER=#3`";
+		Canvas2D.Entity updateOrderParamsForAdminEntity = canvas2D.newEntity(null, bundle.getString("cart.order.notify"), "", updateOrderParamsForAdmin, false);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		Canvas2D.Entity adminMenu1 = canvas2D.newEntity(new Canvas2D.Entity[] { updateOrderParamsForAdminEntity }, "", bundle.getString("cart.order.remark") + "\n\n#contact\n\n#THE_ORDER", true);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		Canvas2D.Entity adminMenu2 = canvas2D.newEntity(new Canvas2D.Entity[] { adminMenu1 }, "Push", "Enter new status for #THE_ORDER", true);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		String eventCommand = "`?e_./#target=" + bundle.getString("cart.order.remark") + " #THE_ORDER ##`";
+		Canvas2D.Entity adminFireEvent = canvas2D.newEntity(new Canvas2D.Entity[] { adminMenu2 }, "", "", eventCommand, false);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
+		canvas2D.newEntity(new Canvas2D.Entity[] { adminFireEvent }, "", "..(^o^)ๆ", null);		
 	}
 
 }

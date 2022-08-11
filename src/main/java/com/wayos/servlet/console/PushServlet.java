@@ -23,10 +23,10 @@ public class PushServlet extends ConsoleServlet {
 		String accountId = tokens[0];
 		String botId = tokens[1];
 						
-		String sessionId = req.getParameter("sessionId");
+		String target = req.getParameter("target");
 		
 		//Broadcast Message <Call from dashboard>
-		if (sessionId==null || sessionId.trim().isEmpty()) {
+		if (target==null || target.trim().isEmpty() || target.trim().equals("All")) {
 			/**
 			 * Parse keyword or just push message
 			 */
@@ -37,25 +37,20 @@ public class PushServlet extends ConsoleServlet {
 			return;
 			
 		}
+		
+		tokens = target.split("/");
+		String channel = tokens[0];
+		String sessionId = tokens[1];
 						
-		int reaches;
 		/**
 		 * Parse keyword or just push message
 		 */
 		if (!keyword.isEmpty()) //Parse keywords
-			reaches = pusherUtil().parse(accountId, botId, sessionId, keyword + " " + message).size();
+			pusherUtil().parse(accountId, botId, channel, sessionId, keyword + " " + message);
 		else //Or just push message
-			reaches = pusherUtil().push(accountId, botId, sessionId, message).size();
-		
-		/**
-		 * Error Happens!
-		 */
-		if (reaches==0) {
-			resp.getWriter().print(sessionId + ":" + reaches);
-			return;
-		}
-		
-		resp.getWriter().print(reaches);
+			pusherUtil().push(accountId, botId, channel, sessionId, message);
+				
+		resp.getWriter().print(1);
 	}
 	
 }
