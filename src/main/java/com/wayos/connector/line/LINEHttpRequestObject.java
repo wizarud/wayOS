@@ -59,11 +59,11 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 		String botId = tokens[1];
 		
 		String secret = configObject.getString("secret");
-		
-		channelAccessToken = configObject.getString("channelAccessToken");
-		
+				
     	if (secret==null) throw new IllegalArgumentException("Missing Secret");
 
+		channelAccessToken = configObject.getString("act");
+		
     	LINESignatureValidator lineSignatureValidator = new LINESignatureValidator(secret.getBytes());
     	
     	String requestBody = null;
@@ -133,7 +133,7 @@ public class LINEHttpRequestObject extends HttpRequestObject {
                                 String messageId = messageObj.getString("id");
                                 String contentSourceURL = CONTENT_ENDPOINT + messageId + "/content";
                                 message = contentSourceURL + "?" + messageObj.getString("type");
-                                message += "\n\n\n";
+                                //message += "\n\n\n";
                                 
                             }
 
@@ -255,11 +255,12 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 
 					storage().write(contentStream, contentName);
 					
-					messageObject.setText(Configuration.domain + "/" + contentName);
+					message = Configuration.domain + "/" + contentName;
 					
 				} else {
 					
-					messageObject.setText(contentURL + ": " + con.getResponseMessage());
+					message = contentURL + ": " + con.getResponseMessage();
+							
 				}
 				
 			} catch (Exception e) {
@@ -268,8 +269,7 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 			}
 		}
 		
-		messageObject.attr("channel", "line." + sourceType);        
-        
+		messageObject.attr("channel", "line");
 	}
 	
 	public String getReplyToken() {
@@ -301,6 +301,5 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 		}
 		
 	}
-	
 	
 }

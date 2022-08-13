@@ -43,7 +43,7 @@ public class FlowTalkCommandNode extends CommandNode {
             messageObject.split(session.context());
             
         }
-
+        
         final List<Node> activeNodeList = new ArrayList<>();
         
         session.context().matched(messageObject, new ContextListener() {

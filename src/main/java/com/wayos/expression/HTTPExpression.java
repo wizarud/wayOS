@@ -17,9 +17,9 @@ public abstract class HTTPExpression extends Expression {
     protected final Map<String, String> signatureMap(MessageObject messageObject) {
         Map<String, String> signatureMap = new HashMap<>();
 
-        String signatureType = (String) messageObject.attributes.get("signatureType");
+        String signatureType = (String) messageObject.attr("signatureType");
         if (signatureType!=null) {
-            String signatureValue = (String) messageObject.attributes.get("signatureValue");
+            String signatureValue = (String) messageObject.attr("signatureValue");
             signatureMap.put(signatureType, signatureValue);
         }
 

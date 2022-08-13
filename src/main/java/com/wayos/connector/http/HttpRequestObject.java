@@ -120,13 +120,13 @@ public class HttpRequestObject extends RequestObject {
 		
 		if (isAdmin(session)) {
 			
-			messageObject.attributes.put("selfSign", Configuration.brainySecret);
+			messageObject.attr("selfSign", Configuration.brainySecret);
 			
 		}
 		
 		if (signature!=null) {
 			
-			messageObject.attributes.put("signature", signature);
+			messageObject.attr("signature", signature);
 			
 		}
 		

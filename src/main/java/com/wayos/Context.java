@@ -34,6 +34,14 @@ public abstract class Context implements Serializable {
 
     private List<Node> nodeList = new ArrayList<>();
     
+    /**
+     * Index for Soft key Node such as *
+     */
+    private List<Node> softNodeList = new ArrayList<>();
+    
+    /**
+     * index for Hard Key Node
+     */
     private Map<String, List<Node>> indexMap = new HashMap<>();
 
     private final String name;
@@ -196,16 +204,28 @@ public abstract class Context implements Serializable {
         	for (Hook hook:node.hookList()) {
         		
         		key = hook.toString().toLowerCase(); //MessageOblect is splitt to lowercase, So prevent the capital letters
-        		memberList = indexMap.get(key);
         		
-        		if (memberList==null) {
+        		//Generate Index for Soft Key Nodes
+        		if (key.startsWith("*") || key.endsWith("*") || key.contains(",")) {
         			
-        			memberList = new ArrayList<>();
+        			softNodeList.add(node);
         			
+        		} else {
+        			
+        			//Generate Index for Hard Key Nodes
+            		memberList = indexMap.get(key);
+            		
+            		if (memberList==null) {
+            			
+            			memberList = new ArrayList<>();
+            			
+            		}
+            		
+        			memberList.add(node);
+            		indexMap.put(key, memberList);
+            		
         		}
         		
-    			memberList.add(node);
-        		indexMap.put(key, memberList);
         	}
         }
         
@@ -449,19 +469,32 @@ public abstract class Context implements Serializable {
     
     public boolean matched(MessageObject messageObject, ContextListener listener) {
     	
-        boolean matched = false;
-        
-        List<String> wordList = messageObject.wordList();
-        
         Set<Node> matchedNodeSet = new HashSet<>();
         
-        List<Node> memberList;
+        boolean matched = false;
         
-        for (String word:wordList) {
+        /**
+         * Soft Key Node Searching
+         */
+        for (Node node:softNodeList) {
         	
-        	/**
-        	 * TODO: Test for * matching first
-        	 */
+        	if (node.matched(messageObject)) {
+        		
+        		matched = true;
+        		
+        		matchedNodeSet.add(node);        		
+        	}
+        }
+        
+        List<String> wordList = messageObject.wordList();
+                
+        List<Node> memberList;
+                        
+        /**
+         * Hard Key Node Searching
+         */
+        for (String word:wordList) {
+        	        	
         	memberList = indexMap.get(word);
         	
         	if (memberList!=null) {
@@ -510,7 +543,7 @@ public abstract class Context implements Serializable {
 
         Node node = Node.build(split(input));
 
-        Object mode = messageObject.attributes.get("mode");
+        Object mode = messageObject.attr("mode");
 
         if (mode!=null && !mode.toString().trim().isEmpty()) {
         	

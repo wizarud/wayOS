@@ -51,7 +51,7 @@ public class ImageGenerator {
 	        try {
 	        	color = Color.decode(request.getParameter("c"));
 	        } catch (Exception e) {
-	        	color = null;
+	        	color = Color.LIGHT_GRAY;
 	        }
 	        
 	        String operator = request.getParameter("opt");

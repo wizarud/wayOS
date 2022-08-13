@@ -36,7 +36,7 @@ public class LinePusher extends Pusher {
 			
 		String channelAccessToken;
 		try {
-			channelAccessToken = configObject.getString("channelAccessToken");
+			channelAccessToken = configObject.getString("act");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

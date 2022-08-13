@@ -265,11 +265,10 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
 										
 			}
 			
-			messageObject.setText(relocatedContents.toString().trim());
+			message = relocatedContents.toString().trim();
 		}
-		
+				
 		messageObject.attr("channel", "facebook.page");		
-		
 	}
 	
 	private String extractText(JSONObject messageObj) {

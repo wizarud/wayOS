@@ -78,7 +78,7 @@ public class ThinkableTalkCommandNode extends CommandNode {
 
     private Set<Node> think(final MessageObject messageObject) {
 
-        messageObject.attributes.put("wordCount", session.context().split(messageObject.toString()).length);
+        messageObject.attr("wordCount", session.context().split(messageObject.toString()).length);
 
         final Set<Node> activeNodeSet = new HashSet<>();
 

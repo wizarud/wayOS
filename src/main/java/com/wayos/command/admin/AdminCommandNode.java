@@ -40,14 +40,14 @@ public class AdminCommandNode extends CommandNode {
             /**
              * Quick pass for registered Admin sessionId
              */
-            String selfSign = (String) messageObject.attributes.get("selfSign");
+            String selfSign = (String) messageObject.attr("selfSign");
             
             if (selfSign!=null && selfSign.equals(Configuration.brainySecret)) return true;
             
             /**
              * For embedded http header signature
              */
-            String signature = (String) messageObject.attributes.get("signature");
+            String signature = (String) messageObject.attr("signature");
             
             SignatureValidator signatureValidator = new SignatureValidator(Configuration.brainySecret.getBytes());
 

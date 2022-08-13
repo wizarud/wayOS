@@ -158,7 +158,7 @@ public class Canvas2D {
 				return "?";
 			
 			if (type==Node.Type.FORWARDER)
-				return "?";
+				return "!";
 			
 			return "";
 		}

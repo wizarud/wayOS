@@ -33,6 +33,7 @@ public class RemoteContext extends Context {
     }
     
     public RemoteContext(String name) {
+    	
     	this (name, Configuration.brainySecret);
     }
     
@@ -46,7 +47,7 @@ public class RemoteContext extends Context {
     public void doLoad(String name) throws Exception {
         BufferedReader br = null;
         try {
-        	String fullContextName = name + SUFFIX;
+        	String fullContextName = Configuration.LIB_PATH + name + SUFFIX;
             String signed = signatureValidator.generateSignature(fullContextName.getBytes());        	
             
             URL url = new URL(dataURL + fullContextName);
@@ -89,7 +90,7 @@ public class RemoteContext extends Context {
 
     private void doFutureSave(String name, List<Node> nodeList) {
         try {
-        	String fullContextName = name + SUFFIX;
+        	String fullContextName = Configuration.LIB_PATH + name + SUFFIX;
             String signed = signatureValidator.generateSignature(fullContextName.getBytes());
             
             HttpsURLConnection connection = (HttpsURLConnection) new URL(dataURL + fullContextName).openConnection();

@@ -128,7 +128,7 @@ public class Hook implements Serializable, Comparable<Hook> {
 
         }
 
-        Object modeObject = messageObject.attributes.get("mode");
+        Object modeObject = messageObject.attr("mode");
         return modeObject!=null && modeObject.toString().equalsIgnoreCase(text);
     }
 

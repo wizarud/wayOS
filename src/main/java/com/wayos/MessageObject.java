@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class MessageObject implements Serializable {
 
-    public final Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     private MessageObject(Map<String, Object> attributes) {
 
@@ -92,7 +92,12 @@ public class MessageObject implements Serializable {
         return length;
     }
     
-    public MessageObject attr(String key, String val) {
+    public Object attr(String key) {
+    	
+    	return attributes.get(key);
+    }
+    
+    public MessageObject attr(String key, Object val) {
     	
     	attributes.put(key, val);
     	
@@ -102,6 +107,12 @@ public class MessageObject implements Serializable {
     public MessageObject setText(String text) {
     	
         updateAttributes(attributes, text);
+        
+        /**
+         * TODO: Clear splitted because of new text;
+         */
+        attributes.remove("wordList");
+        attributes.remove("wordCount");
         
         return this;
     }

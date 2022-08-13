@@ -260,4 +260,16 @@ public class Question {
         return new Question(parentId, label, imageURL, choiceList);
     }
     
+    public static void main(String[]args) {
+    	String text = "Question:ส่ง Art Work รูปที่จะ Screen ได้เลย (หลังจากส่งรูปแล้วกรุณารอสักครู่นะครับ..)\n"
+    			+ "Id:@741c7c40-4798-4a1d-863b-f1c12c5225d2\n"
+    			+ "Image:";
+    	
+    	text = text.replaceFirst("Question:", "");
+    	
+    	String label = text.substring(0, text.indexOf("Id:"));
+    	
+    	System.out.println(label);
+    }
+    
 }

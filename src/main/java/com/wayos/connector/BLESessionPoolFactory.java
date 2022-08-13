@@ -104,7 +104,7 @@ public class BLESessionPoolFactory {
 				
 				Configuration configuration = new Configuration(contextName);
 				
-		        String channel = (String) requestObject.messageObject().attributes.get("channel");
+		        String channel = (String) requestObject.messageObject().attr("channel");
 		        
 		        String sessionId = requestObject.sessionId();
 		        
@@ -146,6 +146,11 @@ public class BLESessionPoolFactory {
 		        		        
 		        session.vars("#channel", channel);
 		        session.vars("#sessionId", sessionId);
+		        
+		        if (session.vars("#channel").isEmpty()) {
+		        	
+		        	throw new RuntimeException("Unknown channel");
+		        }
 		        
         	    /**
         	     * Check that this session is in Edit Mode, So switch context to adminContext
@@ -231,7 +236,7 @@ public class BLESessionPoolFactory {
 		        	}
 					
 		        	//Update Variable
-					Map<String, String> variableMap = session.vars();					
+					Map<String, String> variableMap = session.vars();
 					for (Map.Entry<String, String> entry:variableMap.entrySet()) {
 						
 						prop.put(entry.getKey(), entry.getValue());
@@ -245,7 +250,9 @@ public class BLESessionPoolFactory {
 					 * Process Action Variables!
 					 */
 					
-					JSONObject adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());					
+					JSONObject adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
+					
+					if (adminConfigObject==null) return;					
 					
 					String adminChannel = adminConfigObject.getString("channel");
 					
