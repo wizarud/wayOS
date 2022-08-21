@@ -22,7 +22,17 @@ import junit.framework.TestCase;
  */
 public class AppTest extends TestCase
 {
-    public static void main(String [] args) {
+	
+	public static void main(String [] args) throws Exception {
+		
+		Context context = new RemoteContext("2361932404058813/1571124198330", "D0ra3m0n", "https://eoss-wayo-bot.appspot.com/s/", "");
+		context.load();
+		System.out.println(context.prop("title"));
+		System.out.println(context.toJSONString());
+		
+	}
+	
+    public static void sessionTest() {
     	
     	/**
     	 * Basic Configuration
@@ -42,7 +52,7 @@ public class AppTest extends TestCase
 				 */
 				try {
 					context.load();
-					FileContext.save("backup/" + contextName.replace("/", "-"), context, true);
+					FileContext.save("backup/student/" + contextName.replace("/", "-"), context, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -126,14 +136,16 @@ public class AppTest extends TestCase
 				
 			}
 
-    	});
+    	});    	
     	
     	String channel = "console";
     	String sessionId = "" + System.currentTimeMillis();
     	
     	String accountId = "103014451870896";
     	//String botId = "appchain";
-    	String botId = "sscs";
+    	//String botId = "sscs";
+    	String botId = "Yod";
+    	
     	String contextName = accountId + "/" + botId;
     	
         Scanner scanner = new Scanner(System.in, "UTF-8");

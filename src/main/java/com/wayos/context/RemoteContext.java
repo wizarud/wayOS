@@ -11,43 +11,54 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by eoss-th on 8/15/17.
  */
 public class RemoteContext extends Context {
 	
-    private SignatureValidator signatureValidator;
-    
-    private final ExecutorService executorService;
-
     /**
      * Storage URL Pattern: https://<your instance id>.appspot.com/s/
      */
-    private static final String dataURL = "https://" + Configuration.storageBucket + "/s/";
+    private static final String defaultDataURL = "https://" + Configuration.storageBucket + "/s/";
     
-    private RemoteContext(String name, String brainySecret) {
-        this(name, brainySecret, Executors.newFixedThreadPool(1));
-    }
+    private static final String defaultLibPath = Configuration.LIB_PATH;
+    
+    private final String dataURL;
+    
+    private final String libPath;
+    
+    private SignatureValidator signatureValidator;
     
     public RemoteContext(String name) {
     	
     	this (name, Configuration.brainySecret);
+    	
     }
     
-    public RemoteContext(String name, String brainySecret, ExecutorService executorService) {
+    public RemoteContext(String name, String brainySecret) {
+    
+        this(name, brainySecret, defaultDataURL, defaultLibPath);
+        
+    }
+    
+    public RemoteContext(String name, String brainySecret, String dataURL, String libPath) {
+    	
         super(name);
+        
         this.signatureValidator = new SignatureValidator(brainySecret.getBytes());
-        this.executorService = executorService;
+        this.dataURL = dataURL;
+        this.libPath = libPath;
     }
 
     @Override
     public void doLoad(String name) throws Exception {
+    	
         BufferedReader br = null;
+        
         try {
-        	String fullContextName = Configuration.LIB_PATH + name + SUFFIX;
+        	
+        	String fullContextName = libPath + name + SUFFIX;
             String signed = signatureValidator.generateSignature(fullContextName.getBytes());        	
             
             URL url = new URL(dataURL + fullContextName);
@@ -59,15 +70,20 @@ public class RemoteContext extends Context {
             br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
+            
             while ((line = br.readLine())!=null) {
+            	
                 sb.append(line);
             }
+            
             loadJSON(sb.toString());
             
         } catch (Exception e) {
-            e.printStackTrace();
+        	
             throw e;
+            
         } finally {
+        	
             if (br!=null) try { br.close(); } catch (Exception e) {}
         }
     }
@@ -75,22 +91,9 @@ public class RemoteContext extends Context {
     @Override
     public void doSave(final String name, final List<Node> nodeList) {
 
-        if (executorService==null)
-            doFutureSave(name, nodeList);
-        else
-            executorService.execute(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            doFutureSave(name, nodeList);
-                        }
-                    }
-            );
-    }
-
-    private void doFutureSave(String name, List<Node> nodeList) {
         try {
-        	String fullContextName = Configuration.LIB_PATH + name + SUFFIX;
+        	
+        	String fullContextName = libPath + name + SUFFIX;
             String signed = signatureValidator.generateSignature(fullContextName.getBytes());
             
             HttpsURLConnection connection = (HttpsURLConnection) new URL(dataURL + fullContextName).openConnection();
@@ -102,10 +105,13 @@ public class RemoteContext extends Context {
             out.write(toJSONString());
             out.flush();
             out.close();
+            
             InputStream in = connection.getInputStream();
             in.close();
+            
         } catch (IOException e) {
-            e.printStackTrace();
+        	
+        	throw new RuntimeException(e);
         }
     }
 

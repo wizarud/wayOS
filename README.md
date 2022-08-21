@@ -62,11 +62,9 @@ To be updated later
 
 - Mask Variable is the reference to another variable's value by mask to that name. For the example you can have a variable name #OrderId which has a value "001" and You can also have another variable name #OrderSummary_#OrderId, So you can automatic have the variable name #OrderSummary_001. wayOS would resolved the value for each variable order by descending.
 
-## Installation
-To be updated later
+## Installation & How to use?
 
-## How to use?
-To be updated later
+See https://github.com/wizarud/wayOSGAE for web development usage.
 
 ## Contributor
 

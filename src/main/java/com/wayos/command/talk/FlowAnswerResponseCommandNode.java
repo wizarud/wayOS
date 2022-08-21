@@ -70,7 +70,7 @@ public class FlowAnswerResponseCommandNode extends ResponseCommandNode {
                 }
             }
 
-            boolean isParent = question.parent!=null && parentIdList.contains(question.parent);
+            boolean isParent = question.id!=null && parentIdList.contains(question.id);
 
             if (parentIdList.isEmpty() || isParent) {
             	

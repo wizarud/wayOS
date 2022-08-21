@@ -362,6 +362,8 @@ public class DataTableDrawer extends Drawer {
 						}
 						propertyValue = propertyValue.trim();
 						
+						if (propertyValue.endsWith(", @" + canvas2D.GREETING.id() + canvas2D.GREETING.getMarker())) continue;
+							
 						canvas2D.context.prop("greeting", propertyValue + ", @" + canvas2D.GREETING.id() + canvas2D.GREETING.getMarker());
 
 					} else if (parentEntity==canvas2D.UNKNOWN) {
@@ -372,6 +374,8 @@ public class DataTableDrawer extends Drawer {
 						}
 						propertyValue = propertyValue.trim();
 						
+						if (propertyValue.endsWith(", @" + canvas2D.UNKNOWN.id() + canvas2D.UNKNOWN.getMarker())) continue;
+						
 						canvas2D.context.prop("unknown", propertyValue + ", @" + canvas2D.UNKNOWN.id() + canvas2D.UNKNOWN.getMarker());
 
 					} else if (parentEntity==canvas2D.SILENT) {
@@ -381,6 +385,8 @@ public class DataTableDrawer extends Drawer {
 							propertyValue = "";
 						}
 						propertyValue = propertyValue.trim();
+						
+						if (propertyValue.endsWith(", @" + canvas2D.SILENT.id() + canvas2D.SILENT.getMarker())) continue;
 						
 						canvas2D.context.prop("silent",  propertyValue + ", @" + canvas2D.SILENT.id() + canvas2D.SILENT.getMarker());
 

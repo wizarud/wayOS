@@ -3,14 +3,16 @@ package com.wayos.command.talk;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.wayos.ContextListener;
 import com.wayos.Hook;
+import com.wayos.MessageObject;
 import com.wayos.Node;
+import com.wayos.NodeEvent;
 import com.wayos.Session;
 
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
@@ -19,7 +21,7 @@ public class Question {
 
     protected ReadWriteLock lock = new ReentrantReadWriteLock();
     
-    public final String parent;
+    public final String id;
     public final String label;
     public final String imageURL;
     public final List<Choice> choices;
@@ -31,8 +33,8 @@ public class Question {
      */
     public List<Node> defaultChoices;
 
-    public Question(String parent, String label, String imageURL, List<Choice> choices) {
-        this.parent = parent;
+    public Question(String id, String label, String imageURL, List<Choice> choices) {
+        this.id = id;
         this.label = label;
         this.imageURL = imageURL;
         this.choices = choices;
@@ -54,15 +56,19 @@ public class Question {
             imageURL = null;
             label = title;
         }
+        
+    	MessageObject messageObject = MessageObject.build(params);
+    	messageObject.split();
 
-        List<String> paramList = Arrays.asList(params.split(" "));
-        String foundParent = null;
+        List<String> paramList = messageObject.wordList();
+        String parentId = null;
         for(String param:paramList) {
             if (param.startsWith("@")) {
-                foundParent = param;
+            	parentId = param;
+                break;
             }
         }
-        parent = foundParent;
+        id = parentId;
 
         choices = new ArrayList<>();
         nodeList = new ArrayList<>();
@@ -71,38 +77,32 @@ public class Question {
         //TODO: should perform load test again!
         lock.readLock().lock();
         try {
-        	
-            session.context().nodeList().forEach(new Consumer<Node>() {
+        	        	
+            session.context().matched(messageObject, new ContextListener() {
             	
                 @Override
-                public void accept(Node node) {
-
+                public void callback(NodeEvent nodeEvent) {
+                	
+                	Node node = nodeEvent.node;
+                	
                     List<Hook> hookList = node.hookList();
-
-                    /**
-                     * Is Child
-                     */
-                    boolean matched = false;
-                    for (Hook hook:hookList) {
-                        if (paramList.contains(hook.text)) {
-                            matched = true;
-                            break;
-                        }
-                    }
-
-                    if (!matched) return;
-
+                	
                     boolean isDefaultChoice = true;
                     String label = "";
                     for (Hook hook:hookList) {
+                    	
+                    	//Skip id
                         if (hook.text.startsWith("@")) {
                             continue;
                         }
 
                         isDefaultChoice = false;
+                        
+                        //Skip Soft Key
                         if (hook.text.contains(",") || hook.text.contains("*")) {
                             continue;
                         }
+                        
                         label += hook.text + " ";
                     }
 
@@ -147,16 +147,17 @@ public class Question {
                         linkURL = session.parameterized(null, linkURL);
                     }
 
-                    choices.add(new Choice(parent, label, imageURL, linkURL));
+                    choices.add(new Choice(id, label, imageURL, linkURL));
 
                     //Resplit Hook by Locale
                     Node tempNode = Node.build(session.context().split(Hook.toString(hookList)));
                     tempNode.setResponse(node.response());
                     tempNode.attr("isQuestion", node.attr("isQuestion"));
                     nodeList.add(tempNode);
-
+                    
                 }
             });
+            
             
         } finally {
             lock.readLock().unlock();
@@ -183,7 +184,7 @@ public class Question {
         StringBuilder sb = new StringBuilder(
                 String.format("Question:%s\nId:%s\nImage:%s",
                         ofNullable(label).orElse(""),
-                        ofNullable(parent).orElse(""),
+                        ofNullable(id).orElse(""),
                         ofNullable(imageURL).orElse("")
                 )
         );
@@ -199,7 +200,7 @@ public class Question {
     public JSONObject toJSONObject() {
 
         JSONObject questionObj = new JSONObject();
-        questionObj.put("parent", parent);
+        questionObj.put("parent", id);
         questionObj.put("label", label);
         questionObj.put("imageURL", imageURL);
 

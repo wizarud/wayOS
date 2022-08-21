@@ -45,7 +45,8 @@ public class WebAPI {
 			} else if (msg instanceof ResponseObject.Image) {
 				
 				image = (ResponseObject.Image) msg;
-				messages.append(createImage(image.toString()));
+				//messages.append(createImage(image.toString()));
+				messages.append(image.toString());
 				
 			} else if (msg instanceof ResponseObject.Audio) {
 				
@@ -61,39 +62,65 @@ public class WebAPI {
 				
 				questionList = (List<Question>) msg;
 				if (questionList.size()>1) {
+					
     				messages.append("<div style=\"overflow: auto; white-space: nowrap;\">");
 				}
+				
+				Choice defaultChoice;
+				String clickEvent;				
 	        	for (Question question:questionList) {
-	        		
+	        			        		
 	        		if (questionList.size()>1) {
-	    				messages.append("<div align=\"center\" style=\"display: inline-block; width: 80%\">");		
+	        			
+	    				messages.append("<div align=\"center\" style=\"display: inline-block; width: 80%\">");
 	        		}
     				
+	        		if (!question.choices.isEmpty()) {
+	        			
+		        		defaultChoice = question.choices.get(0);//Default Choice for image and label touch
+						clickEvent = "wayOS.parse('" + StringEscapeUtils.escapeHtml4(defaultChoice.parent + " " + defaultChoice.label) + "')";
+	        			
+	        		} else {
+	        			
+	        			clickEvent = "";
+	        		}	        		
+					
             		if (question.hasImage()) {
             			
-        				messages.append(createImage(question.imageURL));
+        				messages.append(createImage(question.imageURL, clickEvent));
         				
                     } else if (questionList.size() > 1) {
             			
                     	/**
                     	 * Default Image for Slide Menu Only
                     	 */
-        				messages.append(createImage("https://wayobot.com/assets/images/muay_smiling.png"));
+        				messages.append(createImage("/images/gigi.png", clickEvent));
             			
             		}
             		
-            		messages.append("<div align=\"center\"><h3>" + createText(question.label) + "</h3></div>");
+            		messages.append("<div align=\"center\" onclick=\"" + clickEvent + "\"><h3 class=\"wayos_label\">" + createText(question.label) + "</h3></div>");
 
 	    			if(!question.choices.isEmpty()) {
+	    				
+	    				if (question.choices.size()>9) {
+	    					
+			    			messages.append("\n\n\n");	    					
+			    			
+	    				} 
+	    				
 	    				messages.append("<div align=\"center\">");
+	    				
 	        			for (Choice choice:question.choices) {
+	        				
 	        				if (choice.isLinkLabel() || choice.isImageLinkLabel()) {
 	        					
-	        					messages.append("<a href=\"" + choice.linkURL + "\" target=\"_blank\"><div class=\"eoss_menu_item\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div></a>");
+	        					messages.append("<a href=\"" + choice.linkURL + "\" target=\"_blank\"><div class=\"wayos_menu_item\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div></a>");
 	        					
 	        				} else {
 	        					
-	        					messages.append("<div class=\"eoss_menu_item\" onclick=\"eossWayoBot.sendMessageToEossBot('" + StringEscapeUtils.escapeHtml4(choice.parent + " " + choice.label) + "')\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div>");
+	        					clickEvent = "wayOS.parse('" + StringEscapeUtils.escapeHtml4(choice.parent + " " + choice.label) + "')";
+	        					
+	        					messages.append("<div class=\"wayos_menu_item\" onclick=\"" + clickEvent + "\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div>");
 	        				}
 	        			}
 	        			messages.append("</div>");
@@ -149,7 +176,7 @@ public class WebAPI {
         		} else {
             		youtubeThumbnail = "https://i3.ytimg.com/vi/" + youtubeThumbnail + "/maxresdefault.jpg";        			
         		}
-            	result = result.replace(url, "<a href=\"" + url + "\" target=\"_blank\"><div class=\"eoss_image_head\" style=\"background-image: url('" + youtubeThumbnail + "'); background-size: contain\"></div></a>");
+            	result = result.replace(url, "<a href=\"" + url + "\" target=\"_blank\"><div class=\"wayos_image_head\" style=\"background-image: url('" + youtubeThumbnail + "'); background-size: contain\"></div></a>");
         		continue;
         	}
         	
@@ -166,13 +193,13 @@ public class WebAPI {
         result = result.replace("\n", "<br/>");
 		return result;
 	}
-	
-	private String createImage(String imageURL) {
+
+	private String createImage(String imageURL, String linkTo) {
 		
 		StringBuilder result = new StringBuilder();
-		result.append("<a href=\"" + imageURL + "\" target=\"_blank\"><div class=\"eoss_image_head\" style=\"background-image: url('" + imageURL + "'); background-size: contain\"></div></a>");
+		result.append("<div class=\"wayos_image_head\" onclick=\"" + linkTo + "\" style=\"background-image: url('" + imageURL + "');\"></div>");
 		return result.toString();
-	}	
+	}
 
 	private String createAudio(String audioURL) {
 		

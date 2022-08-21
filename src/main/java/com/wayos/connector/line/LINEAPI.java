@@ -371,7 +371,7 @@ public class LINEAPI {
             defaultAction = new JSONObject();
             defaultAction.put("type", "postback");
             defaultAction.put("label", "View detail");
-            defaultAction.put("data", question.parent);
+            defaultAction.put("data", question.id);
             
             column.put("defaultAction", defaultAction);
             

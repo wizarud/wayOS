@@ -111,17 +111,27 @@ public class ResponseObject {
             	}
             	
                 if (firstToken.endsWith("png") || firstToken.endsWith("jpg") || firstToken.endsWith("jpeg")|| firstToken.endsWith("gif")) {
+                	
                     messageList.add(new Image(tokens[0]));
+                    
                 } else if (firstToken.endsWith("m4a") || firstToken.endsWith("mp3")) {
+                	
                     messageList.add(new Audio(tokens[0]));
+                    
                 } else if (firstToken.endsWith("mp4")) {
+                	
                     messageList.add(new Video(tokens[0]));
+                    
                 } else {
+                	
                     messageList.add(new Text(tokens[0]));
+                    
                 }
 
                 if (tokens.length==2) {
+                	
                     messageList.add(new Text(tokens[1]));
+                    
                 }
 
             } else if (!response.trim().isEmpty()) {
@@ -219,6 +229,13 @@ public class ResponseObject {
         }
 
         return array.toString();
+    }
+    
+    public static void main(String [] args) {
+    	
+    	ResponseObject responseObject = new ResponseObject("https://wayobot.com/bin/1833768260014999/4.1%20RD%20BRIGHT%2024.png");
+    	System.out.println(responseObject.messageList);
+    	
     }
 
 }

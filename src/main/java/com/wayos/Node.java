@@ -154,6 +154,11 @@ public class Node implements Serializable, Comparable<Node> {
 		
 		attributes.put(name, value);
 	}
+	
+	public String id() {
+		
+		return (String) attributes.get("id");
+	}
 
     public boolean coverHooks(Node fromNode) {
     	
