@@ -1,6 +1,5 @@
 package com.wayos.servlet.console;
 
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +21,7 @@ import com.wayos.connector.SessionPool;
 import com.wayos.pusher.PusherUtil;
 import com.wayos.util.Application;
 import com.wayos.util.ConsoleUtil;
+import com.wayos.util.URItoContextResolver;
 
 @SuppressWarnings("serial")
 public class ConsoleServlet extends HttpServlet {
@@ -79,13 +79,15 @@ public class ConsoleServlet extends HttpServlet {
 		return Application.instance().get(PusherUtil.class);
 	}
 
-	protected final void addNewBot(String templateContent, String contextName, Map<String, String> propertyMap) throws Exception {
+	protected final void addNewBot(String jsonContext, String contextName, Map<String, String> propertyMap) throws Exception {
 		
 		PathStorage storage = storage();
 		
 		Configuration configuration = new Configuration(contextName);
 		
-		storage.write(templateContent, configuration.contextPath());
+		System.out.println("save.. to" + configuration.contextPath());
+		
+		storage.write(jsonContext, configuration.contextPath());
 		
 		Context context = sessionPool().getContext(contextName);
 				
@@ -105,7 +107,7 @@ public class ConsoleServlet extends HttpServlet {
 		context.save();			
 		
 	}
-	
+		
 	protected final String contextName(String requestURI, boolean isPublic) {
 		
 		/**
@@ -114,6 +116,13 @@ public class ConsoleServlet extends HttpServlet {
 		 * Console: /x/y/*
 		 */
 		int numSlashs = isPublic ? 3 : 4;
+		
+		/**
+		 * Plus one for contextRoot, Ex <domain>/<contextRoot>/x/*
+		 */
+		if (URItoContextResolver.hasContextRoot()) {
+			numSlashs += 1;
+		}
 		
 		String [] paths = requestURI.split("/", numSlashs);
 		

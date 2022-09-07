@@ -17,6 +17,8 @@ public class Configuration {
 	
 	public static final String contextHome = System.getenv("contextHome");
 	
+	public static final String contextRoot = System.getenv("contextRoot");
+	
 	/**
 	 * For Google Appengine Project
 	 */

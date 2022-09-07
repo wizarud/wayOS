@@ -47,14 +47,28 @@ public class ContextServlet extends ConsoleServlet {
 			String botId;
 			for (String object:objectList) {
 				
-				if (suffix!=null && !object.endsWith(suffix)) continue;
+				/**
+				 * For GCP Storage
+				 */
+				if (object.contains("/")) {
+					
+					if (suffix!=null && !object.endsWith(suffix)) continue;
+					
+					if (object.equals(resourcePath)) continue;
+					
+					contextName = object.substring(Configuration.LIB_PATH.length(), object.lastIndexOf(".context"));
+					botId = contextName.split("/")[1];
+					
+					array.put(botId);
+					
+				} else {
+					
+					botId = object.substring(0, object.lastIndexOf(".context"));
+					
+					array.put(botId);
+					
+				}
 				
-				if (object.equals(resourcePath)) continue;
-				
-				contextName = object.substring(Configuration.LIB_PATH.length(), object.lastIndexOf(".context"));
-				botId = contextName.split("/")[1];
-				
-				array.put(botId);
 			}
 			
 			resp.getWriter().print(array.toString());
@@ -70,35 +84,31 @@ public class ContextServlet extends ConsoleServlet {
 	}
 	
 	/**
-	 * For saving (Updating) context file (Single text from Designer)
-	 */
-	@Override
-	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		
-		String requestURI = req.getRequestURI();
-		String contextName = contextName(requestURI, false);
-		
-		Configuration configuration = new Configuration(contextName);
-		
-		storage().write(req.getInputStream(), configuration.contextPath());
-		
-		Context context = sessionPool().getContext(contextName);
-		try {
-			context.load();
-		} catch (Exception contextException) {
-			throw new RuntimeException(contextException);
-		}
-		
-	}
-
-	/**
 	 * For add new bot from dashboard
 	 */
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
+		
 		String requestURI = req.getRequestURI();
 		String contextName = contextName(requestURI, false);
+		
+		String cmd = req.getParameter("cmd");
+
+		if (cmd==null) {
+			
+			Configuration configuration = new Configuration(contextName);
+			
+			storage().write(req.getInputStream(), configuration.contextPath());
+			
+			Context context = sessionPool().getContext(contextName);
+			try {
+				context.load();
+			} catch (Exception contextException) {
+				throw new RuntimeException(contextException);
+			}
+			
+			return;
+		}
 		
 		String [] tokens = contextName.split("/");
 		String accountId = tokens[0];

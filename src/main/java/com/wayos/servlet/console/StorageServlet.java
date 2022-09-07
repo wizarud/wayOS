@@ -9,6 +9,8 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.wayos.util.URItoContextResolver;
+
 /**
  * For uploading to specific path only
  * 
@@ -24,9 +26,16 @@ public class StorageServlet extends ConsoleServlet {
 
 		String requestURI = req.getRequestURI();
 		
-		String [] paths = requestURI.split("/", 4);		
+		int numSlashs = 4;
 		
-		String fileName = paths[3];
+		if (URItoContextResolver.hasContextRoot()) {
+			
+			numSlashs += 1;
+		}
+				
+		String [] paths = requestURI.split("/", numSlashs);		
+		
+		String fileName = paths[numSlashs - 1];
 		
 		ServletFileUpload upload = new ServletFileUpload();
 		

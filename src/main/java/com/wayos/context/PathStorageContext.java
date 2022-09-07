@@ -10,11 +10,11 @@ import com.wayos.PathStorage;
 import com.wayos.Node;
 
 @SuppressWarnings("serial")
-public class DirectoryStorageContext extends Context {
+public class PathStorageContext extends Context {
 	
 	private final PathStorage storage;
 	
-	public DirectoryStorageContext(PathStorage storage, String name) {
+	public PathStorageContext(PathStorage storage, String name) {
 		super(name);
 		this.storage = storage;
 	}
@@ -30,10 +30,10 @@ public class DirectoryStorageContext extends Context {
 	}
 
 	@Override
-	protected void doLoad(String name) throws Exception {		
+	protected void doLoad(String name) throws Exception {
 		BufferedReader br = null;
         try {
-            loadJSON(storage.readAsJSONObject(fileName(name)).toString());
+        	loadJSON(storage.readAsJSONObject(fileName(name)).toString());
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

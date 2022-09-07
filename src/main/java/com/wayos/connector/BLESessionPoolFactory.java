@@ -19,7 +19,7 @@ import com.wayos.command.CommandNode;
 import com.wayos.command.admin.AdminCommandNode;
 import com.wayos.command.wakeup.WAYOSWakeupCommandNode;
 import com.wayos.connector.SessionPool.ContextFactory;
-import com.wayos.context.DirectoryStorageContext;
+import com.wayos.context.PathStorageContext;
 import com.wayos.pusher.PusherUtil;
 import com.wayos.util.ConsoleUtil;
 
@@ -64,7 +64,7 @@ public class BLESessionPoolFactory {
 			@Override
 			public Context createContext(String contextName) {
 				
-				return new DirectoryStorageContext(storage, contextName);
+				return new PathStorageContext(storage, contextName);
 			}
     		
     	});    	

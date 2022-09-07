@@ -107,7 +107,7 @@ public class FacebookAccountServlet extends ConsoleServlet {
 				
 				String contextName = Configuration.contextHome + accountId + "/" + botSelectedId + Context.SUFFIX;
 				
-				status = parseJsonStatus("SignIn", setSession(req, accountId, botSelectedId, name, email), contextName);
+				status = parseJsonStatus("SignIn", setSession(req, accountId, botSelectedId), contextName);
 				
 			}
 			
@@ -203,17 +203,17 @@ public class FacebookAccountServlet extends ConsoleServlet {
 			}	
 		}
 
-		status = parseJsonStatus("Register", setSession(req, accountId, botId, name, email), contextName);
+		status = parseJsonStatus("Register", setSession(req, accountId, botId), contextName);
 		
 		return status;
 	}
 	
-	private String setSession(HttpServletRequest req, String accountId, String botId, String name, String email) {
+	private String setSession(HttpServletRequest req, String accountId, String botId) {
 		
 		HttpSession session = req.getSession(true);
 		
 		session.setAttribute("accountId", accountId);
-		session.setAttribute("name", name);
+		session.setAttribute("botId", botId);
 		
 		return "success";
 	}

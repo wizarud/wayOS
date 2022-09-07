@@ -32,7 +32,9 @@ public class DirectoryStorage implements PathStorage {
 	@Override
 	public List<String> listObjectsWithPrefix(String directoryPrefix) {
 		
-		File dir = new File(directoryPrefix);
+		if (directoryPrefix.contains("..")) throw new IllegalArgumentException("Illegal Path:" + directoryPrefix);
+		
+		File dir = new File(home, directoryPrefix);
 		
 		if (!dir.isDirectory()) return null;
 		
@@ -41,6 +43,8 @@ public class DirectoryStorage implements PathStorage {
 
 	@Override
 	public void serve(String path, HttpServletResponse resp) throws IOException {
+		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
 		
 	    String suffix = path;
 	    
@@ -117,6 +121,8 @@ public class DirectoryStorage implements PathStorage {
 	@Override
 	public JSONObject readAsJSONObject(String path) {
 		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
+		
 		File fromFile = new File(home, path);
 		
     	InputStream inputStream = null;
@@ -128,6 +134,12 @@ public class DirectoryStorage implements PathStorage {
 	        return new JSONObject(IOUtils.toString(inputStream, StandardCharsets.UTF_8.name()));
 	        					
 		} catch (Exception e) {
+			
+			/* For Debugging only
+			e.printStackTrace();
+			
+			throw(new RuntimeException(e));
+			*/
 						
 		} finally {
 			
@@ -137,8 +149,9 @@ public class DirectoryStorage implements PathStorage {
 			}
 					
 		}
-		
+        
         return null;
+		
 	}
 	
 	/**
@@ -148,6 +161,8 @@ public class DirectoryStorage implements PathStorage {
 	 * @return
 	 */
 	private File placeFileAt(String path) {
+		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
 		
 		String dir;
 		String fileName;
@@ -188,6 +203,8 @@ public class DirectoryStorage implements PathStorage {
 	@Override
 	public void write(String content, String path) {
 		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
+		
 		try {
 			
 			copy(IOUtils.toInputStream(content, StandardCharsets.UTF_8.name()), new FileOutputStream(placeFileAt(path)));
@@ -202,11 +219,15 @@ public class DirectoryStorage implements PathStorage {
 	@Override
 	public void write(InputStream input, String path) throws IOException {
 		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
+		
 		copy(input, new FileOutputStream(placeFileAt(path)));	
 	}
 
 	@Override
 	public void write(String path, OutputStream outputStream) throws IOException {
+		
+		if (path.contains("..")) throw new IllegalArgumentException("Illegal Path:" + path);
 		
 		File fromFile = new File(home, path);
 		
@@ -245,9 +266,9 @@ public class DirectoryStorage implements PathStorage {
 		JSONObject test = new JSONObject();
 		test.put("name", "Hello");
 		
-		storage.write(test.toString(), "/aaa/test.json");
+		storage.write(test.toString(), "../test/wizarud@gmail.com/test.json");
 		
-		JSONObject test2 = storage.readAsJSONObject("/aaa/test.json");
+		JSONObject test2 = storage.readAsJSONObject("../test/wizarud@gmail.com/test.json");
 		
 		System.out.println(test2);
 		

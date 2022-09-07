@@ -29,18 +29,21 @@ public class CSVServlet extends ConsoleServlet {
 			
 		    try {
 		    	
-	    		String catalogTSVPath = Configuration.PRIVATE_PATH + contextName + ".catalog.tsv";
-		    	
+	    		String catalogTSVPath = Configuration.PRIVATE_PATH + contextName + "." + type;
+	    		
 				storage().write(catalogTSVPath, resp.getOutputStream());
 				
 		    } catch (Exception e) {
 		    	
-		    	throw new RuntimeException(e);
+		    	/**
+		    	 * TODO: Fix if no tsv file
+		    	 */
+		    	//throw new RuntimeException(e);
 		    }
 			
 			return;
 		}
-				
+		
 		try {
 			
 			Context context = sessionPool().getContext(contextName);

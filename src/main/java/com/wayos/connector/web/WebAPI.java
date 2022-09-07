@@ -114,13 +114,13 @@ public class WebAPI {
 	        				
 	        				if (choice.isLinkLabel() || choice.isImageLinkLabel()) {
 	        					
-	        					messages.append("<a href=\"" + choice.linkURL + "\" target=\"_blank\"><div class=\"wayos_menu_item\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div></a>");
+	        					messages.append("<a href=\"" + choice.linkURL + "\" target=\"_blank\"><div class=\"wayos_menu_item\">" + choice.label + "</div></a>");
 	        					
 	        				} else {
 	        					
 	        					clickEvent = "wayOS.parse('" + StringEscapeUtils.escapeHtml4(choice.parent + " " + choice.label) + "')";
 	        					
-	        					messages.append("<div class=\"wayos_menu_item\" onclick=\"" + clickEvent + "\">" + StringEscapeUtils.escapeHtml4(choice.label) + "</div>");
+	        					messages.append("<div class=\"wayos_menu_item\" onclick=\"" + clickEvent + "\">" + choice.label + "</div>");
 	        				}
 	        			}
 	        			messages.append("</div>");

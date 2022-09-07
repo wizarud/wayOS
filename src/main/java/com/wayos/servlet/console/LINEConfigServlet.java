@@ -49,7 +49,7 @@ public class LINEConfigServlet extends ConsoleServlet {
 	}
 	
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String contextName = contextName(req.getRequestURI(), false);
 		

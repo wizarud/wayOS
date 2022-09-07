@@ -153,12 +153,24 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 					contextName = itemName.substring(0, itemName.lastIndexOf("/qa.tsv"));
 					
+					//Read to buffer because multiple reader
+					InputStream inputStream = fileItemStream.openStream();						
+					byte [] buffer = new byte[inputStream.available()];
+					inputStream.read(buffer);
+					
 					String qa = new BufferedReader(
-						      new InputStreamReader(fileItemStream.openStream(), StandardCharsets.UTF_8))
+						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
 						        .lines()
 						        .collect(Collectors.joining("\n"));	
 						        
 		        	drawer = new QuestionareDrawer(qa);					
+		        	
+		        	/**
+		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
+		        	 */
+		    		String qaTSVPath = Configuration.PRIVATE_PATH + contextName + ".qa.tsv";
+		    		
+					storage().write(new ByteArrayInputStream(buffer), qaTSVPath);
 					
 				} 
 				//RAW Text

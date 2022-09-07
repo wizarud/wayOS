@@ -45,7 +45,7 @@ public class ContextPropertiesServlet extends ConsoleServlet {
 	}
 	
 	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String contextName = contextName(req.getRequestURI(), false);
 		
@@ -64,7 +64,7 @@ public class ContextPropertiesServlet extends ConsoleServlet {
 				
 				context.prop(entry.getKey(), entry.getValue());
 			}
-
+			
 			context.save();
 			
 			context.load(); //Reload after save

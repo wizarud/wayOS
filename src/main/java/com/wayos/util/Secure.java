@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@SuppressWarnings("serial")
 public class Secure implements Serializable {
 
     public String encryptPassword(String password) {

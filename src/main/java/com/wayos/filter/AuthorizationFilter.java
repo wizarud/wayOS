@@ -72,9 +72,9 @@ public abstract class AuthorizationFilter implements Filter {
 		
 		HttpSession session = req.getSession();
 		
-		String name = (String) session.getAttribute("name");
+		String accountId = (String) session.getAttribute("accountId");
 		
-		if (name==null) {
+		if (accountId==null) {
 			
 			resp.sendRedirect("https://" + req.getServerName());
 			
@@ -108,7 +108,9 @@ public abstract class AuthorizationFilter implements Filter {
 			}
 			
 		}		
-				
+		
+		req.setCharacterEncoding("UTF-8");
+						
 		chain.doFilter(req, resp);
 				
 	}

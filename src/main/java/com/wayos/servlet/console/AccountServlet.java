@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.wayos.Configuration;
+import com.wayos.util.URItoContextResolver;
 
 @SuppressWarnings("serial")
 @WebServlet("/console/account/*")
@@ -75,9 +76,16 @@ public class AccountServlet extends ConsoleServlet {
 	 */
 	private String accountJSONPath(String requestURI) {
 		
-		String [] paths = requestURI.split("/", 4);
+		int numSlashs = 4;
 		
-		String accountId = paths[3];
+		if (URItoContextResolver.hasContextRoot()) {
+			
+			numSlashs += 1;
+		}
+		
+		String [] paths = requestURI.split("/", numSlashs);
+		
+		String accountId = paths[numSlashs-1];
 		
 		/**
 		 * Extract contextName and mapping to the private location

@@ -7,6 +7,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
+import com.wayos.Context;
 import com.wayos.servlet.console.ConsoleServlet;
 
 @SuppressWarnings("serial")
@@ -26,6 +29,29 @@ public class ShowcaseServlet extends ConsoleServlet {
 		req.setAttribute("accountId", accountId);
 		req.setAttribute("botId", botId);
 		
+		try {
+			
+			Context context = sessionPool().getContext(contextName);
+			
+			context.load();
+
+			/**
+			* filter only title, desc, borderColor & loadingGif
+			*/
+			JSONObject properties = new JSONObject(context.prop());
+			properties = new JSONObject(context.prop());
+			properties.remove("greeting");
+			properties.remove("silent");
+			properties.remove("unknown");
+			
+			req.setAttribute("props", properties);
+			
+		} catch (Exception e) {
+			
+			throw new RuntimeException(req.getRequestURI() + "=>" + contextName);
+			
+		}
+				
 		req.getRequestDispatcher("/index.jsp").forward(req, resp);
 	}
 	
