@@ -107,6 +107,11 @@ public class ConsoleServlet extends HttpServlet {
 		context.save();			
 		
 	}
+	
+	protected final boolean hasContextRoot() {
+		
+		return !getServletContext().getContextPath().isEmpty();
+	}
 		
 	protected final String contextName(String requestURI, boolean isPublic) {
 		
@@ -120,7 +125,7 @@ public class ConsoleServlet extends HttpServlet {
 		/**
 		 * Plus one for contextRoot, Ex <domain>/<contextRoot>/x/*
 		 */
-		if (URItoContextResolver.hasContextRoot()) {
+		if (hasContextRoot()) {
 			numSlashs += 1;
 		}
 		

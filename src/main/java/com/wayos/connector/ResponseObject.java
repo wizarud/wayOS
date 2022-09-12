@@ -16,7 +16,7 @@ public class ResponseObject {
 
     public static class Text implements JSONAble {
         private final String text;
-        public Text(String text) {
+        public Text(String text) {        	
             this.text = text;
         }
         @Override
@@ -96,7 +96,7 @@ public class ResponseObject {
 
         		questionList.add(Question.build(response));
 
-            } else if (firstToken.startsWith("https:")) {
+            } else if (firstToken.startsWith("https://") || firstToken.startsWith("http://")) {
             	            	
             	/**
             	 * Trim Query Parameters (for Facebook Storage)

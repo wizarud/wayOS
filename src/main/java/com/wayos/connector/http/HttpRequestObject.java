@@ -44,7 +44,7 @@ public class HttpRequestObject extends RequestObject {
         
 		try {
 			
-			URItoContextResolver uriToContextResolver = new URItoContextResolver(request.getRequestURI());
+			URItoContextResolver uriToContextResolver = new URItoContextResolver(request);
 			contextName = uriToContextResolver.contextName();
 			
 			/**

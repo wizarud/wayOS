@@ -24,12 +24,10 @@ public class PublicStorageServlet extends ConsoleServlet {
 		
 		String requestURI = req.getRequestURI();
 		
-		boolean hasContextPath = true;
-		
 		String [] paths;
 		String fileName;		
 		
-		if (hasContextPath) {
+		if (super.hasContextRoot()) {
 			
 			paths = requestURI.split("/", 4);
 			fileName = paths[3];

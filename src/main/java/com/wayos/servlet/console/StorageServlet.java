@@ -28,7 +28,7 @@ public class StorageServlet extends ConsoleServlet {
 		
 		int numSlashs = 4;
 		
-		if (URItoContextResolver.hasContextRoot()) {
+		if (super.hasContextRoot()) {
 			
 			numSlashs += 1;
 		}

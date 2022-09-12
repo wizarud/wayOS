@@ -1,6 +1,6 @@
 package com.wayos.util;
 
-import com.wayos.Configuration;
+import javax.servlet.http.HttpServletRequest;
 
 public class URItoContextResolver {
 	
@@ -8,17 +8,16 @@ public class URItoContextResolver {
 	public final String botId;
 	public final String sessionId;
 	
-	public static boolean hasContextRoot() {
-		
-		return Configuration.contextRoot != null;
+	public URItoContextResolver(HttpServletRequest request) {
+		this(request.getRequestURI(), !request.getContextPath().isEmpty());
 	}
-	
-	public URItoContextResolver(String uri) {
+		
+	private URItoContextResolver(String uri, boolean hasContextRoot) {
 		
 		int forSessionIdPath = 4;
 		int forContextNamePath = 3;
 				
-		if (hasContextRoot()) {
+		if (hasContextRoot) {
 			forSessionIdPath += 1;
 			forContextNamePath += 1;
 		}
@@ -55,7 +54,7 @@ public class URItoContextResolver {
 	
 	public static void main(String[]args) {
 		
-		URItoContextResolver uri = new URItoContextResolver("/wayOSTomcat/webhooks/<accountId>/<botId>/<sessionId>");
+		URItoContextResolver uri = new URItoContextResolver("/wayOSTomcat/webhooks/<accountId>/<botId>/<sessionId>", true);
 		
 		System.out.println(uri.contextName());
 		System.out.println(uri.sessionId());
