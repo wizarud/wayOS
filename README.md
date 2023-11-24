@@ -7,11 +7,41 @@ Programmable Chatbot
 ## Build status
 Ready for customization.
 
-## Screenshots
-
-
 ## Technology Stack
-Java 1.8
+- Context file in JSON format that contains nodes array of entities. A Entity has hooks array of keywords and a response message.
+
+```
+
+{
+  "nodes": [
+    {
+      "hooks": [
+        {
+          "text": "hi",
+          "match": "Words",
+          "weight": 1
+        }
+      ],
+      "response": "Hello World"
+    }
+  }
+]
+...
+}
+```
+
+- The following folders in storage path are use by wayOS such as libs/ to contains context files, private/ for channel credentials (LINE, Facebook), users/ for authentication credentials, vars/ for session variables, public/ for user resource files such as image, audio and video content and logs/ for logging variables.
+
+```
+libs/
+logs/
+private/
+public/
+users/
+vars/
+```
+
+- Java 1.8
 
 ## Features
 - Support Context file that contains the array of key-value pairs for keyword and response messages.
@@ -22,7 +52,7 @@ Java 1.8
 - Additional Features such as Context Builder by using TSV or just the simple text for FAQ, Form, Quiz and Catalog that has the add to cart menu.
 
 ## Installation
-- Install as jar to the WEB-INF/lib of wayOS Web Project.
+- Install as jar to the WEB-INF/lib of [Play](https://github.com/wizarud/play) Web Project.
 
 ## Contributor
 
