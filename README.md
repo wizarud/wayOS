@@ -1,14 +1,11 @@
 ## wayOS Runtime
-Runtime for wayOS Web (Chatbot Designer)
+Runtime for [Play](https://github.com/wizarud/Play), Chatbot designer and player on web.
 
 ## Motivation
-Programmable Chatbot
-
-## Build status
-Ready for customization.
+Programmable Chatbot that support variable, condition, loop and calling WebServices API.
 
 ## Technology Stack
-- Context file in JSON format that contains nodes array of entities. A Entity has hooks array of keywords and a response message.
+- Context file in JSON format that contains nodes array of entities. A Entity has hooks array of keywords and a response message. You can use [Play](https://github.com/wizarud/Play) to create the context.
 
 ```
 
@@ -47,14 +44,15 @@ vars/
 - Support Context file that contains the array of key-value pairs for keyword and response messages.
 - Interpret Context by finding the best fit of keyword and response that match the user's message.
 - Generate Text, Image, Menu for HTML, LINE and Facebook Page Messenger in JSON Format.
-- Http Endpoints for REST Api including LINE and Facebook.
+- Webhooks endpoints for LINE, Facebook and simple REST provider.
 - Programmatic Features such as forwarding, built-in and session variables, conditional and also support REST calling, WebScrapping (Jsoup).
+- Push Notification.
 - Additional Features such as Context Builder by using TSV or just the simple text for FAQ, Form, Quiz and Catalog that has the add to cart menu.
 
 ## Installation
-- Install as jar to the WEB-INF/lib of [Play](https://github.com/wizarud/play) Web Project.
+- Install as jar to the WEB-INF/lib of [Play](https://github.com/wizarud/Play).
 
-## Contributor
+## Developer
 
 **Wisarut Srisawet**
 
