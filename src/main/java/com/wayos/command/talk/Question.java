@@ -159,6 +159,8 @@ public class Question {
                     Node tempNode = Node.build(session.context().split(Hook.toString(hookList)));
                     tempNode.setResponse(node.response());
                     tempNode.attr("isQuestion", node.attr("isQuestion"));
+                    tempNode.attr("hasParam", node.attr("hasParam"));
+                    
                     nodeList.add(tempNode);
                     
                 }

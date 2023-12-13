@@ -38,7 +38,9 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
     
     protected String recipientType;
     
-	private User userProfile;    
+	private User userProfile;
+	
+	private String commentName;
     
 	public FacebookHttpRequestObject(HttpServletRequest request) {
 		
@@ -152,6 +154,8 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
                 		
                 		sessionId = fromId; //TODO: check later
                 		
+                		commentName = changeObj.getJSONObject("from").getString("name");
+                		
                 		String postId = changeObj.optString("post_id");
                 		
                 		//From User Comments
@@ -182,6 +186,7 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
                 		System.out.println("Post Id:" + postId);
                 		System.out.println("Recipient Id:" + recipientId);
                 		System.out.println("From Id:" + fromId);
+                		System.out.println("From Name:" + commentName);
                 		System.out.println("sessionId:" + sessionId);
                 		System.out.println();
                         
@@ -435,6 +440,11 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
 		if (userProfile!=null) {
 			
 	        session.vars("#s_fullName",  userProfile.getFirstName() + " " + userProfile.getLastName());
+	        
+		} else if (commentName!=null) {
+			
+	        session.vars("#s_fullName", commentName);
+	        
 		}
 		
 		session.vars("#pageId", recipientId);

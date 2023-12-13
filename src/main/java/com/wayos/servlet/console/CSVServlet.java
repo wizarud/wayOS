@@ -182,6 +182,35 @@ public class CSVServlet extends ConsoleServlet {
 		    		return;
 		    	}		    	
 		    	
+		    	/**
+		    	 * Thread
+		    	 */
+		    	if (type.equals("thread.tsv")) {
+		    		
+		    		try {
+						Context context = sessionPool().getContext(contextName);
+						
+						context.load();
+						
+						String language = context.prop("language");
+						if (language==null) {
+							language = "en";
+						}
+						
+						Locale locale = new Locale(language);
+			    		ResourceBundle bundle = ResourceBundle.getBundle("com.wayos.i18n.text", locale);
+			    		
+			    		resp.getWriter().print(bundle.getString("thread.sample"));
+		    			
+		    		} catch (Exception ee) {
+		    			
+		    			resp.getWriter().print(ee);
+		    			
+		    		}
+		    		
+		    		return;
+		    	}		    	
+		    	
 		    }
 			
 			return;

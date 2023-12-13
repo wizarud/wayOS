@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 
 import com.wayos.Configuration;
 import com.wayos.Context;
@@ -31,6 +32,7 @@ import com.wayos.drawer.basic.FAQDrawer;
 import com.wayos.drawer.basic.FormDrawer;
 import com.wayos.drawer.basic.PresentationDrawer;
 import com.wayos.drawer.basic.QuizDrawer;
+import com.wayos.drawer.basic.ThreadDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogImporter;
 
@@ -111,9 +113,11 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					contextName = itemName.substring(0, itemName.lastIndexOf("/chai.tsv"));
 					
 					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					InputStream inputStream = fileItemStream.openStream();	
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 		        	drawer = new DataTableDrawer(new DataTableDrawer.TSVTableLoader(new ByteArrayInputStream(buffer), "\t"));
 		        	
@@ -126,9 +130,11 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					contextName = itemName.substring(0, itemName.lastIndexOf("/catalog.tsv"));
 					
 					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					InputStream inputStream = fileItemStream.openStream();
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 					CSVPaginationCatalogImporter csvPaginationCatalogImporter = new CSVPaginationCatalogImporter(null, new ByteArrayInputStream(buffer), "\t");
 					
@@ -150,15 +156,18 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					storage().write(new ByteArrayInputStream(buffer), catalogTSVPath);
 					
 				}
+				
 				//Questionare
 				else if (itemName.endsWith("/qa.tsv")) {
 					
 					contextName = itemName.substring(0, itemName.lastIndexOf("/qa.tsv"));
 					
 					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					InputStream inputStream = fileItemStream.openStream();	
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 					String qa = new BufferedReader(
 						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
@@ -175,15 +184,18 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					storage().write(new ByteArrayInputStream(buffer), qaTSVPath);
 					
 				} 
+				
 				//Form
 				else if (itemName.endsWith("/form.tsv")) {
 					
 					contextName = itemName.substring(0, itemName.lastIndexOf("/form.tsv"));
 					
 					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					InputStream inputStream = fileItemStream.openStream();
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 					String form = new BufferedReader(
 						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
@@ -200,15 +212,18 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					storage().write(new ByteArrayInputStream(buffer), formTSVPath);
 					
 				} 
+				
 				//FAQ
 				else if (itemName.endsWith("/faq.tsv")) {
 					
 					contextName = itemName.substring(0, itemName.lastIndexOf("/faq.tsv"));
 					
 					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					InputStream inputStream = fileItemStream.openStream();
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 					String form = new BufferedReader(
 						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
@@ -224,7 +239,8 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 		    		
 					storage().write(new ByteArrayInputStream(buffer), faqTSVPath);
 					
-				} 				
+				}
+				
 				//Presentation
 				else if (itemName.endsWith("/pt.tsv")) {
 					
@@ -232,8 +248,10 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 					//Read to buffer because multiple reader
 					InputStream inputStream = fileItemStream.openStream();						
-					byte [] buffer = new byte[inputStream.available()];
-					inputStream.read(buffer);
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
 					
 					String qa = new BufferedReader(
 						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
@@ -248,6 +266,34 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 		    		String ptTSVPath = Configuration.PRIVATE_PATH + contextName + ".pt.tsv";
 		    		
 					storage().write(new ByteArrayInputStream(buffer), ptTSVPath);
+					
+				}
+				
+				//Thread
+				else if (itemName.endsWith("/thread.tsv")) {
+					
+					contextName = itemName.substring(0, itemName.lastIndexOf("/thread.tsv"));
+					
+					//Read to buffer because multiple reader
+					InputStream inputStream = fileItemStream.openStream();						
+					
+					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
+					
+					byte [] buffer = text.getBytes();
+					
+					String thread = new BufferedReader(
+						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
+						        .lines()
+						        .collect(Collectors.joining("\n"));	
+						        
+		        	drawer = new ThreadDrawer(thread);// Thread use the ThreadDrawer
+		        	
+		        	/**
+		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
+		        	 */
+		    		String threadTSVPath = Configuration.PRIVATE_PATH + contextName + ".thread.tsv";
+		    		
+					storage().write(new ByteArrayInputStream(buffer), threadTSVPath);
 					
 				}
 				

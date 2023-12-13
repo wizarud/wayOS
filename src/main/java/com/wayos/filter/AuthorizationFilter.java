@@ -69,6 +69,8 @@ public abstract class AuthorizationFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		
 		HttpServletResponse resp = (HttpServletResponse) response;
+		
+		System.out.println("User-Agent" + req.getHeader("user-agent"));		
 				
 		HttpSession session = req.getSession();
 		
@@ -76,9 +78,12 @@ public abstract class AuthorizationFilter implements Filter {
 		
 		if (accountId==null) {
 			
-			resp.sendRedirect("https://" + req.getServerName());
+			//resp.sendRedirect("https://" + req.getServerName());
 			
-			return;
+			//return;
+			
+	        throw new AdminCommandNode.AuthenticationException("Please Login!");
+	        
 		}
 		
 		/**

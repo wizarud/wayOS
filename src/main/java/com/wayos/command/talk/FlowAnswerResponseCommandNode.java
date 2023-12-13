@@ -106,6 +106,7 @@ public class FlowAnswerResponseCommandNode extends ResponseCommandNode {
                     MessageObject forwardMessageObject = MessageObject.build(messageObject, forwardInput.toString().trim());
                     
                     return ResponseFactoryCommandNode.build(session, maxActiveNode).execute(forwardMessageObject);
+                                        
                 }
             }
 

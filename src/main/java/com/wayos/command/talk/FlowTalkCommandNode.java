@@ -55,7 +55,7 @@ public class FlowTalkCommandNode extends CommandNode {
             	if (session.lastEntry()!=null && 
             			session.lastEntry().node.hasSameId(nodeEvent.node)) {
             		
-            		System.err.println("Match LAst Entry!!!" + session.getRoundCount());
+            		System.err.println("Match Last Entry!!!" + session.getRoundCount());
                 	System.err.println(session.lastEntry().node);
                 	
             		return;
@@ -228,6 +228,8 @@ public class FlowTalkCommandNode extends CommandNode {
 
             String unknownConfig = session.context().prop("unknown");
                         
+            //System.err.println(unknownConfig);
+            
             messageObject.attr("unknown", unknownConfig);
             
         	/**
@@ -256,14 +258,19 @@ public class FlowTalkCommandNode extends CommandNode {
             /**
              * Merge that message as parameters
              */
-            String paramsAdded = "," + unknownConfig.substring(1, unknownConfig.length()-1) + " " + messageObject.toString() + "!";
+            //I dont know why i did this!
+            //String paramsAdded = "," + unknownConfig.substring(1, unknownConfig.length()-1) + " " + messageObject.toString() + "!";
             
-            //System.out.println(paramsAdded);
+            String paramsAdded = unknownConfig.substring(0, unknownConfig.length()-1) + " " + messageObject.toString() + "!";
+            
+            //System.err.println(paramsAdded);
             
             /**
              * Replace with UnknownConfig (text after ,)
              */
             messageObject.setText(paramsAdded);
+            
+            //System.err.println(messageObject.headIncluded());
             
             return (messageObject.headIncluded() + execute(messageObject.forward(unknownConfig))).trim();
         }

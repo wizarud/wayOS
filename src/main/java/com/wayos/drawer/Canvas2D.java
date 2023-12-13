@@ -115,6 +115,7 @@ public class Canvas2D {
                                     
             this.node.setResponse(answer);
             this.expressions = expressions.trim();
+            
         }        
         
         public String id() {
