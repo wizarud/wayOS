@@ -16,14 +16,7 @@ public class Configuration {
 	public static final String adminContextName = System.getenv("ADMIN_CONTEXT_NAME");
 	
 	public static final String contextHome = System.getenv("contextHome");
-	
-	/**
-	 * For Google Appengine Project
-	 */
-	public static final String projectId = System.getenv("projectId");
-	
-    public static final String storageBucket = System.getenv("storageBucket");
-	
+		
 	/**
 	 * Storage relative path from contextName configuration
 	 */

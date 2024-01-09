@@ -14,9 +14,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 
 import com.wayos.PathStorage;
+
+import x.org.json.JSONObject;
 
 public class DirectoryStorage implements PathStorage {
 	
@@ -266,6 +267,24 @@ public class DirectoryStorage implements PathStorage {
 	public boolean exists(String path) {
 		
 		return new File(home, path).exists();
+	}
+	
+	@Override
+	public void delete(String path) {
+		
+		File file = new File(home, path);
+		
+		if (file.exists()) {
+			
+			boolean success = file.delete();
+			
+			if (success) {
+				System.out.println(path + " was deleted!");
+			} else {
+				System.out.println(path + " cannot delete!");				
+			}
+		}
+		
 	}
 	
 	public static void main(String [] args) {

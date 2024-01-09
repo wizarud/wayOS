@@ -2,8 +2,6 @@ package com.wayos.util;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.google.common.io.ByteStreams;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,6 +11,8 @@ import java.nio.charset.StandardCharsets;
  * Created by eoss-th on 8/15/17.
  */
 public class RemoteStorage {
+	
+	private static final int BUFFER_SIZE = 5 * 1024 * 1024;
 	
 	/**
 	 * GAE Storage Service Servlet Endpoint URL, Must endswith /
@@ -91,7 +91,7 @@ public class RemoteStorage {
             connection.setDoOutput(true);
             connection.addRequestProperty("Brainy-Signature", "555" + signed);
             
-            ByteStreams.copy(inputStream, connection.getOutputStream());
+            copy(inputStream, connection.getOutputStream());
             in = connection.getInputStream();
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,5 +102,27 @@ public class RemoteStorage {
 
     }
     
+	/**
+	 * Transfer the data from the inputStream to the outputStream. Then close both streams.
+	 */
+	private void copy(InputStream input, OutputStream output) throws IOException {
+				
+		try {
+			
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int bytesRead = input.read(buffer);
+			
+			while (bytesRead != -1) {
+				
+				output.write(buffer, 0, bytesRead);
+				bytesRead = input.read(buffer);
+			}
+			
+		} finally {
+			
+			input.close();
 
+			output.close();
+		}
+	}
 }

@@ -3,19 +3,19 @@ package com.wayos.connector.line;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.wayos.command.talk.Choice;
 import com.wayos.command.talk.Question;
 import com.wayos.connector.ResponseObject;
 import com.wayos.util.SimpleHTMLDecoder;
 
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
+
 public class LINEAPI {
 	
-    private static final String PREVIEW_MEDIA_URL = "https://wayos.yiem.ai/images/WAYOBOT512.png";
+    private static final String PREVIEW_MEDIA_URL = "https://wayos.yiem.cc/images/WAYOBOT512.png";
     
-    private static final String thumbnailImageUrl = "https://wayos.yiem.ai/images/gigi.png";
+    private static final String thumbnailImageUrl = "https://wayos.yiem.cc/images/gigi.png";
 
 	private static LINEAPI _lineAPI;
 	

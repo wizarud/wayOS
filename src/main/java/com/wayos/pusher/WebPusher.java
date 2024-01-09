@@ -11,10 +11,10 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.json.JSONObject;
-
 import com.wayos.PathStorage;
 import com.wayos.connector.ResponseObject;
+
+import x.org.json.JSONObject;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;

@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.json.JSONObject;
-
 import com.restfb.BinaryAttachment;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -24,6 +22,8 @@ import com.wayos.Configuration;
 import com.wayos.PathStorage;
 import com.wayos.connector.ResponseObject;
 import com.wayos.connector.facebook.FacebookAPI;
+
+import x.org.json.JSONObject;
 
 public class FacebookPusher extends Pusher {
 	

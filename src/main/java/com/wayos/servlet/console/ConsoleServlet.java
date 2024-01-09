@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.wayos.Application;
 import com.wayos.Configuration;
 import com.wayos.Context;
@@ -22,6 +20,8 @@ import com.wayos.connector.SessionPool;
 import com.wayos.pusher.PusherUtil;
 import com.wayos.util.ConsoleUtil;
 import com.wayos.util.URItoContextResolver;
+
+import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class ConsoleServlet extends HttpServlet {

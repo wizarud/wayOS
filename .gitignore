@@ -1,0 +1,4 @@
+
+*.class
+target/classes/org/.DS_Store
+*.jar

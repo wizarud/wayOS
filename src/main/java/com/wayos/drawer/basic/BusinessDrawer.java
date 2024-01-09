@@ -11,7 +11,7 @@ import java.util.Set;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 
-public class ThreadDrawer extends Drawer {
+public class BusinessDrawer extends Drawer {
 	
 	final String ENTITY_SEPARATOR = "\n\n";
 	
@@ -23,6 +23,8 @@ public class ThreadDrawer extends Drawer {
 	
 	final String KEY_SEPARATOR = ",\n";
 	
+	final String FORWARD_SEPARATOR = "\n,";
+	
 	private final String content;
 	
 	private final Set<String> quizVarSet;
@@ -31,12 +33,11 @@ public class ThreadDrawer extends Drawer {
 	
 	private String lastText;
 	
-	public ThreadDrawer(String content) {
+	public BusinessDrawer(String content) {
 		this.content = content;
 		this.quizVarSet = new HashSet<>();
 		this.formVarSet = new HashSet<>();
 	}
-
 
 	@Override
 	public void draw(Canvas2D canvas2D) {
@@ -72,7 +73,7 @@ public class ThreadDrawer extends Drawer {
 		canvas2D.nextColumn(200);
 		canvas2D.newEntity(new Canvas2D.Entity[] { logUnknownEntity }, "", "", null);
     	
-    	Canvas2D.Entity resetScoreEntity = canvas2D.newEntity(parent, "home", "", false);
+    	Canvas2D.Entity resetScoreEntity = canvas2D.newEntity(parent, "welcome", "", false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
@@ -93,6 +94,7 @@ public class ThreadDrawer extends Drawer {
 			} else {
 				
 				List<Canvas2D.Entity> parentGroup = new ArrayList<>();
+				
 				for (String entityText:tokens) {
 					
 					entityText = entityText.trim();
@@ -154,95 +156,42 @@ public class ThreadDrawer extends Drawer {
     	
 	}
 	
-	private boolean isMenu(String entity) {
-		
-		return entity.contains(MENU_ITEMS_SEPARATOR) || entity.contains(FIELD_SEPARATOR);
-		
-	}
-
-	private boolean isFAQ(String entity) {
-		
-		if (!entity.contains(KEY_SEPARATOR)) return false;
-		
-		String [] tokens = entity.split(KEY_SEPARATOR, 2);
-		
-		return !tokens[0].trim().isEmpty() && !tokens[1].trim().isEmpty();
-	}
-	
 	private Canvas2D.Entity [] createEntity(Canvas2D canvas2D, ResourceBundle bundle, String entityText, Canvas2D.Entity[] parent) {
 		
 		String keyword, responseText;
 		String [] tokens;
 		
-		if (isMenu(entityText)) {
+		if (entityText.contains(MENU_ITEMS_SEPARATOR) || entityText.contains(FIELD_SEPARATOR)) {
 			
 	        parent = drawMenu(canvas2D, bundle, entityText, parent);
-			
-			canvas2D.nextColumn(100);
-			canvas2D.nextRow(100);
-			
-		} else if (isFAQ(entityText)) {
-			
-			/**
-			 * Map to keywords, responseText for a FAQ
-			 */
-			
-    		tokens = entityText.split(KEY_SEPARATOR, 2);
-    		
-			keyword = tokens[0].trim();
-			responseText = tokens[1].trim();
-			
-	    	/**
-	    	 * Forwarding support , <jump to target keywords>
-	    	 */
-			String forwardingText;
-	    	if (responseText.contains(",")) {
-	    		int lastIndexOfComma = responseText.lastIndexOf(",");
-	    		forwardingText = responseText.substring(lastIndexOfComma + 1).trim();
-	    		responseText = responseText.substring(0, lastIndexOfComma);
-	    	} else {
-	    		forwardingText = "";
-	    	}
-	    	
-	    	if (!forwardingText.isEmpty()) {
-	    		
-	    		Canvas2D.Entity entity = canvas2D.newEntity(null, keyword, responseText, forwardingText, null);
-	    		entity.attachExpressionForLeaf();
-	    		
-	    	} else {
-		        canvas2D.newEntity(null, keyword, responseText, null);
-	    	}
-			
-			canvas2D.nextRow(200);
-			
+						
 		} else {
 			
+			keyword = "";
 			responseText = entityText;
-						
-	    	/**
-	    	 * Forwarding support , <jump to target keywords>
-	    	 */
-			String forwardingText;
-	    	if (responseText.contains(",")) {
-	    		int lastIndexOfComma = responseText.lastIndexOf(",");
-	    		forwardingText = responseText.substring(lastIndexOfComma + 1).trim();
-	    		responseText = responseText.substring(0, lastIndexOfComma);
-	    	} else {
-	    		forwardingText = "";
-	    	}
-	    	
-	    	if (!forwardingText.isEmpty()) {
+			
+			/**
+			 * Map to keywords, responseText
+			 */
+			if (entityText.contains(KEY_SEPARATOR)) {
+				
+	    		tokens = entityText.split(KEY_SEPARATOR, 2);
 	    		
-	    		Canvas2D.Entity entity = canvas2D.newEntity(parent, "", responseText, forwardingText, null);
-	    		entity.attachExpressionForLeaf();
-	    		
-	    	} else {
-	    		
-				parent = new Canvas2D.Entity[] { canvas2D.newEntity(parent, "", responseText, false) };
-	    	}			
-						    			
-			canvas2D.nextColumn(100);
-			canvas2D.nextRow(100);
+				keyword = tokens[0].trim();
+				responseText = tokens[1].trim();
+				
+				/**
+				 * Add as another index to that path
+				 */
+				List<Canvas2D.Entity> parentList = new ArrayList<>(Arrays.asList(parent));
+				parentList.add(canvas2D.newEntity(null, keyword, responseText, false));
+				parent = parentList.toArray(new Canvas2D.Entity[parentList.size()]);
+				
+			} else {
+				
+				parent = new Canvas2D.Entity[] { canvas2D.newEntity(parent, keyword, responseText, false) };
+			}
+		
 			
 			/**
 			 * Simple Entity
@@ -250,6 +199,9 @@ public class ThreadDrawer extends Drawer {
 			 */
 			lastText = responseText;
 		}		
+		
+		canvas2D.nextColumn(200);
+		canvas2D.nextRow(200);
 		
 		return parent;
 	}
@@ -260,16 +212,22 @@ public class ThreadDrawer extends Drawer {
 		String [] tokens;
 		
         List<Canvas2D.Entity> menuItemList = new ArrayList<>();
-		String forwardingText;
 		
 		/**
-		 * Extract Keywords
+		 * If This menu has Keywords, Separate from main thread
 		 */
 		String keyword = "";
 		if (responseText.contains(KEY_SEPARATOR)) {
+			
 			tokens = responseText.split(KEY_SEPARATOR, 2);
 			keyword = tokens[0].trim();
 			responseText = tokens[1].trim();
+			
+			for (Canvas2D.Entity thread:parent) {
+				menuItemList.add(thread);				
+			}			
+			parent = null;
+			
 		}
 		
 		/**
@@ -277,6 +235,7 @@ public class ThreadDrawer extends Drawer {
 		 */					
 		String menuItemsText = "";	
 		String varName = "";
+		
 		if (responseText.contains(MENU_ITEMS_SEPARATOR)) {
 			
 			tokens = responseText.split(MENU_ITEMS_SEPARATOR, 2);			
@@ -305,11 +264,16 @@ public class ThreadDrawer extends Drawer {
 			
 		}
 		
+		/*
 		System.out.println("Create Menu..");
 		System.out.println("Keywords: " + keyword);
 		System.out.println("Response: " + responseText);
 		System.out.println("Choices: " + menuItemsText);
 		System.out.println("Field: " +varName);
+		System.out.println();
+		*/
+		
+		String choiceJumpingText;
 		
 		canvas2D.nextColumn(200);
 		canvas2D.nextRow(100);
@@ -336,10 +300,10 @@ public class ThreadDrawer extends Drawer {
 	        	 */
 	        	if (c.contains(",")) {
 	        		int lastIndexOfComma = c.lastIndexOf(",");
-	        		forwardingText = c.substring(lastIndexOfComma + 1).trim();
+	        		choiceJumpingText = c.substring(lastIndexOfComma + 1).trim();
 	        		c = c.substring(0, lastIndexOfComma);
 	        	} else {
-	        		forwardingText = "";
+	        		choiceJumpingText = "";
 	        	}
 	        	
 	        	/*
@@ -420,9 +384,9 @@ public class ThreadDrawer extends Drawer {
 	    		
 	    		//keyword = keyword.replace("-", "➖");
 	    		
-	        	if (!forwardingText.isEmpty()) {
+	        	if (!choiceJumpingText.isEmpty()) {
 	        		
-	        		responseText += " " + forwardingText;
+	        		responseText += " " + choiceJumpingText;
 	        		
 	        		Canvas2D.Entity entity = canvas2D.newEntity(new Canvas2D.Entity [] { menu }, keyword, "", responseText, null);
 	        		entity.attachExpressionForLeaf();
@@ -438,40 +402,27 @@ public class ThreadDrawer extends Drawer {
         
 		canvas2D.nextRow(100);
 		
+		/**
+		 * Optional Input Answer Entity
+		 */
 		if (!varName.isEmpty()) {
-			
-	    	/**
-	    	 * Forwarding support , <jump to target keywords>
-	    	 */
-	    	if (varName.contains(",")) {
-	    		int lastIndexOfComma = varName.lastIndexOf(",");
-	    		forwardingText = varName.substring(lastIndexOfComma + 1).trim();
-	    		varName = varName.substring(0, lastIndexOfComma);
-	    	} else {
-	    		forwardingText = "";
-	    	}
-
+						
+    		menuItemList.add(canvas2D.newEntity(new Canvas2D.Entity [] { menu }, "", " `?" + varName + "=##`", false));
+	    	
 			formVarSet.add(varName);
 			
-			/**
-			 * Input Answer Entity
-			 */
-	    	if (!forwardingText.isEmpty()) {
-	    		
-	    		Canvas2D.Entity entity = canvas2D.newEntity(new Canvas2D.Entity [] { menu }, "", "", " `?" + varName + "=##` " + forwardingText, null);
-	    		entity.attachExpressionForLeaf();
-	    		
-	    	} else {
-	    		
-	    		menuItemList.add(canvas2D.newEntity(new Canvas2D.Entity [] { menu }, "", " `?" + varName + "=##`", false));
-	    	}
+		} else {
+			
+			//Empty Box
+    		menuItemList.add(canvas2D.newEntity(new Canvas2D.Entity [] { menu }, "", "", false));
+    		
 		}
 		
 		canvas2D.nextColumn(200);
 		
 		Canvas2D.Entity knot = canvas2D.newEntity(menuItemList.toArray(new Canvas2D.Entity[menuItemList.size()]), "", "", false);
-        
+				        
         return new Canvas2D.Entity [] { knot };
-    }	
+    }
 
 }

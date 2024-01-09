@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultJsonMapper;
@@ -19,6 +16,9 @@ import com.restfb.batch.BatchRequest;
 import com.restfb.batch.BatchResponse;
 import com.restfb.types.Conversation;
 import com.restfb.types.Page;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 public class FacebookPageUtil {
 	

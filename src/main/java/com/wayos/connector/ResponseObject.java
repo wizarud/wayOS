@@ -1,10 +1,10 @@
 package com.wayos.connector;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.wayos.command.talk.Question;
 import com.wayos.util.URLInspector;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -308,7 +308,7 @@ public class ResponseObject {
     
     public static void main(String [] args) {
     	
-    	//ResponseObject responseObject = new ResponseObject("https://wayos.yiem.ai/flatten?layers=https://wayos.yiem.ai/public/eoss-th/10.3%20PK%20Lotus%2038.png&layers=https%3A%2F%2Fwayos.yiem.ai%2Fpublic%2Feoss-th%2Fdirector.PNG&type=png");
+    	//ResponseObject responseObject = new ResponseObject("https://wayos.yiem.cc/flatten?layers=https://wayos.yiem.cc/public/eoss-th/10.3%20PK%20Lotus%2038.png&layers=https%3A%2F%2Fwayos.yiem.cc%2Fpublic%2Feoss-th%2Fdirector.PNG&type=png");
     	//System.out.println(responseObject.messageList);
     	
     	ResponseObject responseObject = new ResponseObject("สำหรับ test ขออนุญาติตอบลงใน inbox นะครับ\n"
@@ -317,11 +317,11 @@ public class ResponseObject {
     			+ "นี่คือข้อความอัตโนมัติ รบกวนฝากข้อความ ทางเราจะรีบติดต่อกลับไปครับ\n"
     			+ "\n"
     			+ "\n"
-    			+ "https://wayos.yiem.ai/public/1833768260014999/F8646F3F-AD60-4627-9D7F-A6773E15C762.jpeg\n"
+    			+ "https://wayos.yiem.cc/public/1833768260014999/F8646F3F-AD60-4627-9D7F-A6773E15C762.jpeg\n"
     			+ "\n"
     			+ "\n"
     			+ "\n"
-    			+ "https://wayos.yiem.ai/public/1833768260014999/EE2324D2-9521-453C-A081-C914DF2D3988.jpeg");
+    			+ "https://wayos.yiem.cc/public/1833768260014999/EE2324D2-9521-453C-A081-C914DF2D3988.jpeg");
     	System.out.println(responseObject.messageList.get(3).getClass().getSimpleName());
     }
 

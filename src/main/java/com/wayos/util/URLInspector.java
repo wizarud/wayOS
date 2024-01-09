@@ -76,7 +76,7 @@ public class URLInspector {
 		
 		System.out.println(isWidget("https://xlocalhost:8080/xxxx"));
 		
-		System.out.println(isImage("https://wayos.yiem.ai/public/1833768260014999/F8646F3F-AD60-4627-9D7F-A6773E15C762.jpeg"));
+		System.out.println(isImage("https://wayos.yiem.cc/public/1833768260014999/F8646F3F-AD60-4627-9D7F-A6773E15C762.jpeg"));
 		
 	}
 

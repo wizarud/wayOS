@@ -23,7 +23,7 @@ public class FacebookAPI {
 		
     private static final String domain = System.getenv("domain");
     
-    private static final String thumbnailImageUrl = "https://wayos.yiem.ai/images/gigi.png";
+    private static final String thumbnailImageUrl = "https://wayos.yiem.cc/images/gigi.png";
     
 	private static FacebookAPI _facebookAPI;
 	

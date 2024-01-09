@@ -8,12 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient.AccessToken;
 import com.wayos.Configuration;
 import com.wayos.servlet.console.ConsoleServlet;
+
+import x.org.json.JSONObject;
+
 import com.restfb.Version;
 
 @SuppressWarnings("serial")

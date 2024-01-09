@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -27,6 +26,8 @@ import com.restfb.types.User;
 import com.wayos.Configuration;
 import com.wayos.Context;
 import com.wayos.servlet.console.ConsoleServlet;
+
+import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 @WebServlet("/fbSignIn")

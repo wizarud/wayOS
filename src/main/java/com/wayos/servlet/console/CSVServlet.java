@@ -31,15 +31,15 @@ public class CSVServlet extends ConsoleServlet {
 		/**
 		 * Load TSV for Example catalog.tsv
 		 */
-		if (type!=null && type.endsWith(".tsv")) {
+		if (type!=null && (type.endsWith(".tsv") || type.endsWith(".txt"))) {
 			
 		    try {
 		    	
-	    		String tsvPath = Configuration.PRIVATE_PATH + contextName + "." + type;
+	    		String contentPath = Configuration.PRIVATE_PATH + contextName + "." + type;
 	    		
-	    		if (!storage().exists(tsvPath)) throw new IllegalArgumentException(tsvPath + " not exists");
+	    		if (!storage().exists(contentPath)) throw new IllegalArgumentException(contentPath + " not exists");
 	    		
-				storage().write(tsvPath, resp.getOutputStream());
+				storage().write(contentPath, resp.getOutputStream());
 				
 		    } catch (Exception e) {
 		    	
@@ -180,12 +180,12 @@ public class CSVServlet extends ConsoleServlet {
 		    		}
 		    		
 		    		return;
-		    	}		    	
+		    	}	
 		    	
 		    	/**
-		    	 * Thread
+		    	 * Way
 		    	 */
-		    	if (type.equals("thread.tsv")) {
+		    	if (type.equals("way.txt")) {
 		    		
 		    		try {
 						Context context = sessionPool().getContext(contextName);
@@ -200,7 +200,7 @@ public class CSVServlet extends ConsoleServlet {
 						Locale locale = new Locale(language);
 			    		ResourceBundle bundle = ResourceBundle.getBundle("com.wayos.i18n.text", locale);
 			    		
-			    		resp.getWriter().print(bundle.getString("thread.sample"));
+			    		resp.getWriter().print(bundle.getString("way.sample"));
 		    			
 		    		} catch (Exception ee) {
 		    			
@@ -214,6 +214,7 @@ public class CSVServlet extends ConsoleServlet {
 		    }
 			
 			return;
+			
 		}
 		
 		/**

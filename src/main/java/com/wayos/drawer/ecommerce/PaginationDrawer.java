@@ -15,7 +15,7 @@ import com.wayos.drawer.Drawer;
 
 public class PaginationDrawer extends Drawer {
 	    
-	private static final String morePicURL = "https://wayos.yiem.ai/images/More.png";	
+	private static final String morePicURL = "https://wayos.yiem.cc/images/More.png";	
 	
 	protected final PaginationCatalogImporter paginationCatalogImporter;
 

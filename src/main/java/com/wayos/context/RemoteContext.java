@@ -20,7 +20,7 @@ public class RemoteContext extends Context {
     /**
      * Storage URL Pattern: https://<your instance id>.appspot.com/s/
      */
-    private static final String defaultDataURL = "https://" + Configuration.storageBucket + "/s/";
+    private static final String defaultDataURL = "https://{ storageBucket }/s/";
     
     private static final String defaultLibPath = Configuration.LIB_PATH;
     

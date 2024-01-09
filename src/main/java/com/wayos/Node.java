@@ -1,10 +1,10 @@
 package com.wayos;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.*;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 /**
  * Created by eossth on 7/14/2017 AD.
@@ -262,7 +262,7 @@ public class Node implements Serializable, Comparable<Node> {
          */
         /*
         if (matchedCount != _matchedCount || totalResponseActive != _totalResponseActive) {
-            System.out.println("FUCKKKKKKKKK!!!!!!!");        	
+            System.out.println("CKKKKKKKKK!!!!!!!");        	
         }
         
         System.out.println("---" + messageObject.wordList());
@@ -313,21 +313,19 @@ public class Node implements Serializable, Comparable<Node> {
             	
             }
         }
-        
-        /*
-        System.out.println("matchedHookList:" + matchedHookList);
-        System.out.println("matchedIndexCount:" + matchedIndexCount);
-        System.out.println("totalMatchedIndexResponseActive:" + totalMatchedIndexResponseActive);
-        */
-        
+                
         int parentCount = 0;
-        int matchedCount = 0;
-        float totalResponseActive = 0.0f;
+        int matchedCount = matchedIndexCount;
+        float totalResponseActive = totalMatchedIndexResponseActive;        
         
         for (Hook hook:hookList) {
         	
-        	/* TODO: Remove later because of use the below code instead
-        	if (hook instanceof NumberHook) {
+            /**
+             * For Special Hook such as..
+             * KeywordHook, Ex matched * ,
+             * NumberHook, Ex matched gt lt
+             */
+        	if (matchedHookList == null || !matchedHookList.contains(hook)) {
         		
                 if (hook.matched(messageObject)) {
                 	
@@ -335,22 +333,7 @@ public class Node implements Serializable, Comparable<Node> {
                 	matchedCount ++;
                     
                 }
-        	
-        	}
-        	*/
-        	
-        	if (
-        		matchedHookList == null || 
-        			!matchedHookList.contains(hook) // Test Keywords matched (,)
-        			) {
-        		
-                if (hook.matched(messageObject)) {
-                	
-                	totalResponseActive += hook.weight;
-                	matchedCount ++;
-                    
-                }
-        		
+                
         	}
         	
         	if (hook.text.startsWith("@")) {
@@ -363,12 +346,6 @@ public class Node implements Serializable, Comparable<Node> {
                 
             }
         } 
-        
-        //Use indexMatchedCount if no matchedCount
-        if (matchedCount==0) {
-        	matchedCount = matchedIndexCount;
-        	totalResponseActive = totalMatchedIndexResponseActive;
-        }
         
         int allCount = (hookCount + parentCount + wordCount - matchedCount); //Union
         
@@ -394,7 +371,13 @@ public class Node implements Serializable, Comparable<Node> {
         
         /*
         System.out.println("---" + this);
+        
         System.out.println("input:" + messageObject.wordList());
+        
+        System.out.println("matchedHookList:" + matchedHookList);
+        System.out.println("matchedIndexCount:" + matchedIndexCount);
+        System.out.println("totalMatchedIndexResponseActive:" + totalMatchedIndexResponseActive);        
+        
         System.out.println("hookCount:" + hookCount);
         System.out.println("parentCount:" + parentCount);
         System.out.println("wordCount:" + wordCount);
@@ -402,9 +385,10 @@ public class Node implements Serializable, Comparable<Node> {
         System.out.println("totalResponseActive:" + totalResponseActive);
         System.out.println("allCount:" + allCount);        
         System.out.println("active:" + active);
+        
         System.out.println("---");
         */
-        
+      
     }    
 
     public void feedback(MessageObject messageObject, float feedback) {

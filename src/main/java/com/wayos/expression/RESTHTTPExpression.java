@@ -57,13 +57,15 @@ public class RESTHTTPExpression extends HTTPExpression {
 
         StringBuffer response = new StringBuffer();
         try {
+        	
             System.out.println("POSTING URL:" + apiURL);
+            
             URL url = new URL(apiURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(method);
             conn.setDoOutput(true);
-			conn.addRequestProperty("User-Agent", "Mozilla/4.0");//For Special Connection Ex. Bitkub
-			conn.addRequestProperty("User-Agent", "wayOS");
+			//conn.addRequestProperty("User-Agent", "Mozilla/4.0");//For Special Connection Ex. Bitkub
+			//conn.addRequestProperty("User-Agent", "wayOS");
             
             if (headerMap!=null) {
                 for (Map.Entry<String, String> entry:headerMap.entrySet()) {

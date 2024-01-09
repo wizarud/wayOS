@@ -25,7 +25,7 @@ public class SimpleHTMLDecoder {
     	content = content.replace("&#96;", "`");
     	content = content.replace("&#35;", "#");
     	
-    	System.out.println("CONTENT:" + content);
+    	//System.out.println("CONTENT:" + content);
     	
     	return content;		
 	}

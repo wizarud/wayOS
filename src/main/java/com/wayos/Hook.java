@@ -1,8 +1,8 @@
 package com.wayos;
 
-import org.json.JSONObject;
-
 import com.wayos.expression.VarExpression;
+
+import x.org.json.JSONObject;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -60,7 +60,7 @@ public class Hook implements Serializable, Comparable<Hook> {
 
     public final Match match;
 
-    public float weight;
+    public double weight;
     
     /**
      * Create instance of hook
@@ -72,7 +72,7 @@ public class Hook implements Serializable, Comparable<Hook> {
         this(text, match, match.initWeight);
     }
 
-    public Hook(String text, Match match, float weight) {
+    public Hook(String text, Match match, double weight) {
         this.text = text;
         this.match = match;
         this.weight = weight;
@@ -218,7 +218,7 @@ public class Hook implements Serializable, Comparable<Hook> {
         return new Hook(text, match);
     }
 
-    public static Hook build(String text, Match match, float weight) {
+    public static Hook build(String text, Match match, double weight) {
     	
         if (match == Hook.Match.GreaterEqualThan ||
             match == Hook.Match.GreaterThan ||

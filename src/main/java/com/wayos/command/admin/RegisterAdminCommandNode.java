@@ -2,8 +2,6 @@ package com.wayos.command.admin;
 
 import java.util.List;
 
-import org.json.JSONObject;
-
 import com.wayos.Application;
 import com.wayos.Configuration;
 import com.wayos.Hook;
@@ -11,6 +9,8 @@ import com.wayos.PathStorage;
 import com.wayos.MessageObject;
 import com.wayos.Session;
 import com.wayos.command.CommandNode;
+
+import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class RegisterAdminCommandNode extends CommandNode {

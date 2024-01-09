@@ -6,8 +6,8 @@ import com.wayos.Node;
 import com.wayos.Session;
 import com.wayos.command.CommandNode;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 import java.util.*;
 import java.util.regex.Matcher;

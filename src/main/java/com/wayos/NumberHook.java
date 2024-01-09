@@ -9,7 +9,7 @@ public class NumberHook extends Hook {
         super(text, match);
     }
 
-    public NumberHook(String text, Match match, float weight) {
+    public NumberHook(String text, Match match, double weight) {
         super(text, match, weight);
     }
 
@@ -28,6 +28,10 @@ public class NumberHook extends Hook {
             }
 
             List<Float> inputNumberList = numberList(wordList);
+            
+            //System.out.println(targetNumber);
+            //System.out.println(inputNumberList);
+            
             boolean result = false;
             for (Float number:inputNumberList) {
                 if (number>targetNumber)

@@ -10,9 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
@@ -21,6 +18,9 @@ import com.restfb.types.User;
 import com.wayos.Configuration;
 import com.wayos.Session;
 import com.wayos.connector.http.HttpRequestObject;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 public class FacebookHttpRequestObject extends HttpRequestObject {
 

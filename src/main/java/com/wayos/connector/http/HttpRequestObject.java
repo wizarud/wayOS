@@ -3,8 +3,6 @@ package com.wayos.connector.http;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.wayos.Application;
 import com.wayos.Configuration;
 import com.wayos.PathStorage;
@@ -12,6 +10,8 @@ import com.wayos.MessageObject;
 import com.wayos.Session;
 import com.wayos.connector.RequestObject;
 import com.wayos.util.URItoContextResolver;
+
+import x.org.json.JSONObject;
 
 public class HttpRequestObject extends RequestObject {
 	

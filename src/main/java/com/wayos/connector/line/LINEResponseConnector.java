@@ -5,11 +5,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.wayos.connector.ResponseConnector;
 import com.wayos.connector.ResponseObject;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 public class LINEResponseConnector extends ResponseConnector {
 	

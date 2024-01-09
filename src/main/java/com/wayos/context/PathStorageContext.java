@@ -31,14 +31,25 @@ public class PathStorageContext extends Context {
 
 	@Override
 	protected void doLoad(String name) throws Exception {
+		
+        lock.readLock().lock();
+        
 		BufferedReader br = null;
+		
         try {
+        	
         	loadJSON(storage.readAsJSONObject(fileName(name)).toString());
+        	
         } catch (Exception e) {
+        	
             e.printStackTrace();
             throw e;
+            
         } finally {
-            if (br!=null) try { br.close(); } catch (Exception e) {}            
+        	
+            if (br!=null) try { br.close(); } catch (Exception e) {} 
+            lock.readLock().unlock();
+            
         }
 	}
 

@@ -70,7 +70,7 @@ public abstract class AuthorizationFilter implements Filter {
 		
 		HttpServletResponse resp = (HttpServletResponse) response;
 		
-		System.out.println("User-Agent" + req.getHeader("user-agent"));		
+		//System.out.println("User-Agent" + req.getHeader("user-agent"));		
 				
 		HttpSession session = req.getSession();
 		

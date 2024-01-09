@@ -127,6 +127,8 @@ public class SessionPool implements Serializable {
 	            
 			} catch (Exception e) {
 				
+				e.printStackTrace();
+				
 				throw new RuntimeException(e + ":" + contextName);
 			}            
                         

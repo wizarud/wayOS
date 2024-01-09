@@ -17,7 +17,7 @@ import com.wayos.context.MemoryContext;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.QuizDrawer;
-import com.wayos.drawer.basic.ThreadDrawer;
+import com.wayos.drawer.basic.WayDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
 import com.wayos.drawer.ecommerce.Catalog;
 import com.wayos.drawer.ecommerce.PaginationCatalogImporter;

@@ -1,7 +1,5 @@
 package com.wayos.util;
 
-import com.google.common.io.ByteStreams;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
@@ -17,6 +16,8 @@ import java.nio.charset.StandardCharsets;
  */
 public class FileStream extends Stream {
 
+	private static final int BUFFER_SIZE = 5 * 1024 * 1024;
+	
     private File dir;
 
     private String name;
@@ -90,11 +91,36 @@ public class FileStream extends Stream {
     @Override
     public void write(InputStream inputStream) throws Exception {
         try {
-            ByteStreams.copy(inputStream, new FileOutputStream(getFile()));
+            copy(inputStream, new FileOutputStream(getFile()));
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
+    
+	/**
+	 * Transfer the data from the inputStream to the outputStream. Then close both streams.
+	 */
+	private void copy(InputStream input, OutputStream output) throws IOException {
+				
+		try {
+			
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int bytesRead = input.read(buffer);
+			
+			while (bytesRead != -1) {
+				
+				output.write(buffer, 0, bytesRead);
+				bytesRead = input.read(buffer);
+			}
+			
+		} finally {
+			
+			input.close();
+
+			output.close();
+		}
+	}
+    
 
 }

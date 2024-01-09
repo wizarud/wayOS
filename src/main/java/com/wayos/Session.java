@@ -181,14 +181,7 @@ public class Session implements Serializable {
 		String result = null;
 		
 		try {
-			
-			/**
-			 * Project injection from , <comma space>
-			 */
-			String input = messageObject.toString();
-			input = input.replace(",", "");
-			messageObject.setText(input);
-			
+						
 			/**
 			 * Clear Problem for Special Commands
 			 */
@@ -237,6 +230,14 @@ public class Session implements Serializable {
 				clearProblem();
 
 			} else {
+				
+				/**
+				 * Moved from Top to Here
+				 * Project injection from , <comma space>
+				 */
+				String input = messageObject.toString();
+				input = input.replace(",", "");
+				messageObject.setText(input);
 				
 		        /**
 		         * Recursive Protection!

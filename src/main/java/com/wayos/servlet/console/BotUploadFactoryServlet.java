@@ -28,11 +28,8 @@ import com.wayos.Context;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.DataTableDrawer;
-import com.wayos.drawer.basic.FAQDrawer;
-import com.wayos.drawer.basic.FormDrawer;
-import com.wayos.drawer.basic.PresentationDrawer;
-import com.wayos.drawer.basic.QuizDrawer;
-import com.wayos.drawer.basic.ThreadDrawer;
+import com.wayos.drawer.basic.PlayDrawer;
+import com.wayos.drawer.basic.WayDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogImporter;
 
@@ -155,96 +152,16 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 		    		
 					storage().write(new ByteArrayInputStream(buffer), catalogTSVPath);
 					
-				}
-				
-				//Questionare
-				else if (itemName.endsWith("/qa.tsv")) {
+		    		String newTSVPath = Configuration.PRIVATE_PATH + contextName + ".chai.tsv";
 					
-					contextName = itemName.substring(0, itemName.lastIndexOf("/qa.tsv"));
-					
-					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();	
-					
-					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-					
-					byte [] buffer = text.getBytes();
-					
-					String qa = new BufferedReader(
-						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
-						        .lines()
-						        .collect(Collectors.joining("\n"));	
-						        
-		        	drawer = new QuizDrawer(qa);					
-		        	
-		        	/**
-		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
-		        	 */
-		    		String qaTSVPath = Configuration.PRIVATE_PATH + contextName + ".qa.tsv";
-		    		
-					storage().write(new ByteArrayInputStream(buffer), qaTSVPath);
-					
-				} 
-				
-				//Form
-				else if (itemName.endsWith("/form.tsv")) {
-					
-					contextName = itemName.substring(0, itemName.lastIndexOf("/form.tsv"));
-					
-					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();
-					
-					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-					
-					byte [] buffer = text.getBytes();
-					
-					String form = new BufferedReader(
-						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
-						        .lines()
-						        .collect(Collectors.joining("\n"));	
-						        
-		        	drawer = new FormDrawer(form);			
-		        	
-		        	/**
-		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
-		        	 */
-		    		String formTSVPath = Configuration.PRIVATE_PATH + contextName + ".form.tsv";
-		    		
-					storage().write(new ByteArrayInputStream(buffer), formTSVPath);
-					
-				} 
-				
-				//FAQ
-				else if (itemName.endsWith("/faq.tsv")) {
-					
-					contextName = itemName.substring(0, itemName.lastIndexOf("/faq.tsv"));
-					
-					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();
-					
-					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-					
-					byte [] buffer = text.getBytes();
-					
-					String form = new BufferedReader(
-						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
-						        .lines()
-						        .collect(Collectors.joining("\n"));	
-					
-		        	drawer = new FAQDrawer(form);
-		        	
-		        	/**
-		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
-		        	 */
-		    		String faqTSVPath = Configuration.PRIVATE_PATH + contextName + ".faq.tsv";
-		    		
-					storage().write(new ByteArrayInputStream(buffer), faqTSVPath);
+					storage().delete(newTSVPath);
 					
 				}
 				
-				//Presentation
-				else if (itemName.endsWith("/pt.tsv")) {
+				//Way
+				else if (itemName.endsWith("/way.txt")) {
 					
-					contextName = itemName.substring(0, itemName.lastIndexOf("/pt.tsv"));
+					contextName = itemName.substring(0, itemName.lastIndexOf("/way.txt"));
 					
 					//Read to buffer because multiple reader
 					InputStream inputStream = fileItemStream.openStream();						
@@ -253,47 +170,20 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 					byte [] buffer = text.getBytes();
 					
-					String qa = new BufferedReader(
+					String way = new BufferedReader(
 						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
 						        .lines()
 						        .collect(Collectors.joining("\n"));	
 						        
-		        	drawer = new PresentationDrawer(qa);// Presentation use the QuizDrawer as qa					
+		        	drawer = new PlayDrawer(way);// Way use the WayDrawer
 		        	
-		        	/**
-		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
-		        	 */
-		    		String ptTSVPath = Configuration.PRIVATE_PATH + contextName + ".pt.tsv";
+		    		String wayTxtPath = Configuration.PRIVATE_PATH + contextName + ".way.txt";
 		    		
-					storage().write(new ByteArrayInputStream(buffer), ptTSVPath);
+					storage().write(new ByteArrayInputStream(buffer), wayTxtPath);
 					
-				}
-				
-				//Thread
-				else if (itemName.endsWith("/thread.tsv")) {
+		    		String newTSVPath = Configuration.PRIVATE_PATH + contextName + ".chai.tsv";
 					
-					contextName = itemName.substring(0, itemName.lastIndexOf("/thread.tsv"));
-					
-					//Read to buffer because multiple reader
-					InputStream inputStream = fileItemStream.openStream();						
-					
-					String text = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
-					
-					byte [] buffer = text.getBytes();
-					
-					String thread = new BufferedReader(
-						      new InputStreamReader(new ByteArrayInputStream(buffer), StandardCharsets.UTF_8))
-						        .lines()
-						        .collect(Collectors.joining("\n"));	
-						        
-		        	drawer = new ThreadDrawer(thread);// Thread use the ThreadDrawer
-		        	
-		        	/**
-		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
-		        	 */
-		    		String threadTSVPath = Configuration.PRIVATE_PATH + contextName + ".thread.tsv";
-		    		
-					storage().write(new ByteArrayInputStream(buffer), threadTSVPath);
+					storage().delete(newTSVPath);
 					
 				}
 				

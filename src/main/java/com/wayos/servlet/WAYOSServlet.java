@@ -6,12 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.wayos.Application;
-import com.wayos.Context;
 import com.wayos.connector.ResponseConnector;
-import com.wayos.connector.SessionPool;
 import com.wayos.connector.facebook.FacebookHttpRequestObject;
 import com.wayos.connector.facebook.FacebookResponseConnector;
 import com.wayos.connector.http.HttpRequestObject;
@@ -20,10 +16,11 @@ import com.wayos.connector.line.LINEHttpRequestObject;
 import com.wayos.connector.line.LINEResponseConnector;
 import com.wayos.connector.rest.RestHttpRequestObject;
 import com.wayos.connector.rest.RestResponseConnector;
+import com.wayos.connector.speech.SpeechHttpRequestObject;
+import com.wayos.connector.speech.SpeechResponseConnector;
 import com.wayos.connector.web.WebHttpRequestObject;
 import com.wayos.connector.web.WebResponseConnector;
 import com.wayos.util.ConsoleUtil;
-import com.wayos.util.URItoContextResolver;
 
 @SuppressWarnings("serial")
 public abstract class WAYOSServlet extends HttpServlet {
@@ -60,6 +57,15 @@ public abstract class WAYOSServlet extends HttpServlet {
 		}
 		
 		/**
+		 * Android
+		 */
+		if (request.getHeader("X-Speech-Signature") != null) {
+			
+			return new SpeechHttpRequestObject(request, response);
+			
+		}
+		
+		/**
 		 * Default Http Request (REST API)
 		 */
 		return new HttpRequestObject(request, response);
@@ -92,11 +98,19 @@ public abstract class WAYOSServlet extends HttpServlet {
 		}
 		
 		/**
-		 * Web (Homepage)
+		 * REST
 		 */
 		if (requestObject instanceof RestHttpRequestObject) {
 			
 			return new RestResponseConnector((RestHttpRequestObject) requestObject);
+		}
+		
+		/**
+		 * Speech
+		 */
+		if (requestObject instanceof SpeechHttpRequestObject) {
+			
+			return new SpeechResponseConnector((SpeechHttpRequestObject) requestObject);
 		}
 		
 		/**

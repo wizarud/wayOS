@@ -264,9 +264,9 @@ public class CatalogFactoryServlet extends ConsoleServlet {
 			/**
 			 * For Yiem, Cannot use https for internal REST invoke
 			 */
-			if (internalCoverImageURL.startsWith("https://wayos.yiem.ai")) {
+			if (internalCoverImageURL.startsWith("https://wayos.yiem.cc")) {
 				
-				internalCoverImageURL = internalCoverImageURL.replace("https://wayos.yiem.ai", "http://wayos:8080");
+				internalCoverImageURL = internalCoverImageURL.replace("https://wayos.yiem.cc", "http://wayos:8080");
 			}
 			
 			BufferedImage coverImage = ImageIO.read(new URL(internalCoverImageURL));

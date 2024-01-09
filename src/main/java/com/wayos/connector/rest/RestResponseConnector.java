@@ -18,6 +18,12 @@ public class RestResponseConnector extends ResponseConnector {
 	@Override
 	public String execute(ResponseObject responseObject) {
 		
+		/*
+		System.out.println("*****************");
+		System.out.println(responseObject);
+		System.out.println("*****************");
+		*/
+		
 		HttpServletResponse response = restHttpRequestObject().httpServletResponse();
 		
 		response.addHeader("Access-Control-Allow-Origin", "*");

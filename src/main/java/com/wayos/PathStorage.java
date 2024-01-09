@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
+import x.org.json.JSONObject;
 
 public interface PathStorage {
 
@@ -29,6 +29,7 @@ public interface PathStorage {
 	void write(String fromPath, OutputStream outputStream) throws IOException;
 
 	boolean exists(String catalogTSVPath);
-
+	
+	void delete(String path);
 
 }

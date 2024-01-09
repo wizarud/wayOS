@@ -8,7 +8,7 @@ public class KeywordsHook extends Hook {
         super(text, match);
     }
 
-    public KeywordsHook(String text, Match match, float weight) {
+    public KeywordsHook(String text, Match match, double weight) {
         super(text, match, weight);
     }
     
@@ -52,7 +52,6 @@ public class KeywordsHook extends Hook {
                         return true;
                     }
                     
-                    //System.out.println(word + " not matched " + token);                                        
             	}
                 
             }

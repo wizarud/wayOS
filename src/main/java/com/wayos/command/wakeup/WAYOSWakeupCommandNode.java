@@ -78,33 +78,42 @@ public class WAYOSWakeupCommandNode extends CommandNode {
         session.adminCommandList().add(new AdminCommandNode(new EntityManagerCommandNode(session, new String[]{"แก้ไขข้อมูล"}, Hook.Match.Head, "\\|")));
         */
                 
+        /*
         session.adminCommandList().add(new AdminCommandNode(new ImportQuestionareDataCommandNode(session, new String[]{"importqa"})));
         session.adminCommandList().add(new AdminCommandNode(new ImportCSVDataCommandNode(session, new String[]{"importtsv"}, "\t")));
         session.adminCommandList().add(new AdminCommandNode(new ExportCSVDataCommandNode(session, new String[]{"exporttsv"}, "\t")));
+        */
         
         /**
          * Delegate command to Custom Implementation
          */
         //session.adminCommandList().add(new AdminCommandNode(new GoogleSpreadsheetsCommandNode(session, new String[]{"https://docs.google.com/spreadsheets/d/"}, Hook.Match.Head)));
         
-        session.adminCommandList().add(new AdminCommandNode(new DebugCommandNode(session, new String[]{"ดูทั้งหมด"})));
+        //session.adminCommandList().add(new AdminCommandNode(new DebugCommandNode(session, new String[]{"ดูทั้งหมด"})));
         
         /**
          * Replace cmd "load", "โหลดข้อมูล" with hard command to prevent talk to admin cmd
          */
+        /*
         session.adminCommandList().add(new AdminCommandNode(new LoadDataCommandNode(session, new String[]{"โหลตๆๆ"})));
         session.adminCommandList().add(new AdminCommandNode(new SaveDataCommandNode(session, new String[]{"บันทึกข้อมูล"})));
         session.adminCommandList().add(new AdminCommandNode(new BackupDataCommandNode(session, new String[]{"สำรองข้อมูล"})));
+        */
+        session.adminCommandList().add(new AdminCommandNode(new ImportWayDataCommandNode(session, new String[]{"wayos"})));        
 
         session.commandList().clear();
         session.commandList().add(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"}, Match.Head));
         session.commandList().add(new GreetingCommandNode(session, new String[]{"greeting", "ดีจ้า"}));
-        session.commandList().add(new EchoCommandNode(session, new String[]{"echo"}, Match.Head));
-        session.commandList().add(new BotCallerCommandNode(session, new String[]{"call"}, Match.Head));
         session.commandList().add(new WakeCommandNode(session, new String[]{"silent"}));
+        
+        session.commandList().add(new BotCallerCommandNode(session, new String[]{"call"}, Match.Head));
+        
+        /*
+        session.commandList().add(new EchoCommandNode(session, new String[]{"echo"}, Match.Head));
         session.commandList().add(new FeedbackCommandNode(session, new String[]{"\uD83D\uDC4D"}, "\uD83D\uDE0A", 0.1f));
         session.commandList().add(new FeedbackCommandNode(session, new String[]{"\uD83D\uDC4E"}, "\uD83D\uDE1F", -0.1f, KEY));
-        //session.commandList().add(new ForwardCommandNode(session, new String[]{"Next"}, KEY));
+        session.commandList().add(new ForwardCommandNode(session, new String[]{"Next"}, KEY));
+        */
         
         session.commandList().add(new FlowTalkCommandNode(session, KEY));
 

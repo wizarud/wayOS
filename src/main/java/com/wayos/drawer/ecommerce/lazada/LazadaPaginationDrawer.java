@@ -10,7 +10,7 @@ import com.wayos.drawer.ecommerce.Product;
 
 public class LazadaPaginationDrawer extends Drawer {
 	
-	private static final String morePicURL = "https://wayos.yiem.ai/images/More.png";	
+	private static final String morePicURL = "https://wayos.yiem.cc/images/More.png";	
 	
 	protected final LazadaCSVPaginationCatalogImporter paginationCatalogImporter;
 

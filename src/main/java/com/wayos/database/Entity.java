@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import x.org.json.JSONArray;
+import x.org.json.JSONObject;
 
 public class Entity extends JSONObject {
 	

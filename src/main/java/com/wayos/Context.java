@@ -1,9 +1,5 @@
 package com.wayos;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.text.BreakIterator;
 import java.util.*;
@@ -11,6 +7,10 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import x.org.json.JSONArray;
+import x.org.json.JSONException;
+import x.org.json.JSONObject;
 
 /**
  * Created by eoss-th on 8/15/17.
@@ -205,6 +205,8 @@ public abstract class Context implements Serializable {
     		 * For search and feed matched nodes
              */
             indexMap.clear();
+            softNodeList.clear();
+            
             String key;
             Map<Node, Hook> memberList;
             String [] keyArray;
@@ -538,6 +540,8 @@ public abstract class Context implements Serializable {
         }
         
         List<String> wordList = messageObject.wordList();
+        
+        //System.out.println(wordList);
                 
         Map<Node, Hook> memberList;
                         
@@ -827,6 +831,8 @@ public abstract class Context implements Serializable {
     protected abstract void doSave(String name, List<Node> nodeList);
     
     public void validate() {
+    	
+    	if (this.attributes==null || this.attributes.isEmpty()) return; //Skip
     	
         lock.readLock().lock();
         

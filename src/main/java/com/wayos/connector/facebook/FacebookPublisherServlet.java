@@ -9,8 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
@@ -22,6 +20,8 @@ import com.wayos.command.talk.Choice;
 import com.wayos.command.talk.Question;
 import com.wayos.connector.ResponseObject;
 import com.wayos.servlet.console.ConsoleServlet;
+
+import x.org.json.JSONObject;
 
 @WebServlet("/publish")
 public class FacebookPublisherServlet extends ConsoleServlet {

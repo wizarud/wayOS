@@ -37,8 +37,9 @@ public class LoadDataCommandNode extends CommandNode {
             /**
              * Forward reload command to Microservices if exists, Must be call from GAE only!
              */
+            String storageBucket = "";
             
-            if (Configuration.storageBucket.endsWith(".appspot.com")) {
+            if (storageBucket.endsWith(".appspot.com")) {
             	
                 String webHookURL = session.context().prop("webHookURL");
                 

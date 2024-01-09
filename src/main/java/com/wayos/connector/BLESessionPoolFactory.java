@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONObject;
-
 import com.wayos.Application;
 import com.wayos.Configuration;
 import com.wayos.Context;
@@ -24,6 +22,8 @@ import com.wayos.context.PathStorageContext;
 import com.wayos.pusher.PusherUtil;
 import com.wayos.pusher.WebPusher;
 import com.wayos.util.ConsoleUtil;
+
+import x.org.json.JSONObject;
 
 /**
  * 
@@ -122,10 +122,10 @@ public class BLESessionPoolFactory {
 		        if (varsObject!=null) {
 		        	
 		        	try {
+		        											    
+		        		//removeUnusedVariables(session, prop);
 		        		
 		        		Map<String, Object> prop = varsObject.toMap();
-									    
-		        		//removeUnusedVariables(session, prop);
 		        		
 						for (Map.Entry<String, Object> entry:prop.entrySet()) {
 							
@@ -134,6 +134,7 @@ public class BLESessionPoolFactory {
 						
 						//Update Session Persistent
 						storage.write((new JSONObject(prop).toString()), path);
+						
 						
 		        	} catch (Exception e) {
 		        		
@@ -499,5 +500,5 @@ public class BLESessionPoolFactory {
 		
 		return wakeupCommandNode;
 	}
-
+	
 }

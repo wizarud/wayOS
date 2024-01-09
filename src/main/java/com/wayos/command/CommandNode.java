@@ -1,8 +1,10 @@
 package com.wayos.command;
 
+import com.wayos.Application;
 import com.wayos.Hook;
 import com.wayos.MessageObject;
 import com.wayos.Node;
+import com.wayos.PathStorage;
 import com.wayos.Session;
 
 /**
@@ -44,5 +46,11 @@ public abstract class CommandNode extends Node {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+    
+	protected final PathStorage storage() {
+		
+		return Application.instance().get(PathStorage.class);		
+	}
+    
     
 }
