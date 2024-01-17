@@ -1,5 +1,7 @@
 package com.wayos.util;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -48,8 +50,8 @@ public class URLInspector {
 	    return false;
 	}
 	
-	
-	public static boolean isImage(String url) {
+	@Deprecated //Can not use ImageIO in android
+	public static boolean _isImage(String url) {
 			
 		try {
 			
@@ -60,6 +62,28 @@ public class URLInspector {
 				
 		return false;
 	}
+	
+	public static boolean isImage(String url) {
+		
+        HttpURLConnection connection = null;
+        try {
+            URL imageUrl = new URL(url);
+            connection = (HttpURLConnection) imageUrl.openConnection();
+            connection.setRequestMethod("HEAD");
+
+            String contentType = connection.getContentType();
+            if (contentType != null) {
+                return contentType.startsWith("image");
+            }
+            return false;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
 
 	public static void main(String[] args) {
 		
@@ -76,8 +100,9 @@ public class URLInspector {
 		
 		System.out.println(isWidget("https://xlocalhost:8080/xxxx"));
 		
-		System.out.println(isImage("https://wayos.yiem.cc/public/1833768260014999/F8646F3F-AD60-4627-9D7F-A6773E15C762.jpeg"));
+		System.out.println(isImage("https://static.wixstatic.com/media/41ab21_e102834285354beaa2270ff84a5e9dbaf000.jpg/v1/fill/w_590,h_366,al_c,q_80,usm_0.33_1.00_0.00,enc_auto/41ab21_e102834285354beaa2270ff84a5e9dbaf000.jpg"));
 		
+		System.out.println(isImage("https://w7.pngwing.com/pngs/272/824/png-transparent-house-home-modern-luxury-architecture-building-residential-real-estate-exterior-facade.png"));
 	}
 
 }

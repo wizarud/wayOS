@@ -254,12 +254,11 @@ public class PlayDrawer extends Drawer {
 								
 				tokens = responseText.split("\n:");
 				
-				responseText = tokens[0].trim();
+				responseText = tokens[0].trim();//Body 
 				varsText = tokens[1].trim();
 				
-	        	/**
-	        	 * Forwarding support , <jump to target keywords>
-	        	 */
+	        	// Forwarding support , <jump to target keywords>
+	        	 
 	        	if (varsText.contains(",")) {
 	        		int lastIndexOfComma = varsText.lastIndexOf(",");
 	        		jumpingText = varsText.substring(lastIndexOfComma + 1).trim();
@@ -275,11 +274,11 @@ public class PlayDrawer extends Drawer {
 				responseText = tokens[0].trim();
 				jumpingText = tokens[1].trim();
 				
-			} else if (responseText.startsWith("#")) {
+			} else if (responseText.startsWith(":")) {
 				
 				//For empty responseText but has vars or contains jumping text
 				
-				varsText = responseText;
+				varsText = responseText.substring(1);
 				responseText = "";
 				
 	        	/**
@@ -325,11 +324,23 @@ public class PlayDrawer extends Drawer {
 			
 			List<Canvas2D.Entity> keywordEntityList = new ArrayList<>();
 			
+			String params;
+			
 			for (String keyword:tokens) {
 				
 				keyword = keyword.trim();
 				
-				keywordEntityList.add(canvas2D.newEntity(parent, keyword, "", "##", false));
+				if (keyword.isEmpty()) {
+					
+					params = "";
+					
+				} else {
+					
+					params = "##";
+					
+				}
+				
+				keywordEntityList.add(canvas2D.newEntity(parent, keyword, "", params, false));
 				
 				canvas2D.nextRow(100);
 				
