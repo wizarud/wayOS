@@ -208,7 +208,7 @@ public class FlowTalkCommandNode extends CommandNode {
         
         /*
         System.out.println("MessageObject:" + messageObject);
-        System.out.println("ResponseText:" + confidenceRate + ":" + responseText);
+        System.out.println("MaxActiveNode:" + confidenceRate + ":" + maxActiveNode);
         System.out.println();
         */
         
@@ -227,9 +227,7 @@ public class FlowTalkCommandNode extends CommandNode {
         if (confidenceRate <= LOWER_BOUND) {
 
             String unknownConfig = session.context().prop("unknown");
-                        
-            //System.err.println(unknownConfig);
-            
+                                    
             messageObject.attr("unknown", unknownConfig);
             
         	/**

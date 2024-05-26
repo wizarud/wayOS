@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,11 +16,9 @@ import com.wayos.context.MemoryContext;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.QuizDrawer;
-import com.wayos.drawer.basic.WayDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
 import com.wayos.drawer.ecommerce.Catalog;
 import com.wayos.drawer.ecommerce.PaginationCatalogImporter;
-import com.wayos.drawer.ecommerce.PaginationDrawer;
 import com.wayos.drawer.ecommerce.Product;
 
 @SuppressWarnings("serial")

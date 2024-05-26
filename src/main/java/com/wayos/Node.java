@@ -444,12 +444,26 @@ public class Node implements Serializable, Comparable<Node> {
     public String cleanHooksFrom(String input) {
     	
     	if (input==null) input = "";
-
+    	
+    	/*
         for (Hook hook:hookList) {
             if (input.startsWith(hook.text)) {
                 input = input.substring(hook.text.length()).trim();
             }
         }
+        */
+    	
+    	/**
+    	 * Fix for cleaning EN to ignore captital case
+    	 */
+    	String lowerCaseInput = input.toLowerCase();
+    	
+        for (Hook hook:hookList) {
+            if (lowerCaseInput.startsWith(hook.text.toLowerCase())) {
+                input = input.substring(hook.text.length()).trim();
+            }
+        }
+    	
 
         return input.trim();
     }

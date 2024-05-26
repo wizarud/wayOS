@@ -28,7 +28,6 @@ import com.wayos.Context;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.DataTableDrawer;
-import com.wayos.drawer.basic.PlayDrawer;
 import com.wayos.drawer.basic.WayDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
 import com.wayos.drawer.ecommerce.CSVPaginationCatalogImporter;
@@ -137,13 +136,11 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 		        	drawer = new CSVPaginationCatalogDrawer(contextName, csvPaginationCatalogImporter);
 		        	
-					String sheme = Configuration.domain.startsWith("localhost") ? "http" : "https";
+					((CSVPaginationCatalogDrawer) drawer).setMorePicURL(Configuration.domain + request.getContextPath() + "/images/More.png");
 					
-					((CSVPaginationCatalogDrawer) drawer).setMorePicURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/More.png");
+					((CSVPaginationCatalogDrawer) drawer).setEmptyCartImageURL(Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
 					
-					((CSVPaginationCatalogDrawer) drawer).setEmptyCartImageURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
-					
-					((CSVPaginationCatalogDrawer) drawer).setFilledCartImageURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
+					((CSVPaginationCatalogDrawer) drawer).setFilledCartImageURL(Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
 					
 		        	/**
 		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information
@@ -175,7 +172,7 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 						        .lines()
 						        .collect(Collectors.joining("\n"));	
 						        
-		        	drawer = new PlayDrawer(way);// Way use the WayDrawer
+		        	drawer = new WayDrawer(way);// Way use the WayDrawer
 		        	
 		    		String wayTxtPath = Configuration.PRIVATE_PATH + contextName + ".way.txt";
 		    		

@@ -89,9 +89,7 @@ public class RestHttpRequestObject extends HttpRequestObject {
 				
 				String contextRoot = request.getContextPath();
 				
-				String sheme = Configuration.domain.startsWith("localhost") ? "http" : "https";
-				
-				lines.append(sheme + "://" + Configuration.domain + contextRoot + "/public/" + accountId + "/" + fileName);
+				lines.append(Configuration.domain + contextRoot + "/public/" + accountId + "/" + fileName);
 				
 				lines.append(" ");
 			}

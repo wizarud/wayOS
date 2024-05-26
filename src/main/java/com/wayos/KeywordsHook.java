@@ -82,15 +82,15 @@ public class KeywordsHook extends Hook {
     private boolean starMatched(String input, String key) {
     	
     	if (key.startsWith("*") && key.endsWith("*")) {
-    		return input.toLowerCase().contains(key.substring(1, key.length()-1));
+    		return input.toLowerCase().contains(key.substring(1, key.length()-1).toLowerCase());
     	}
     	
     	if (key.startsWith("*")) {
-        	return input.toLowerCase().endsWith(key.substring(1));    		
+        	return input.toLowerCase().endsWith(key.substring(1).toLowerCase());
     	}
     	
     	if (key.endsWith("*")) {
-    		return input.toLowerCase().startsWith(key.substring(0, key.length()-1));
+    		return input.toLowerCase().startsWith(key.substring(0, key.length()-1).toLowerCase());
     	}
     	
     	return false;

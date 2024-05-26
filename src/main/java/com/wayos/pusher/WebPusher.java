@@ -25,9 +25,14 @@ import javax.websocket.Session;
 public class WebPusher extends Pusher {
 	
 	/**
-	 * For boardcast to <accountId>/<botId>
+	 * For boardcast to <accountId>/<botId> => sessionId
 	 */
-	private static Map<String, Set<String>> connectionSetMap = new HashMap<>();
+	private static Map<String, Set<String>> contextToSessionIdSetMap = new HashMap<>();
+	
+	/**
+	 * For boardcast to sessionId => <accountId>/<botId>
+	 */
+	private static Map<String, Set<String>> sessionToContextSetMap = new HashMap<>();
 	
 	/**
 	 * For direct to target
@@ -93,45 +98,42 @@ public class WebPusher extends Pusher {
 	
 	@OnOpen
     public void start(Session session, @PathParam("accountId") String accountId, @PathParam("botId") String botId, @PathParam("sessionId") String sessionId) {
-		
-      	/*
-		Map<String, List<String>> paramsMap = session.getRequestParameterMap();
-		
-		String accountId = paramsMap.get("accountId").get(0);
-		
-		String botId = paramsMap.get("botId").get(0);
-		
-		String sessionId = paramsMap.get("sessionId").get(0);
-		*/
-		
-		/*
-		HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpSession");
-		
-        ServletContext servletContext = httpSession.getServletContext();
-        
-		URItoContextResolver uriToContextResolver = new URItoContextResolver(session.getRequestURI().toString(), servletContext.getContextPath().isEmpty());
-		
-		String accountId = uriToContextResolver.accountId;
-		
-		String botId = uriToContextResolver.botId;
-		
-		String sessionId = uriToContextResolver.sessionId;
-		*/
-				
+						
 		System.out.println("Incoming connection from.." + accountId + "/" + botId + "/" + sessionId);
 		
-        Set<String> connectionSet = connectionSetMap.get(accountId + "/" + botId);
+		/**
+		 * Group sessionId by contextName
+		 */
+        Set<String> sessionIdSet = contextToSessionIdSetMap.get(accountId + "/" + botId);
         
-        if (connectionSet==null) {
+        if (sessionIdSet==null) {
         	
-        	connectionSet = new HashSet<>();
+        	sessionIdSet = new HashSet<>();
         	
         }
         
-        connectionSet.add(sessionId);
+        sessionIdSet.add(sessionId);
         
-        connectionSetMap.put(accountId + "/" + botId, connectionSet);
+        contextToSessionIdSetMap.put(accountId + "/" + botId, sessionIdSet);
         
+        /**
+         * Group contextName by sessionId
+         */
+        Set<String> contextNameSet = sessionToContextSetMap.get(sessionId);
+        
+        if (contextNameSet==null) {
+        	
+        	contextNameSet = new HashSet<>();
+        	
+        }
+        
+        contextNameSet.add(accountId + "/" + botId);
+        
+        sessionToContextSetMap.put(sessionId, contextNameSet);
+        
+        /**
+         * Use full reference to session instance for pushing
+         */
         List<Session> connectionList = connectionListMap.get(accountId + "/" + botId + "/" + sessionId);
         
         if (connectionList==null) {
@@ -178,7 +180,7 @@ public class WebPusher extends Pusher {
     	
     	System.out.println("Remove connection:" + accountId + "/" + botId + "/" + sessionId);
     	
-        Set<String> connectionSet = connectionSetMap.get(accountId + "/" + botId);
+        Set<String> connectionSet = contextToSessionIdSetMap.get(accountId + "/" + botId);
     	
         if (connectionSet!=null) {
         	
@@ -188,7 +190,7 @@ public class WebPusher extends Pusher {
         
         if (connectionSet!=null && connectionSet.isEmpty()) {
         	
-        	connectionSetMap.remove(accountId + "/" + botId);
+        	contextToSessionIdSetMap.remove(accountId + "/" + botId);
         	
         }
     	
@@ -196,9 +198,18 @@ public class WebPusher extends Pusher {
     	
     }
     
+    /**
+     * Send to targets that have same AccountId, botId
+     * @param fromAccountId
+     * @param fromBotId
+     * @param fromSessionId
+     * @param accountId
+     * @param botId
+     * @param message
+     */
     public static void boardcast(String fromAccountId, String fromBotId, String fromSessionId, String accountId, String botId, String message) {
     	
-        Set<String> connectionSet = connectionSetMap.get(accountId + "/" + botId);
+        Set<String> connectionSet = contextToSessionIdSetMap.get(accountId + "/" + botId);
                 
         for (String sessionId : connectionSet) {
         	
@@ -215,6 +226,39 @@ public class WebPusher extends Pusher {
     	    	
     }
     
+    /**
+     * Send to targets that have same sessionId
+     * @param fromAccountId
+     * @param fromBotId
+     * @param fromSessionId
+     * @param sessionId
+     * @param message
+     */
+    public static void boardcast(String fromAccountId, String fromBotId, String sessionId, String message) {
+    
+    	String fromContextName = fromAccountId + "/" + fromBotId;
+    	
+        Set<String> connectionSet = sessionToContextSetMap.get(sessionId);
+    
+        String [] tokens;
+        String accountId, botId;
+        for (String contextName : connectionSet) {
+        	
+        	if (fromContextName.equals(contextName)) {
+        		//Skip own message from same context
+        		continue;
+        	}
+        	
+        	tokens = contextName.split("/");
+        	accountId = tokens[0];
+        	botId = tokens[1];
+        	
+        	send(accountId, botId, sessionId, message);
+
+        }
+   	
+    }
+    
     public static void send(String accountId, String botId, String sessionId, String message) {
     	
         List<Session> sessionList = null;
@@ -223,19 +267,25 @@ public class WebPusher extends Pusher {
         	
         	System.out.println("Sending " + message + " to " + accountId + "/" + botId + "/" + sessionId);
         	
-        	ResponseObject responseObject = new ResponseObject(message);
+        	//ResponseObject responseObject = new ResponseObject(message);
         	        	
         	sessionList = connectionListMap.get(accountId + "/" + botId + "/" + sessionId);
         	
-        	for (Session session:sessionList) {
+        	if (sessionList!=null) {
         		
-                synchronized (session) {
-                	
-                	session.getBasicRemote().sendText(responseObject.toJSONString());
-                	
-                }
-        		
-        	}
+            	for (Session session:sessionList) {
+            		
+                    synchronized (session) {
+                    	
+                    	//session.getBasicRemote().sendText(responseObject.toJSONString());
+                    	
+                    	session.getBasicRemote().sendText(message);
+                    	
+                    }
+            		
+            	}
+            	
+        	}        	
         	
             
         } catch (Exception e) {

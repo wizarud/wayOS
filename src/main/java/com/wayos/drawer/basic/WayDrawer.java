@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 
-@Deprecated //Use PlayDrawer Instead
 public class WayDrawer extends Drawer {
 	
 	final String ENTITY_SEPARATOR = "\n\n";
@@ -25,8 +22,6 @@ public class WayDrawer extends Drawer {
 	private final Set<String> quizVarSet;
 	
 	private final Set<String> formVarSet;
-	
-	private String lastText;
 	
 	public WayDrawer(String content) {
 		this.content = content;
@@ -46,21 +41,13 @@ public class WayDrawer extends Drawer {
     	 * Append Logic Flow if #score occurs
 		 * Forward #score to check if exists
     	 */
-		String language = canvas2D.context.prop("language");
-		if (language==null) {
-			language = "en";
-		}
-		
-		Locale locale = new Locale(language);
-		
-		ResourceBundle bundle = ResourceBundle.getBundle("com.wayos.i18n.text", locale);
 		
     	String [] entities = content.split(ENTITY_SEPARATOR);
     	
     	Canvas2D.Entity [] parent = new Canvas2D.Entity [] { canvas2D.GREETING };
     	
     	
-    	Canvas2D.Entity resetScoreEntity = canvas2D.newEntity(parent, "welcome", "", false);
+    	Canvas2D.Entity resetScoreEntity = canvas2D.newEntity(null, "welcome", "", false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
@@ -68,7 +55,7 @@ public class WayDrawer extends Drawer {
 		
 		int i = 0;
 		
-		boolean hasParentBot = false;
+		String parentBot = null;
 		
     	for (String entity:entities) {
     		
@@ -88,9 +75,24 @@ public class WayDrawer extends Drawer {
         				entity.endsWith("]")    				
          				) {
         			
-        			String botName = entity.substring(1, entity.length()-1);
+        			parentBot = entity.substring(1, entity.length()-1);
         			
-            		Canvas2D.Entity unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "`cmd://call://" + botName + " ##`", false);
+        			Canvas2D.Entity unknown;
+        			        			
+        			//Is Webhook service bot, Call as Post API
+        			if (parentBot.startsWith("http://") || parentBot.startsWith("https://")) {
+        				
+        				String url = parentBot.split("://")[1] + (parentBot.startsWith("http://") ? "-nonsecure":"");
+        				String body = "message=##&sessionId=#sessionId";
+        				
+                		unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "`post://" + body + "://" + url + "`", false);
+        	    		canvas2D.nextColumn(200);
+        				
+        			} else {
+        				
+                		unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "`cmd://call://" + parentBot + " ##`", false);
+        				
+        			}        			
         			
             		canvas2D.nextColumn(200);
             		
@@ -99,12 +101,10 @@ public class WayDrawer extends Drawer {
         			canvas2D.nextRow(100);
         			canvas2D.nextColumn(200);
         			
-        			hasParentBot = true;
-        	    	
         			continue;
         		}
         		
-    			parent = createEntity(canvas2D, bundle, entity, parent);
+    			parent = createEntity(canvas2D, entity, parent);
     			
     		} finally {
     			
@@ -141,10 +141,6 @@ public class WayDrawer extends Drawer {
 	    	resetScoreEntity.reAttachForwarder();//TODO: Reattach forwarder should move into setExpressions?
 		}
 		
-		if (lastText==null) {
-			lastText = bundle.getString("way.end");
-		}
-
     	/**
     	 * Log the summary with the last text edited by creator
     	 */    	    	
@@ -164,30 +160,63 @@ public class WayDrawer extends Drawer {
 		canvas2D.newEntity(parent, "", adsText, null);
 		
     	/**
-    	 * Logging Unknown
+    	 * Greeting to welcome and Logging Unknown
     	 */
-    	if (!hasParentBot) {
+    	if (parentBot==null) {
     		
     		canvas2D.setPosition(300, 200);
     		
+        	canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.GREETING }, "", "", "welcome", null).attachExpressionForLeaf();
+        	
+    		canvas2D.nextRow(100);
+    		
+        	/**
+        	 * Unknow forwarding to blabla
+        	 */
         	Canvas2D.Entity unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "##", false);
         	
     		canvas2D.nextColumn(200);
     		
-    		canvas2D.newEntity(new Canvas2D.Entity[] { unknown }, "", "", "`?l_unknown=##`", null).attachExpressionForLeaf();
+    		canvas2D.newEntity(new Canvas2D.Entity[] { unknown }, "", "", "blabla ##", null).attachExpressionForLeaf();
     		
+    	} else {
+    		
+    		canvas2D.setPosition(300, 200);
+    		
+    		//Bypass Greeting to parent, forward to welcome later
+			Canvas2D.Entity greeting;
+			
+			//Is Webhook service bot, Call as Post API
+			if (parentBot.startsWith("http://") || parentBot.startsWith("https://")) {
+				
+				String url = parentBot.split("://")[1] + (parentBot.startsWith("http://") ? "-nonsecure":"");
+				String body = "message=greeting&sessionId=#sessionId";
+				
+				greeting = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.GREETING }, "", "", "`post://" + body + "://" + url + "`", false);
+	    		canvas2D.nextColumn(200);
+				
+			} else {
+				
+				greeting = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.GREETING }, "", "", "`cmd://call://" + parentBot + " ##`", false);
+				
+			}
+			
+    		canvas2D.nextColumn(200);
+    		
+	    	canvas2D.newEntity(new Canvas2D.Entity [] { greeting }, "", "%1", "welcome", null).attachExpressionForLeaf();
+		
     	}
     	
 	}
 	
-	private Canvas2D.Entity [] createEntity(Canvas2D canvas2D, ResourceBundle bundle, String entityText, Canvas2D.Entity[] parent) {
+	private Canvas2D.Entity [] createEntity(Canvas2D canvas2D, String entityText, Canvas2D.Entity[] parent) {
 		
 		String keywords, responseText;
 		String [] tokens;
 		
 		if (entityText.contains(MENU_ITEMS_SEPARATOR)) {
 			
-	        parent = drawMenu(canvas2D, bundle, entityText, parent);
+	        parent = drawMenu(canvas2D, entityText, parent);
 						
 		} else {
 			
@@ -205,7 +234,7 @@ public class WayDrawer extends Drawer {
 	    		tokens = entityText.split(KEY_SEPARATOR, 2);
 	    		
 				keywords = tokens[0].trim();
-				responseText = tokens[1].trim();
+				responseText = "\n" + tokens[1].trim();
 				
 				/**
 				 * Save current parent to the list
@@ -218,20 +247,19 @@ public class WayDrawer extends Drawer {
 				parentList = new ArrayList<>();
 				
 			}
-						
+			
 			String varsText = "";
 			String jumpingText = "";
 			
 			if (responseText.contains("\n:")) {
-				
+								
 				tokens = responseText.split("\n:");
 				
-				responseText = tokens[0].trim();
+				responseText = tokens[0].trim();//Body 
 				varsText = tokens[1].trim();
 				
-	        	/**
-	        	 * Forwarding support , <jump to target keywords>
-	        	 */
+	        	// Forwarding support , <jump to target keywords>
+	        	 
 	        	if (varsText.contains(",")) {
 	        		int lastIndexOfComma = varsText.lastIndexOf(",");
 	        		jumpingText = varsText.substring(lastIndexOfComma + 1).trim();
@@ -247,11 +275,11 @@ public class WayDrawer extends Drawer {
 				responseText = tokens[0].trim();
 				jumpingText = tokens[1].trim();
 				
-			} else if (responseText.startsWith("#")) {
+			} else if (responseText.startsWith(":")) {
 				
 				//For empty responseText but has vars or contains jumping text
 				
-				varsText = responseText;
+				varsText = responseText.substring(1);
 				responseText = "";
 				
 	        	/**
@@ -297,11 +325,23 @@ public class WayDrawer extends Drawer {
 			
 			List<Canvas2D.Entity> keywordEntityList = new ArrayList<>();
 			
+			String params;
+			
 			for (String keyword:tokens) {
 				
 				keyword = keyword.trim();
 				
-				keywordEntityList.add(canvas2D.newEntity(parent, keyword, "", "##", false));
+				if (keyword.isEmpty()) {
+					
+					params = "";
+					
+				} else {
+					
+					params = "##";
+					
+				}
+				
+				keywordEntityList.add(canvas2D.newEntity(parent, keyword, "", params, false));
 				
 				canvas2D.nextRow(100);
 				
@@ -324,13 +364,7 @@ public class WayDrawer extends Drawer {
         	}
 			
 			parent = parentList.toArray(new Canvas2D.Entity[parentList.size()]);
-		
-			
-			/**
-			 * Simple Entity
-			 * set lastTextEntity to genenerate the log var
-			 */
-			lastText = responseText;
+					
 		}
 		
 		canvas2D.nextColumn(150);
@@ -339,8 +373,7 @@ public class WayDrawer extends Drawer {
 		return parent;
 	}
 
-	private Canvas2D.Entity[] drawMenu(Canvas2D canvas2D, ResourceBundle bundle,
-			String responseText, Canvas2D.Entity[] parent) {
+	private Canvas2D.Entity[] drawMenu(Canvas2D canvas2D, String responseText, Canvas2D.Entity[] parent) {
 		
 		String [] tokens;
 		

@@ -260,11 +260,11 @@ public class BLESessionPoolFactory {
 					
 					JSONObject adminConfigObject;
 					
-					String adminAccountId, adminBotId, adminChannel, adminSessionId;
+					String toAccountId, toBotId, toChannel, toSessionId;
 					
-					adminChannel = null;
+					toChannel = null;
 					
-					adminSessionId = null;
+					toSessionId = null;
 					
 					//Check that called from other context or not?
 					String callerContextName = session.vars("#caller.context.name");
@@ -272,9 +272,9 @@ public class BLESessionPoolFactory {
 					//Use this accountId, botId as adminAccountId and adminBotId
 					if (callerContextName.isEmpty()) {
 						
-						adminAccountId = accountId;
+						toAccountId = accountId;
 						
-						adminBotId = botId;
+						toBotId = botId;
 						
 						adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
 						
@@ -282,9 +282,9 @@ public class BLESessionPoolFactory {
 						
 						tokens = callerContextName.split("/");
 						
-						adminAccountId = tokens[0];
+						toAccountId = tokens[0];
 						
-						adminBotId = tokens[1];
+						toBotId = tokens[1];
 						
 						configuration = new Configuration(callerContextName);
 						
@@ -294,9 +294,9 @@ public class BLESessionPoolFactory {
 												
 					if (adminConfigObject!=null) {
 						
-						adminChannel = adminConfigObject.getString("channel");
+						toChannel = adminConfigObject.getString("channel");
 						
-						adminSessionId = adminConfigObject.getString("sessionId");
+						toSessionId = adminConfigObject.getString("sessionId");
 						
 					}
 					
@@ -321,7 +321,7 @@ public class BLESessionPoolFactory {
 						 */
 						if (varChangedName.startsWith("#b_")) {
 							
-							pusherUtil.push(adminAccountId, adminBotId, varChangedValue);
+							pusherUtil.push(toAccountId, toBotId, varChangedValue);
 							
 						}
 						
@@ -336,13 +336,23 @@ public class BLESessionPoolFactory {
 							 * Notify to registered admin channel / sessionId to notify if this session is not from admin
 							 */
 							
-							if (adminSessionId!=null && !adminSessionId.equals(sessionId)) {
+							if (toSessionId!=null && !toSessionId.equals(sessionId)) {
 								
-								pusherUtil.push(adminAccountId, adminBotId, adminChannel, adminSessionId, varChangedValue);
+								pusherUtil.push(toAccountId, toBotId, toChannel, toSessionId, varChangedValue);
 								
 							}
 														
 						}
+						
+						/**
+						 * Only Web Support!!!
+						 * Fire message as a keyword to the current sessionId for many wayoslet instances in the same web browser
+						 */
+						if (channel.equals("web") && varChangedName.startsWith("#w_")) {
+							
+							System.out.println("Boardcasting to web for " + varChangedName + "=" + varChangedValue);
+							WebPusher.boardcast(accountId, botId, sessionId, varChangedValue);
+						}					
 						
 						/**
 						 * Fire message as a keyword to the current context and parse later
@@ -355,12 +365,12 @@ public class BLESessionPoolFactory {
 							
 					    	JSONObject data = new JSONObject();
 					    	
-					    	data.put("fromAccountId", adminAccountId);
-					    	data.put("fromBotId", adminBotId);
+					    	data.put("fromAccountId", toAccountId);
+					    	data.put("fromBotId", toBotId);
 					    	data.put("fromSessionId", sessionId);
 					    	data.put("message", varChangedValue);
 							
-							webPusher.push(adminAccountId + "/" + adminBotId, targetSessionId, data);
+							webPusher.push(toAccountId + "/" + toBotId, targetSessionId, data);
 							
 						}
 						
@@ -383,7 +393,7 @@ public class BLESessionPoolFactory {
 								 */
 								if (adminConfigObject!=null) {
 									
-									pusherUtil.parse(adminAccountId, adminBotId, adminChannel, adminSessionId, varChangedValue);
+									pusherUtil.parse(toAccountId, toBotId, toChannel, toSessionId, varChangedValue);
 									
 								}			
 								
@@ -401,7 +411,7 @@ public class BLESessionPoolFactory {
 									
 									targetBotId = tokens[1];
 									
-									pusherUtil.parse(targetAccountId, targetBotId, adminChannel, adminSessionId, varChangedValue);
+									pusherUtil.parse(targetAccountId, targetBotId, toChannel, toSessionId, varChangedValue);
 									
 								}
 								
@@ -442,7 +452,9 @@ public class BLESessionPoolFactory {
 										
 				} catch (Exception e) {
 					
-					throw new RuntimeException(e);
+					e.printStackTrace();
+					
+					//throw new RuntimeException(e);
 				}
 				
 			}

@@ -274,9 +274,7 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
 						
 						String contextRoot = request.getContextPath();
 						
-						String sheme = Configuration.domain.startsWith("localhost") ? "http" : "https";
-												
-						relocatedContents.append(sheme + "://" + Configuration.domain + contextRoot + "/" + contentName);
+						relocatedContents.append(Configuration.domain + contextRoot + "/" + contentName);
 						relocatedContents.append("\n\n\n");
 					}
 					

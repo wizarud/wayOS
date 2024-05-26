@@ -14,20 +14,26 @@ import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 @WebServlet("/x/*")
-public class ShowcaseServlet extends ConsoleServlet {
+public class PlayServlet extends ConsoleServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String contextName = contextName(req.getRequestURI(), true);
 
-		String [] tokens = contextName.split("/");
+		String [] tokens = contextName.split("/", 3);
 
 		String accountId = tokens[0];
 		String botId = tokens[1];
 		
 		req.setAttribute("accountId", accountId);
 		req.setAttribute("botId", botId);
+		
+		//URL contains override sessionId
+		if (tokens.length>2) {
+			contextName = accountId + "/" + botId;
+			req.setAttribute("sessionId", tokens[2]);
+		}
 		
 		try {
 			

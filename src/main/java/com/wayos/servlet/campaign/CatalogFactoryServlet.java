@@ -293,13 +293,11 @@ public class CatalogFactoryServlet extends ConsoleServlet {
 			
 			drawer.setBusinessInfo(contact);
 			
-			String sheme = Configuration.domain.startsWith("localhost") ? "http" : "https";
+			drawer.setMorePicURL(Configuration.domain + request.getContextPath() + "/images/More.png");
 			
-			drawer.setMorePicURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/More.png");
+			drawer.setEmptyCartImageURL(Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
 			
-			drawer.setEmptyCartImageURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
-			
-			drawer.setFilledCartImageURL(sheme + "://" + Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
+			drawer.setFilledCartImageURL(Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
 			
 			drawer.draw(canvas2D);
 			
@@ -307,7 +305,7 @@ public class CatalogFactoryServlet extends ConsoleServlet {
 
 			context.load();
 
-			response.getWriter().print(sheme + "://" + Configuration.domain + request.getContextPath() + "/x/" + accountId + "/" + botId);
+			response.getWriter().print(Configuration.domain + request.getContextPath() + "/x/" + accountId + "/" + botId);
 
 		} catch (Exception e) {
 

@@ -257,11 +257,7 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 					
 					String contextRoot = request.getContextPath();
 					
-					String sheme = Configuration.domain.startsWith("localhost") ? "http" : "https";
-					
-					//message = Configuration.domain + "/" + contentName;
-					
-					message = sheme + "://" + Configuration.domain + contextRoot + "/" + contentName;					
+					message = Configuration.domain + contextRoot + "/" + contentName;					
 					
 				} else {
 					
