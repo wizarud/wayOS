@@ -2,44 +2,42 @@ package com.wayos.util;
 
 import java.util.TimerTask;
 
-import com.wayos.Session;
+import com.wayos.Application;
 import com.wayos.pusher.PusherUtil;
 
 public class SilentPusherTask extends TimerTask {
 	
-	private SilentPusher silentPusher;
+	private SilentPusher silentPusher;	
 	
-	private PusherUtil pusherUtil = new PusherUtil();
+	private String silentInterval;
+	
+	private String contextName;
 	
 	private String channel;
 	
-	private String sessionId;
-	
-	private String contextName;
+	private String sessionId;	
 	
 	private String accountId;
 	
 	private String botId;
 	
-	private Session session;
-	
-	public SilentPusherTask(SilentPusher silentPusher, Session session) {
+	public SilentPusherTask(SilentPusher silentPusher, String silentInterval, String contextName, String channel, String sessionId) {
 		
 		this.silentPusher = silentPusher;
 		
-		this.channel = session.vars("#channel");
+		this.silentInterval = silentInterval;
 		
-		this.sessionId = session.vars("#sessionId");
+		this.contextName = contextName;
 		
-		this.contextName = session.context().name();
-						
+		this.channel = channel;
+		
+		this.sessionId = sessionId;
+		
 		String [] tokens = this.contextName.split("/");
 		
 		this.accountId = tokens[0];
 		
 		this.botId = tokens[1];
-		
-		this.session = session;
 		
 	}
 	
@@ -55,11 +53,13 @@ public class SilentPusherTask extends TimerTask {
 		
 		try {
 			
+			PusherUtil pusherUtil = (PusherUtil) Application.instance().get(PusherUtil.class.getName());
+			
 			//Push parsed silent as message to this session
 			pusherUtil.parse(accountId, botId, channel, sessionId, "silent");
 			
 			//Re schedule except the exception such as IllegalArgumentException
-			silentPusher.register(session);
+			silentPusher.register(silentInterval, contextName, channel, sessionId, false);
 			
 		} catch (Exception e) {
 			

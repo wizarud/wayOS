@@ -280,9 +280,12 @@ public class DirectoryStorage implements PathStorage {
 			
 			if (success) {
 				System.out.println(path + " was deleted!");
-			} else {
+			} 
+			/*
+			else {
 				System.out.println(path + " cannot delete!");				
 			}
+			*/
 		}
 		
 	}

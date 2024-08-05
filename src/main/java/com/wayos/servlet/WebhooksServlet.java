@@ -13,9 +13,7 @@ import com.wayos.util.SilentPusher;
 @SuppressWarnings("serial")
 @WebServlet("/webhooks/*")
 public class WebhooksServlet extends WAYOSServlet {
-	
-	SilentPusher silentPusher = new SilentPusher();
-		
+			
 	protected void doAction(HttpRequestObject requestObject, ResponseConnector responseConnector) {
 		
 		/**
@@ -31,10 +29,18 @@ public class WebhooksServlet extends WAYOSServlet {
 				
 		//For logging message
 		String log = responseConnector.execute(new ResponseObject(responseText));
-		
-		silentPusher.register(session);
-		
-	    
+				
+		/**
+		 * Register only silent message
+		 */
+		if (requestObject.messageObject().toString().equals("silent")) {
+						
+			SilentPusher silentPusher = (SilentPusher) Application.instance().get(SilentPusher.class.getName());
+			
+			silentPusher.register(session, responseText);
+			
+		}
+		    
 	}
 
 }

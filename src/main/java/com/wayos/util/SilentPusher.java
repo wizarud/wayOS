@@ -5,33 +5,57 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 
+import com.wayos.PathStorage;
 import com.wayos.Session;
-import com.wayos.pusher.PusherUtil;
+
+import x.org.json.JSONObject;
 
 public class SilentPusher {
 	
-	Map<String, SilentPusherTask> silentTaskMap = new HashMap<>();
+	private Map<String, SilentPusherTask> silentTaskMap = new HashMap<>();
 	
-	PusherUtil pusherUtil = new PusherUtil();
+	private PathStorage storage;
 	
-	public SilentPusher() {
+	public SilentPusher(PathStorage storage) {
+		
+		this.storage = storage;
 		
 	}
 	
-	public void register(Session session) {
+	public void register(Session session, String resultOfSilent) {
 		
 		/**
 		 * For silent task
-		 */		
-		String silent = session.context().prop("silent");
+		 */	
+		String silentInterval = session.context().prop("SILENT_INTERVAL");
+		String contextName = session.context().name();
+		String channel = session.vars("#channel"); 
+		String sessionId = session.vars("#sessionId");
+				
+		if (resultOfSilent.trim().isEmpty()) {
+			
+			/**
+			 * Delete old task if exits
+			 */
+			System.out.println("Deactivate Task: " + "silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
+			
+			storage.delete("silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
+			
+			return;
+		}
 		
-		if (silent==null) return;
+		register(silentInterval, contextName, channel, sessionId, false);
+
+	}
+	
+	public void register(String silentInterval, String contextName, String channel, String sessionId, boolean run) {
 		
-		silent = silent.trim();
+		SilentPusherTask silentPusherTask = new SilentPusherTask(this, silentInterval, contextName, channel, sessionId);
 		
-		if (silent.isEmpty()) return;
-		
-		SilentPusherTask silentPusherTask = new SilentPusherTask(this, session);
+		if (run) {
+			
+			silentPusherTask.run();
+		}
 		
 		String id = silentPusherTask.id();
 		
@@ -41,14 +65,12 @@ public class SilentPusher {
 		silentTaskMap.put(id, silentPusherTask);
 		
 		Timer timer = new Timer("Silent Timer");
-		
-		String silentInterval = session.context().prop("SILENT_INTERVAL");
-		
+				
 		long interval;
 		
 		try {
 			
-			interval = Integer.parseInt(silentInterval) * 60 * 1000; //Every Minutes
+			interval = Long.parseLong(silentInterval) * 60 * 1000; //Every Minutes
 			
 		} catch (Exception e4) {
 			
@@ -59,9 +81,16 @@ public class SilentPusher {
 		}
 		
 	    timer.schedule(silentPusherTask, interval);
-				
-		System.out.println("Scheduled " + silentPusherTask.id() + " every " + (interval / (60 * 1000)) + " minutes");
+
+	    /**
+	     * Save Task Name
+	     */
+		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + (interval / (60 * 1000)) + " minutes");
 		
+		JSONObject silentObj = new JSONObject();
+		silentObj.put("interval", interval);
+		
+		storage.write(silentObj.toString(), "silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
 	}
 	
 	private void remove(String id) {

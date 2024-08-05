@@ -49,6 +49,7 @@ public class HttpResponseConnector extends ResponseConnector {
             response.setContentType("text/plain");
             
             result = responseObject.toString();	
+            
             response.getWriter().print(result);
             
             return result;
