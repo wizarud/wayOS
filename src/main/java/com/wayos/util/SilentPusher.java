@@ -72,15 +72,18 @@ public class SilentPusher {
 			
 			interval = Long.parseLong(silentInterval) * 60 * 1000; //Every Minutes
 			
+		    timer.schedule(silentPusherTask, interval);
+		    
 		} catch (Exception e4) {
 			
 			Random random = new Random();
 			
 			interval = (random.nextInt(25) + 1) * 60 * 60 * 1000; //Random between 1-24 Hours
 			
+		    timer.schedule(silentPusherTask, interval);
+		    
 		}
 		
-	    timer.schedule(silentPusherTask, interval);
 
 	    /**
 	     * Save Task Name

@@ -234,7 +234,6 @@ com/wayos/util/URLInspector.class
 com/wayos/context/RemoteContext.class
 com/wayos/pusher/PusherUtil$2.class
 com/wayos/facebook/servlet/FacebookPageUtil.class
-com/wayos/servlet/ShowcaseServlet.class
 com/wayos/KeywordsHook.class
 com/wayos/experiment/model/Key.class
 com/wayos/drawer/Drawer.class
