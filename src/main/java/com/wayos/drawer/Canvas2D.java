@@ -286,12 +286,14 @@ public class Canvas2D {
         	if (borderColor == null) {
         		borderColor = "#64c583";
         	}
-        	
+        	        	
         	String language =  this.context.prop("language");
         	if (language == null) {
         		language = "en";
         	}
         	
+            String publish =this.context.prop("publish");
+            
         	System.out.println("Clearing Context..");
         	
         	this.context.prop().clear();
@@ -322,6 +324,11 @@ public class Canvas2D {
             this.context.prop("title", title);
             this.context.prop("borderColor", borderColor);
             this.context.prop("language", language);
+                        
+            if (publish!=null) {
+            	this.context.prop("publish", publish);
+            }
+                    	
         }
 
     }

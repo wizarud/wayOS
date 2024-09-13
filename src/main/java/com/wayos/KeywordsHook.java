@@ -14,7 +14,7 @@ public class KeywordsHook extends Hook {
     
     @Override
     public boolean matched(MessageObject messageObject) {
-
+    	
         if (!messageObject.isSplitted()) {
             messageObject.split();
         }
@@ -24,9 +24,7 @@ public class KeywordsHook extends Hook {
         String input = messageObject.toString();
 
         //System.out.println("Check Matching:" + input + " vs " + text);
-        
-        if (input.equalsIgnoreCase(text)) return true;
-        
+            	            	
         //For Keywords Match!
         /**
          * Ex 
@@ -42,6 +40,11 @@ public class KeywordsHook extends Hook {
             	
             	token = token.trim();
             	
+            	/**
+            	 * Parameterized Splitted Keyword
+            	 */
+            	token = super.parameterized(messageObject);
+            	
             	for (String word:wordList) {
             		
                     if (starMatched(word, token)) {
@@ -56,11 +59,12 @@ public class KeywordsHook extends Hook {
                 
             }
         }
-        
-        if (starMatched(input, text)) {
-        	return true;
-        }
-
+            	
+        /**
+         * Parameterized Single Hook
+         */
+    	String text = super.parameterized(messageObject);
+    	
     	for (String word:wordList) {
     		
             if (starMatched(word, text)) {
@@ -73,6 +77,15 @@ public class KeywordsHook extends Hook {
                       
     	}
     	
+        if (starMatched(input, text)) {
+        	return true;
+        }
+
+    	
+        if (input.equalsIgnoreCase(text)) {
+        	return true;
+        }
+        
     	return false;
     }
     
@@ -80,8 +93,18 @@ public class KeywordsHook extends Hook {
      * Support Simple Regx Markup *
      */
     private boolean starMatched(String input, String key) {
+    	    	
+    	if (key.equals("*")) {
+    		
+    		//System.out.println(">>" + input);
+    		
+    		//Must be word or number
+    		return !input.startsWith("@") && !input.startsWith("#");   		
+    		
+    	}
     	
-    	if (key.startsWith("*") && key.endsWith("*")) {
+    	if (key.length()>3 && key.startsWith("*") && key.endsWith("*")) {
+    		        	
     		return input.toLowerCase().contains(key.substring(1, key.length()-1).toLowerCase());
     	}
     	
@@ -95,4 +118,5 @@ public class KeywordsHook extends Hook {
     	
     	return false;
     }
+
 }

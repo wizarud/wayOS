@@ -213,7 +213,8 @@ public class FlowTalkCommandNode extends CommandNode {
         */
         
         //final float LOWER_BOUND = 0.05f;
-        final float LOWER_BOUND = 0.03f;
+        //final float LOWER_BOUND = 0.03f;
+        final float LOWER_BOUND = 0;
         
         if (session.learning() && confidenceRate <= LOWER_BOUND) {
 
@@ -233,7 +234,13 @@ public class FlowTalkCommandNode extends CommandNode {
         	/**
         	 * Stop Recursive
         	 */
-            if (messageObject.forwardedFrom(unknownConfig)) return "";
+            if (messageObject.forwardedFrom(unknownConfig)) {
+            	
+            	System.err.println("Doubled Forward:" + messageObject);
+            	
+            	return "";
+            	
+            }
 
             if (unknownConfig==null) {
             	
@@ -261,7 +268,7 @@ public class FlowTalkCommandNode extends CommandNode {
             
             String paramsAdded = unknownConfig.substring(0, unknownConfig.length()-1) + " " + messageObject.toString() + "!";
             
-            //System.err.println(paramsAdded);
+            System.out.println(paramsAdded);
             
             /**
              * Replace with UnknownConfig (text after ,)

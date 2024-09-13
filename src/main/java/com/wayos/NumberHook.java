@@ -15,6 +15,11 @@ public class NumberHook extends Hook {
 
     @Override
     public boolean matched(MessageObject messageObject) {
+    	
+        /**
+         * Parameterized Hooks
+         */
+    	String text = super.parameterized(messageObject);
 
         List<String> wordList = messageObject.wordList();
 
@@ -113,4 +118,5 @@ public class NumberHook extends Hook {
         
         return numberList;
     }
+
 }

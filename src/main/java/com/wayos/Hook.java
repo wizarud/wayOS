@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 /**
  * Hook is like an Event Listener of node. 
  * a Node can has many hooks.
@@ -85,6 +87,11 @@ public class Hook implements Serializable, Comparable<Hook> {
     }
 
     public boolean matched(MessageObject messageObject) {
+    	
+        /**
+         * Parameterized Single Hook
+         */
+    	String text = parameterized(messageObject);
     	
         String input = messageObject.toString().toLowerCase();
 
@@ -215,7 +222,9 @@ public class Hook implements Serializable, Comparable<Hook> {
             return new KeywordsHook(text, match);
         }
     	
-        return new Hook(text, match);
+        //return new Hook(text, match);
+        
+        throw new IllegalArgumentException(match.toString());
     }
 
     public static Hook build(String text, Match match, double weight) {
@@ -273,6 +282,26 @@ public class Hook implements Serializable, Comparable<Hook> {
 	public int compareTo(Hook otherHook) {
 		
 		return this.text.compareTo(otherHook.text);
+	}
+	
+	/**
+	 * To Support parameterized Hooks
+	 * @param messageObject
+	 * @return
+	 */
+	protected String parameterized(MessageObject messageObject) {
+		
+		//Only support for variables
+		if (text.contains("#")) {
+			
+			Session session = (Session) messageObject.attr("session");
+			
+			if (session!=null)
+				return session.parameterized(null, text);
+		
+		}
+		
+		return text;
 	}
 
 }

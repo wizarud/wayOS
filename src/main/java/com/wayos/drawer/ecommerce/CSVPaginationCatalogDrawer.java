@@ -339,13 +339,13 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		/**
 		 * New Customer, Ask Contact & Location
 		 */
-		Canvas2D.Entity askContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, "#contact", bundle.getString("cart.ask.contact"), true);
+		Canvas2D.Entity askContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, "", bundle.getString("cart.ask.contact"), true);
 		canvas2D.nextRow(100);
 				
 		/**
 		 * Return Customer, Confirm Contact & Location
 		 */
-		Canvas2D.Entity confirmContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, "", bundle.getString("cart.confirm.contact") + "\n\n#contact\n\n" + bundle.getString("cart.confirm.no"), true);
+		Canvas2D.Entity confirmContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, "*", bundle.getString("cart.confirm.contact") + "\n\n#contact\n\n" + bundle.getString("cart.confirm.no"), true);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		

@@ -181,6 +181,12 @@ public class Session implements Serializable {
 		String result = null;
 		
 		try {
+			
+			/**
+			 * To parameterized hooks
+			 * TODO: Make sure to set session on talkcmd
+			 */
+			messageObject.attr("session", this);
 						
 			/**
 			 * Clear Problem for Special Commands
@@ -232,11 +238,14 @@ public class Session implements Serializable {
 			} else {
 				
 				/**
-				 * Moved from Top to Here
-				 * Project injection from , <comma space>
+				 * Clean Input
+				 * TODO: howabout \n # % $ gt gte lt lte * 
 				 */
 				String input = messageObject.toString();
-				input = input.replace(",", "");
+				
+				//Project injection from , <comma space>				
+				input = input.replace(",", "");				
+				
 				messageObject.setText(input);
 				
 		        /**
