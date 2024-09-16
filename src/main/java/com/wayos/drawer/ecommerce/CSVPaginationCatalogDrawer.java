@@ -345,7 +345,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		/**
 		 * Return Customer, Confirm Contact & Location
 		 */
-		Canvas2D.Entity confirmContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, "*", bundle.getString("cart.confirm.contact") + "\n\n#contact\n\n" + bundle.getString("cart.confirm.no"), true);
+		Canvas2D.Entity confirmContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { checkoutEntity }, bundle.getString("cart.contact.prefix") + "*", bundle.getString("cart.confirm.contact") + "\n\n#contact\n\n" + bundle.getString("cart.confirm.no"), true);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
@@ -355,7 +355,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		/**
 		 * Enter & Save contact
 		 */
-		Canvas2D.Entity answerContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { askContactEntity, confirmContactEntity }, "", bundle.getString("cart.confirm.contact") + "\n\n##", "`?contact=##`", false);
+		Canvas2D.Entity answerContactEntity = canvas2D.newEntity(new Canvas2D.Entity[] { askContactEntity, confirmContactEntity }, "", bundle.getString("cart.confirm.contact") + "\n\n##", "`?contact=" + bundle.getString("cart.contact.prefix") + ": ##`", false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(400);
 		

@@ -152,7 +152,10 @@ public class CSVPaginationCatalogImporter extends PaginationCatalogImporter {
 					sku = map.get(meta("sku"));
 					if (sku==null) {
 						i = catalog.productList.size() + 1;
-						sku = cat + "_" + i;
+						if (cat.equals("-")) 
+							sku = "P" + i;
+						else
+							sku = cat + "_" + i;
 					}
 					
 					sku = sku.replace(' ', '_');
