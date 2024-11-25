@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.wayos.drawer.ecommerce.CSVPaginationCatalogImporter;
+import com.wayos.drawer.ecommerce.CatalogImporter;
 import com.wayos.drawer.ecommerce.Catalog;
 import com.wayos.drawer.ecommerce.Product;
 
-public class LazadaCSVPaginationCatalogImporter extends CSVPaginationCatalogImporter {
+public class LazadaCSVPaginationCatalogImporter extends CatalogImporter {
 	
 	public LazadaCSVPaginationCatalogImporter(String brandName, InputStream csvInputStream, String delimeter) {		
 		super(brandName, csvInputStream, delimeter);		

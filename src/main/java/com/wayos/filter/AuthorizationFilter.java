@@ -31,7 +31,9 @@ public abstract class AuthorizationFilter implements Filter {
 			"vars/",
 			"context/",
 			"csv/",
-			"push/");
+			"push/",
+			"console/unread/"
+			);
 		
 	protected void validateSessionAccountId(HttpServletRequest req, String resourcePath) {
 		
@@ -104,6 +106,8 @@ public abstract class AuthorizationFilter implements Filter {
 					validateSessionAccountId(req, resourcePath);
 					
 				} catch (Exception e) {
+					
+					e.printStackTrace();
 					
 					validateHeaderSignature(req, resourcePath);
 					

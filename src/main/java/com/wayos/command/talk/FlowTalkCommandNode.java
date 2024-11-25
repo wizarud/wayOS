@@ -206,9 +206,11 @@ public class FlowTalkCommandNode extends CommandNode {
                         
         }
         
+        /*
         System.out.println("MessageObject:" + messageObject);
         System.out.println("MaxActiveNode:" + confidenceRate + ":" + maxActiveNode);
         System.out.println();
+        */
         
         //final float LOWER_BOUND = 0.05f;
         //final float LOWER_BOUND = 0.03f;
@@ -266,7 +268,7 @@ public class FlowTalkCommandNode extends CommandNode {
             
             String paramsAdded = unknownConfig.substring(0, unknownConfig.length()-1) + " " + messageObject.toString() + "!";
             
-            System.out.println(paramsAdded);
+            //System.out.println(paramsAdded);
             
             /**
              * Replace with UnknownConfig (text after ,)

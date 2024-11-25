@@ -29,8 +29,8 @@ import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.DataTableDrawer;
 import com.wayos.drawer.basic.WayDrawer;
-import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
-import com.wayos.drawer.ecommerce.CSVPaginationCatalogImporter;
+import com.wayos.drawer.ecommerce.CatalogDrawer;
+import com.wayos.drawer.ecommerce.CatalogImporter;
 
 @SuppressWarnings("serial")
 @WebServlet("/console/factory")
@@ -132,15 +132,15 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 					byte [] buffer = text.getBytes();
 					
-					CSVPaginationCatalogImporter csvPaginationCatalogImporter = new CSVPaginationCatalogImporter(null, new ByteArrayInputStream(buffer), "\t");
+					CatalogImporter catalogImporter = new CatalogImporter(null, new ByteArrayInputStream(buffer), "\t");
 					
-		        	drawer = new CSVPaginationCatalogDrawer(contextName, csvPaginationCatalogImporter);
+		        	drawer = new CatalogDrawer(contextName, catalogImporter);
 		        	
-					((CSVPaginationCatalogDrawer) drawer).setMorePicURL(Configuration.domain + request.getContextPath() + "/images/More.png");
+					((CatalogDrawer) drawer).setMorePicURL(Configuration.domain + request.getContextPath() + "/images/More.png");
 					
-					((CSVPaginationCatalogDrawer) drawer).setEmptyCartImageURL(Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
+					((CatalogDrawer) drawer).setEmptyCartImageURL(Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
 					
-					((CSVPaginationCatalogDrawer) drawer).setFilledCartImageURL(Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
+					((CatalogDrawer) drawer).setFilledCartImageURL(Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
 					
 		        	/**
 		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information

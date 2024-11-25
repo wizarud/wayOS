@@ -9,6 +9,7 @@ import com.wayos.PathStorage;
 import com.wayos.MessageObject;
 import com.wayos.Session;
 import com.wayos.command.CommandNode;
+import com.wayos.pusher.PusherUtil;
 
 import x.org.json.JSONObject;
 
@@ -87,6 +88,31 @@ public class RegisterAdminCommandNode extends CommandNode {
 		if (configObject==null) {
 			
 			configObject = new JSONObject();
+			
+		} else {
+			
+			/*
+			 * TODO: Alarm the last adminId that would be change to another sessionId
+			 */
+			
+			String lastChannel = configObject.getString("channel");
+			
+			String lastAdminId = configObject.getString("sessionId");
+			
+			if (!lastChannel.equals(channel) || !lastAdminId.equals(sessionId)) {
+				
+				String [] tokens = contextName.split("/");
+				
+				String accountId = tokens[0];
+				
+				String botId = tokens[1];
+				
+				PusherUtil pusherUtil = Application.instance().get(PusherUtil.class);
+				
+				pusherUtil.push(accountId, botId, lastChannel, lastAdminId, "..(-.-)");
+				
+			}
+			
 		}
 
 		configObject.put("channel", channel);

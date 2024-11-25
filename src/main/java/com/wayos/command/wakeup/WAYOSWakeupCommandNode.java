@@ -83,7 +83,7 @@ public class WAYOSWakeupCommandNode extends CommandNode {
         session.adminCommandList().add(new AdminCommandNode(new ImportCSVDataCommandNode(session, new String[]{"importtsv"}, "\t")));
         session.adminCommandList().add(new AdminCommandNode(new ExportCSVDataCommandNode(session, new String[]{"exporttsv"}, "\t")));
         */
-        
+                
         /**
          * Delegate command to Custom Implementation
          */
@@ -99,10 +99,11 @@ public class WAYOSWakeupCommandNode extends CommandNode {
         session.adminCommandList().add(new AdminCommandNode(new SaveDataCommandNode(session, new String[]{"บันทึกข้อมูล"})));
         session.adminCommandList().add(new AdminCommandNode(new BackupDataCommandNode(session, new String[]{"สำรองข้อมูล"})));
         */
-        session.adminCommandList().add(new AdminCommandNode(new ImportWayDataCommandNode(session, new String[]{"wayos"})));        
+        session.adminCommandList().add(new AdminCommandNode(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"})));
+        session.adminCommandList().add(new AdminCommandNode(new ImportWayDataCommandNode(session, new String[]{"wayos"})));
 
         session.commandList().clear();
-        session.commandList().add(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"}, Match.Head));
+        //session.commandList().add(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"}, Match.Head));
         session.commandList().add(new GreetingCommandNode(session, new String[]{"greeting", "ดีจ้า"}));
         session.commandList().add(new WakeCommandNode(session, new String[]{"silent"}));
         

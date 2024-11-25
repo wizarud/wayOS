@@ -25,7 +25,7 @@ public class BotCallerCommandNode extends CommandNode {
 		String [] tokens = params.split(" ", 2);
 		
 		if (tokens.length!=2) {
-			System.err.println("BotCallerCommand:" + messageObject);
+			System.out.println("BotCallerCommand (Tokens.length!=2):" + messageObject);
 			return "";
 		}
 		
@@ -34,10 +34,12 @@ public class BotCallerCommandNode extends CommandNode {
 		String sendMessage = tokens[1].trim();
 		String toContextName = session.context().name().split("/")[0] + "/" + botName;
 		
+		/*
 		System.out.println("BotCallerCommandNode");
 		System.out.println("sessionId: " + sessionId);
 		System.out.println("toContextName: " + toContextName);
 		System.out.println("sendMessage: " + sendMessage);
+		*/
 		
 		RequestObject requestObject = RequestObject.create("http", sessionId, toContextName);
 		
@@ -61,8 +63,8 @@ public class BotCallerCommandNode extends CommandNode {
 			}
 			*/
 						
-			System.out.println("responseText: " + responseText);
-			System.out.println();
+			//System.out.println("responseText: " + responseText);
+			//System.out.println();
 			
 			return responseText;
 			

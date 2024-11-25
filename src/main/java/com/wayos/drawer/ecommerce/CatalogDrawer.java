@@ -18,7 +18,7 @@ import com.wayos.drawer.Drawer;
 
 import x.org.json.JSONObject;
 
-public class CSVPaginationCatalogDrawer extends Drawer {
+public class CatalogDrawer extends Drawer {
 	    
 	protected final String contextName;
 		
@@ -32,7 +32,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 	
 	protected final PaginationCatalogImporter paginationCatalogImporter;
 
-	public CSVPaginationCatalogDrawer(String contextName, PaginationCatalogImporter paginationCatalogImporter) {
+	public CatalogDrawer(String contextName, PaginationCatalogImporter paginationCatalogImporter) {
 		
 		this.contextName = contextName;
 		
@@ -70,7 +70,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		/**
 		 * Register Rich Menu Items for shortcut!
 		 */
-		canvas2D.context.prop("richMenus", bundle.getString("cart.label") + ", " + /*bundle.getString("cart.checkout") + ", " + */ bundle.getString("cart.clear") + ", " + bundle.getString("cart.order.view"));
+		canvas2D.context.prop("richMenus", bundle.getString("cart.label") /* + ", " + bundle.getString("cart.checkout") + ", " + bundle.getString("cart.clear") + ", " + bundle.getString("cart.order.view")*/);
 		
 		PageIterator<Catalog> catalogPageIterator = paginationCatalogImporter.getCatalogPageIterator(9);
 		
@@ -88,7 +88,12 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 			isForwarder = false;
 		}
 			
-		Canvas2D.Entity homeEntity = canvas2D.newEntity(parentEntities, "", bundle.getString("cart.home"), isForwarder);
+		String title = canvas2D.context.prop("title");
+		if (title==null) {
+			title = bundle.getString("cart.home");
+		}
+		
+		Canvas2D.Entity homeEntity = canvas2D.newEntity(parentEntities, "", title, isForwarder);
 
 		parentEntities = new Canvas2D.Entity[] { homeEntity };
 		
@@ -231,7 +236,7 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 						
 						productEntityMap.put(emptyItemEntity, p);
 						productEntityMap.put(hasItemEntity, p);
-						
+
 						cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "[br]");//&#10; is html unicode newline
 						cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "[br]");
 						cartClearCmds.append(" `?i_" + p.sku + "=0`");
@@ -386,12 +391,16 @@ public class CSVPaginationCatalogDrawer extends Drawer {
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
+		Canvas2D.Entity payAtPaymentPointChoiceEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity }, bundle.getString("cart.patAtPaymentPoint"), "", bundle.getString("cart.patAtPaymentPoint"), false);
+		canvas2D.nextRow(100);
+		canvas2D.nextColumn(200);
+		
 		/**
 		 * Generate Tracking Order Id & Clear Orders
 		 */
 		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=Order ID:#THE_ORDER[br]#contact[br][br]#s_orders[br]" + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "[br][br]%year-%monthNumber-%date %hour:%minute:%second NEW`" + " " + "`?e_.=" + bundle.getString("cart.order.notify") + " #contact,#channel/#sessionId,#THE_ORDER`";
 
-		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
+		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity, payAtPaymentPointChoiceEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		

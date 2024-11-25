@@ -10,7 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wayos.Configuration;
 import com.wayos.Context;
+import com.wayos.util.CSVWrapper;
 
 import x.org.json.JSONObject;
 
@@ -68,6 +70,14 @@ public class ContextPropertiesServlet extends ConsoleServlet {
 			context.save();
 			
 			context.load(); //Reload after save
+			
+			/**
+			 * Update chai.tsv
+			 */
+			String lines = new CSVWrapper(context, "\t").toString();
+    		String tsvPath = Configuration.PRIVATE_PATH + contextName + ".chai.tsv";
+    		
+			storage().write(lines, tsvPath);
 			
 			resp.setContentType("text/plain");
 

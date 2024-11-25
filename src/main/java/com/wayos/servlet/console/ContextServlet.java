@@ -93,6 +93,8 @@ public class ContextServlet extends ConsoleServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
+		req.setCharacterEncoding("UTF-8");
+		
 		String requestURI = req.getRequestURI();
 		String contextName = contextName(requestURI, false);
 		

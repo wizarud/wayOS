@@ -33,9 +33,13 @@ public class CommandExpression extends Expression {
         	
             String result = "";
             
+            session.clearProblem();// Clear Question incase of calling command under choice
+            
     		for (CommandNode node : session.commandList()) {
     			
     			if (node.matched(hookMessageObject)) {
+    				
+    				//System.out.println("matched: " + node.getClass().getName());
     				
     				result = node.execute(paramsMessageObject);
     				

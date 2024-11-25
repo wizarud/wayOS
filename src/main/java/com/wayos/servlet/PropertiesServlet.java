@@ -33,6 +33,11 @@ public class PropertiesServlet extends ConsoleServlet {
 			properties.remove("silent");
 			properties.remove("unknown");
 			
+			/**
+			 * To protect duplicate session id for multiapp in same web browser
+			 * I use contextName prefix
+			 * <contextName>-<currentTimeMS>
+			 */
 			properties.put("sessionId", sessionPool().generateSessionId());
 			
 			resp.setHeader("Access-Control-Allow-Origin", "*");

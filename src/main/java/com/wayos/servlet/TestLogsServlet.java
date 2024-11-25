@@ -51,11 +51,11 @@ public class TestLogsServlet extends ConsoleServlet {
 			return;
 		}
 		
-		consoleUtil.appendVars(null, accountId, botId, "test", sessionId, message, "|");
+		consoleUtil.appendLogVars(null, accountId, botId, "test", sessionId, message, "|");
 		
 		response.setContentType("application/json");
 		
-		response.getWriter().print(consoleUtil.readVarsFromDate(accountId, botId, consoleUtil.nowString()));
+		response.getWriter().print(consoleUtil.readLogVarsFromDate(accountId, botId, consoleUtil.nowString()));
 	}
 
 }

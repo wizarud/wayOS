@@ -458,9 +458,21 @@ public class Node implements Serializable, Comparable<Node> {
     	 */
     	String lowerCaseInput = input.toLowerCase();
     	
+    	//System.out.println(">>" + lowerCaseInput);
+    	
         for (Hook hook:hookList) {
-            if (lowerCaseInput.startsWith(hook.text.toLowerCase())) {
+        	
+        	//System.out.println("clean:>>" + input + ">>" + hook.text.toLowerCase());
+        	
+        	if (lowerCaseInput.equals(hook.text.toLowerCase())) {
+        		
+        		input = "";
+        		
+        	} else if (lowerCaseInput.startsWith(hook.text.toLowerCase()) &&
+        			input.length() > hook.text.length()) {
+        		
                 input = input.substring(hook.text.length()).trim();
+                
             }
         }
     	

@@ -48,7 +48,7 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
 				
     	if (appSecret==null) throw new IllegalArgumentException("Missing AppSecret");
     	
-    	setSignature(request.getHeader("Brainy-Signature"));
+    	//setSignature(request.getHeader("Brainy-Signature")); For what???
     	
     	FacebookSignatureValidator facebookSignatureValidator = new FacebookSignatureValidator(appSecret.getBytes());
         

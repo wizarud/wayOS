@@ -67,10 +67,10 @@ public class URLInspector {
 		
         String urlLowerCase = url.toLowerCase();
         
-        if (urlLowerCase.endsWith(".png") || 
-        		urlLowerCase.endsWith(".jpeg") || 
-        			url.toLowerCase().endsWith(".jpg") ||
-        				url.toLowerCase().endsWith(".gif")) {
+        if (urlLowerCase.endsWith("png") || 
+        		urlLowerCase.endsWith("jpeg") || 
+        			url.toLowerCase().endsWith("jpg") ||
+        				url.toLowerCase().endsWith("gif")) {
         	
         	/*
         	System.out.println("Checking image url:" + url);

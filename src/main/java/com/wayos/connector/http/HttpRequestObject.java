@@ -21,7 +21,7 @@ public class HttpRequestObject extends RequestObject {
 	    	
     protected final MessageObject messageObject;
     
-	protected String signature;
+	private String signature;
 	
 	protected String message;
 	
@@ -63,6 +63,17 @@ public class HttpRequestObject extends RequestObject {
 				sessionId = uriToContextResolver.sessionId;				
 			}
 			
+			/**
+			 * TODO: Do we need to protect webhook API with public property? 
+			 * in case of limit access for author only
+			 * PlayServlet > WebHookServlet (Key Header chk)
+			 * 
+			 * TODO: use secret from SECRET configuration in API page!
+			 * SignatureValidator signatureValidator = new SignatureValidator(Configuration.privatePath / secret in publish);
+			 * 
+			 * show responseText as "You dont have authorize to access this content"
+			 */
+			
 		} catch (Exception e) {
 			
 			contextName = null;
@@ -88,7 +99,7 @@ public class HttpRequestObject extends RequestObject {
 		return Application.instance().get(PathStorage.class);
 	}
 	
-	public void setSignature(String signature) {
+	private void setSignature(String signature) {
 		
 		this.signature = signature;
 	}

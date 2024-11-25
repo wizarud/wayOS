@@ -19,7 +19,7 @@ public class ResponseFactoryCommandNode extends ResponseCommandNode {
         System.out.println("Node: " + node);
         System.out.println("Node Type: " + type);
         System.out.println();
-        */
+        */        
         
     	String responseText = node.response();
     	

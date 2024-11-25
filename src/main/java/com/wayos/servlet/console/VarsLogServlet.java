@@ -28,6 +28,8 @@ public class VarsLogServlet extends ConsoleServlet {
 		
 		String dateString = request.getParameter("date");
 		
+		String yearAndMonth = request.getParameter("yearAndMonth");
+		
 		ConsoleUtil consoleUtil = consoleUtil();
 		
 		response.setCharacterEncoding("UTF-8");
@@ -35,13 +37,29 @@ public class VarsLogServlet extends ConsoleServlet {
 		response.setContentType("application/json");
 		
 		if (dateString==null) {
-									
-			response.getWriter().print(consoleUtil.dateList(accountId, botId));
+			
+			/**
+			 * Year and Month List by logs datetime
+			 */
+			if (yearAndMonth==null) {
+				
+				response.getWriter().print(consoleUtil.logsGroupAsYearAndMonth(accountId, botId));
+				
+				return;
+				
+			}
+
+			response.getWriter().print(consoleUtil.dateList(accountId, botId, yearAndMonth));
 			
 			return;
 		}
 		
-		response.getWriter().print(consoleUtil.readVarsFromDate(accountId, botId, dateString));
+		/**
+		 * TODO: mark as read!
+		 */
+		//consoleUtil().removeReadLogVars(accountId, botId, dateString);
+		
+		response.getWriter().print(consoleUtil.readLogVarsFromDate(accountId, botId, dateString));
 	}
 	
 }

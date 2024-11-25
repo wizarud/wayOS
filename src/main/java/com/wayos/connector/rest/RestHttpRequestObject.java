@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.wayos.Configuration;
 import com.wayos.Session;
+import com.wayos.command.admin.AdminCommandNode;
 import com.wayos.connector.http.HttpRequestObject;
 
 public class RestHttpRequestObject extends HttpRequestObject {
@@ -111,8 +112,32 @@ public class RestHttpRequestObject extends HttpRequestObject {
 		super.prepare(session);
 		
         session.vars("#s_fullName",  "Guest");
-		
+        
+        /**
+         * 
+         * TODO: Self Sign if is login and owner of botId
+         * 
+         */
+        Object sessionAccountId = super.request.getSession().getAttribute("accountId");
+        
+        if (sessionAccountId!=null) {
+        	
+    		String [] tokens = contextName.split("/");
+    		
+    		
+    		String accountId = tokens[0];
+    		String botId = tokens[1];
+
+    		if (sessionAccountId.equals(accountId)) {
+    			
+    			System.out.println("Selfsign for authentication:" + accountId);
+    			
+    			messageObject.attr("selfSign", Configuration.brainySecret);
+    			
+    		}
+        
+        } 
+	
 	}
-	
-	
+
 }

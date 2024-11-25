@@ -12,7 +12,7 @@ import java.util.Scanner;
  * @author eoss-th
  *
  */
-public class CSVPaginationCatalogImporter extends PaginationCatalogImporter {
+public class CatalogImporter extends PaginationCatalogImporter {
 	
     NumberFormat priceFormatter = NumberFormat.getInstance();
     
@@ -20,7 +20,7 @@ public class CSVPaginationCatalogImporter extends PaginationCatalogImporter {
 	protected final String delimeter;
 	protected final InputStream csvInputStream;
 		
-	public CSVPaginationCatalogImporter(String brandName, InputStream csvInputStream, String delimeter) {
+	public CatalogImporter(String brandName, InputStream csvInputStream, String delimeter) {
 		this.brandName = brandName;
 		this.delimeter = delimeter;		
 		this.csvInputStream = csvInputStream;

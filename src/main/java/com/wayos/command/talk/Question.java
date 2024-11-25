@@ -142,7 +142,8 @@ public class Question {
 
                     String linkURL = responses[responses.length-1].trim();
 
-                    if (linkURL.contains("://") /*For Web or App*/ ||
+                    if (linkURL.startsWith("https://") ||
+                    		linkURL.startsWith("http://")||
                     		linkURL.startsWith("tel:") || 
                     		linkURL.startsWith("mailto:") ) {
                         /**
@@ -249,7 +250,7 @@ public class Question {
     }
 
     public static Question build(String text) {
-    	    	
+    	
     	text = text.replaceFirst("Question:", "");
     	
     	String label = text.substring(0, text.indexOf("Id:"));

@@ -130,7 +130,7 @@ public class Expression {
 
             String [] args = expression.split("://");
             
-            System.out.println("CMD:" + expression);
+            //System.out.println("CMD:" + expression);
 
             return new CommandExpression(session, args);
 

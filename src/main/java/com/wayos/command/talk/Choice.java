@@ -17,7 +17,7 @@ public class Choice {
     }
 
     public static Choice build(String parentId, String line) {
-
+    	
         String [] tokens = line.split("\t");
         String label = tokens[0].trim();
 
@@ -26,7 +26,7 @@ public class Choice {
 
         String linkURL;
         try { linkURL = tokens[2].trim(); } catch (Exception e) { linkURL = null; }
-
+        
         imageURL = imageURL!=null && !imageURL.isEmpty() ? imageURL : null;
         linkURL = linkURL!=null && !linkURL.isEmpty() ? linkURL : null;
 

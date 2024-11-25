@@ -278,9 +278,10 @@ public class WebPusher extends Pusher {
                     synchronized (session) {
                     	
                     	//session.getBasicRemote().sendText(responseObject.toJSONString());
+                    	                                    	
+                    	//session.getBasicRemote().sendText(message);
                     	
-                    	session.getBasicRemote().sendText(message);
-                    	
+                    	session.getBasicRemote().sendText(new ResponseObject(message).toJSONString());
                     }
             		
             	}

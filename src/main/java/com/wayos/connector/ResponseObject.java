@@ -170,6 +170,12 @@ public class ResponseObject {
     	
     	responseText = responseText.replace("[br]", System.lineSeparator()); 
     	
+    	//TODO: For call another bot and place question result on question
+    	/*
+    	if (responseText.startsWith("Question:") && responseText.contains("Id:")) {
+    	}
+    	*/
+     	
     	this.responseText = responseText;
     	
         String [] responses = this.responseText.split("\n\n\n");
@@ -177,11 +183,15 @@ public class ResponseObject {
 
         List<Question> questionList = new ArrayList<>();
         
+        String tokens0LowerCase;
+        
         for (String response:responses) {
         	
             tokens = response.split(" ", 2);
+            
+            tokens0LowerCase = tokens[0].toLowerCase();//For Media check
 
-            if (tokens[0].startsWith("Question:")) {
+            if (tokens[0].startsWith("Question:") && response.contains("Id:")) {
 
         		questionList.add(Question.build(response));
 
@@ -191,11 +201,11 @@ public class ResponseObject {
                 	
                     messageList.add(new Image(tokens[0]));
                     
-                } else if (tokens[0].endsWith("m4a") || tokens[0].endsWith("mp3") || tokens[0].endsWith("wav")) {
+                } else if (tokens0LowerCase.endsWith("m4a") || tokens0LowerCase.endsWith("mp3") || tokens0LowerCase.endsWith("wav")) {
                 	
                     messageList.add(new Audio(tokens[0]));
                     
-                } else if (tokens[0].endsWith("mp4")) {
+                } else if (tokens0LowerCase.endsWith("mp4")) {
                 	
                     messageList.add(new Video(tokens[0]));
                     

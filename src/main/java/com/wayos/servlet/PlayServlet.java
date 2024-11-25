@@ -13,7 +13,6 @@ import com.wayos.servlet.console.ConsoleServlet;
 import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
-@WebServlet("/x/*")
 public class PlayServlet extends ConsoleServlet {
 	
 	@Override
@@ -40,7 +39,7 @@ public class PlayServlet extends ConsoleServlet {
 			Context context = sessionPool().getContext(contextName);
 			
 			context.load();//TODO: Do we need to load again?
-			
+						
 			/**
 			* filter only title, desc, borderColor & loadingGif
 			*/
@@ -60,7 +59,6 @@ public class PlayServlet extends ConsoleServlet {
 			
 		}
 				
-		req.getRequestDispatcher("/play.jsp").forward(req, resp);
 	}
 	
 }

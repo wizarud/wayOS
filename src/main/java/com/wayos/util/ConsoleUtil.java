@@ -2,9 +2,16 @@ package com.wayos.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import com.wayos.Configuration;
 import com.wayos.PathStorage;
@@ -15,6 +22,8 @@ import x.org.json.JSONObject;
 public class ConsoleUtil {
 		
 	static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	static final DateFormat directoryDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	
 	static final DateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss.SSSSSS");
 	
@@ -61,6 +70,11 @@ public class ConsoleUtil {
 		return dateFormat.format(new Date());
 	}
 	
+	public String directoryNowString() {
+		
+		return directoryDateFormat.format(new Date());
+	}
+	
 	public String timestampString() {
 		
 		return timestampFormat.format(new Date());
@@ -104,6 +118,73 @@ public class ConsoleUtil {
 	}	
 	
 	/**
+	 * Filter by year and month
+	 * @param accountId
+	 * @param botId
+	 * @param yearAndMonth
+	 * @return
+	 */
+	public JSONArray dateList(String accountId, String botId, String yearAndMonth) {
+		
+		String directoryYearAndMonth = yearAndMonth.replace("-", "/");
+		
+		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/" + directoryYearAndMonth + "/";
+		
+		List<String> objectList = storage.listObjectsWithPrefix(resourcePath);
+		
+		/**
+		 * Descending date
+		 */
+		Collections.sort(objectList, Collections.reverseOrder());
+		
+		JSONArray array = new JSONArray();
+		
+		for (String object:objectList) {
+			
+			if (object.equals(resourcePath)) continue;
+			
+			if (object.startsWith(".")) continue; //Skip MacOS hidden files
+			
+			/**
+			 * For GCP Storage
+			 */
+			if (object.contains("/")) {
+				
+				object = object.substring(resourcePath.length(), object.lastIndexOf("/"));				
+				
+			}
+			
+			array.put(yearAndMonth + "-" + object);
+
+		}
+				
+		/**
+		 * At current date if yearAndMonth is now and not exists in array
+		 */
+		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String nowDateString = yearAndMonthFormat.format(new Date());
+		
+		if (nowDateString.startsWith(yearAndMonth)) {
+			
+			if (array.length()==0 || 
+					!array.getString(0).equals(nowDateString)) {
+				
+				//Insert to the first position
+				JSONArray newArray = new JSONArray();				
+				newArray.put(nowDateString);			
+				for (int i=0;i<array.length();i++) {
+					newArray.put(array.get(i));
+				}
+				
+				return newArray;
+			}
+		}
+				
+		return array;
+	}
+
+	/**
 	 * Log vars
 	 * values
 	 * 
@@ -114,57 +195,91 @@ public class ConsoleUtil {
 	 * @param sessionId
 	 * @param message
 	 */
-	public void appendVars(Long timestamp, String accountId, String botId, String channel, String sessionId, String values, String delimeter) {
+	public void appendLogVars(Long timestamp, String accountId, String botId, String channel, String sessionId, String values, String delimeter) {
 		
-		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/" + nowString() + "/vars.json";
+		String directoryNowString = directoryNowString();
 		
-		JSONObject lastLogJSON = storage.readAsJSONObject(resourcePath);
+		String timestampString, timestampIndex;
 		
 		String records = channel + delimeter + sessionId + delimeter + values;
 		
-		if (lastLogJSON==null) {
+		JSONObject json = new JSONObject();
+		
+		if (timestamp==null) {
 			
-			lastLogJSON = new JSONObject();
+			timestamp = new Date().getTime();
+		}
+				
+		timestampString = timestampString(timestamp);
+		
+		json.put(timestampString, records);
+		
+		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/" + directoryNowString + "/" + timestamp + ".json";
+				
+		storage.write(json.toString(), resourcePath);
+		
+		/**
+		 * TODO: Logging unread!
+		 */		
+		String unreadPath = Configuration.PRIVATE_PATH + accountId + "/" + botId + ".unread.json";
+		
+		JSONObject unreadJSON = storage.readAsJSONObject(unreadPath);
+		
+		if (unreadJSON==null) {
+			
+			unreadJSON = new JSONObject();
+			
 		}
 		
-		if (timestamp!=null) {
-			
-			lastLogJSON.put(timestampString(timestamp), records);
-			
-		} else {
-			
-			lastLogJSON.put(timestampString(), records);
-			
+		String nowString = directoryNowString.replace("/", "-");
+		
+		JSONArray timestampArray = unreadJSON.optJSONArray(nowString);
+		
+		if (timestampArray==null) {
+		
+			timestampArray = new JSONArray();
+		
 		}
 		
+		timestampArray.put(timestampString);
 		
-		storage.write(lastLogJSON.toString(), resourcePath);
+		unreadJSON.put(nowString, timestampArray);
+		
+		storage.write(unreadJSON.toString(), unreadPath);		
 		
 	}
 	
-	public JSONObject readVarsFromDate(String accountId, String botId, String dateString) {
+	public JSONArray readLogVarsFromDate(String accountId, String botId, String dateString) {
 		
-		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/" + dateString + "/vars.json";
+		String directoryNowString = dateString.replace("-", "/");
 		
-		JSONObject logJSON = storage.readAsJSONObject(resourcePath);
+		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/" + directoryNowString + "/";
 		
-		if (logJSON==null) {
+		List<String> objectList = storage.listObjectsWithPrefix(resourcePath);
+		
+		/**
+		 * Descending date
+		 */
+		Collections.sort(objectList, Collections.reverseOrder());
+		
+		JSONArray array = new JSONArray();
+		JSONObject json;
+		
+		for (String object:objectList) {
 			
-			return new JSONObject();
+			if (object.equals(resourcePath)) continue;
+			
+			if (object.startsWith(".")) continue; //Skip MacOS hidden files
+			
+			if (object.equals("vars.json")) continue; //Skip old version logs
+			
+			json = storage.readAsJSONObject(Configuration.LOGS_PATH + accountId + "/" + botId + "/" + directoryNowString + "/" + object);
+			
+			array.put(json);
+
 		}
 		
-		/*
-		 TODO: cannot sort by descending key
-		Map<String, Object> logMap = logJSON.toMap();
-		
-		Map<String, Object> reverseSortedMap = new TreeMap<>(Collections.reverseOrder());
-		
-		reverseSortedMap.putAll(logMap);
-		
-		return new JSONObject(reverseSortedMap);
-		*/
-		
-		return logJSON;
+		return array;
 	}
 	
 	/**
@@ -336,6 +451,166 @@ public class ConsoleUtil {
 		
 		storage.write(lastEventJSON.toString(), resourcePath);
 		
-	}	
+	}
 	
+	public JSONArray logsGroupAsYearAndMonth(String accountId, String botId) {
+		
+		Set<String> yearMonthSet = new HashSet<>();
+		
+		String resourcePath = Configuration.LOGS_PATH + accountId + "/" + botId + "/";
+		
+		List<String> yearList = storage.listObjectsWithPrefix(resourcePath);
+		
+		List<String> monthList;
+				
+		for (String year:yearList) {
+		
+			if (year.equals(resourcePath)) continue;
+			
+			if (year.contains("-")) continue;//Skip old version of logging
+			
+			if (year.startsWith(".")) continue;//Skip MacOS hidden files
+			
+			/**
+			 * For GCP Storage
+			 */
+			if (year.contains("/")) {
+				
+				year = year.substring(resourcePath.length(), year.lastIndexOf("/"));				
+				
+			}
+			
+			
+			monthList = storage.listObjectsWithPrefix(resourcePath + year + "/");
+			
+			for (String month:monthList) {
+				
+				if (month.startsWith(".")) continue;//Skip MacOS hidden files
+				
+				yearMonthSet.add(year + "-" + month);
+				
+			}
+			
+		}
+		
+		/**
+		 * At current year and month
+		 */
+		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM");
+		
+		String currentYearAndMonth = yearAndMonthFormat.format(new Date());
+		
+		yearMonthSet.add(currentYearAndMonth);
+		
+		/**
+		 * Convert to List
+		 */
+		List<String> yearMonthList = new ArrayList<>(yearMonthSet);
+				
+		/**
+		 * Descending date
+		 */
+		Collections.sort(yearMonthList, Collections.reverseOrder());
+		
+		
+		/**
+		 * Pack as JSONArray
+		 */
+		JSONArray yearMonthArray = new JSONArray();
+		
+		for (String yearAndMonth:yearMonthList) {
+			
+			yearMonthArray.put(yearAndMonth);
+			
+		}
+				
+		return yearMonthArray;
+	}
+	
+	/**
+	 * Unread logging for botId
+	 */
+	private JSONObject unreadLogVars(String accountId, String botId) {
+		
+		String unreadPath = Configuration.PRIVATE_PATH + accountId + "/" + botId + ".unread.json";
+		
+		JSONObject unreadJSON = storage.readAsJSONObject(unreadPath);
+		
+		if (unreadJSON==null) {
+			
+			unreadJSON = new JSONObject();
+			
+		}
+		
+		return unreadJSON;
+		
+	}
+	
+	/**
+	* Get all Unread Report Amount from unreadLogVars
+	*/
+	public int allUnreadLogVarsCount(String accountId, String botId) {
+		
+		JSONObject unreadJSON = unreadLogVars(accountId, botId);
+
+		int allUnreadCount = 0;
+		
+		JSONArray timestampArray;
+		
+		for (String dateString:unreadJSON.keySet()) {
+			
+			timestampArray = unreadJSON.getJSONArray(dateString);
+			
+			allUnreadCount += timestampArray.length();
+			
+		}
+		
+		return allUnreadCount;
+	}
+	
+	/**
+	* Get Unread Report Amount from unreadLogVars filter by dateString
+	*/
+	public int unreadLogVarsAtDate(String accountId, String botId, String dateString) {
+		
+		JSONObject unreadJSON = unreadLogVars(accountId, botId);
+		
+		JSONArray timestampArray = unreadJSON.optJSONArray(dateString);
+		
+		if (timestampArray!=null) {
+			
+			return timestampArray.length();
+			
+		}
+		
+		return 0;
+	}
+	
+	/**
+	 * remove read logs target date string index
+	 * @param accountId
+	 * @param botId
+	 */
+	public void removeReadLogVars(String accountId, String botId, String targetDate) {
+
+		String unreadPath = Configuration.PRIVATE_PATH + accountId + "/" + botId + ".unread.json";
+		
+		JSONObject unreadJSON = storage.readAsJSONObject(unreadPath);
+		
+		if (unreadJSON==null) {
+			
+			unreadJSON = new JSONObject();
+			
+		}
+		
+		JSONArray timestampArray = unreadJSON.optJSONArray(targetDate);
+		
+		if (timestampArray==null) return;//Not found targetDate, Do nothing!
+		
+		unreadJSON.remove(targetDate);
+		
+		storage.write(unreadJSON.toString(), unreadPath);		
+		
+	}
+
 }

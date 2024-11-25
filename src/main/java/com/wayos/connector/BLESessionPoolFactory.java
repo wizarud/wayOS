@@ -330,13 +330,14 @@ public class BLESessionPoolFactory {
 						 */
 						if (varChangedName.startsWith("#l_")) {
 							
-							consoleUtil.appendVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
+							consoleUtil.appendLogVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
 							
 							/**
 							 * Notify to registered admin channel / sessionId to notify if this session is not from admin
-							 */
-							
+							 */							
 							if (toSessionId!=null && !toSessionId.equals(sessionId)) {
+								
+								//System.out.println("Try to push message to admin " + toChannel + "/" + toSessionId);
 								
 								pusherUtil.push(toAccountId, toBotId, toChannel, toSessionId, varChangedValue);
 								

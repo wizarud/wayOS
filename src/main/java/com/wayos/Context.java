@@ -140,10 +140,8 @@ public abstract class Context implements Serializable {
 
     public final void loadJSON(String jsonString) {
     	
-        lock.readLock().lock();
-        
-        try {
-        	
+    	synchronized(nodeList) {
+    		
             JSONObject object = new JSONObject(jsonString);
             
             Set<String> propertyNames = object.keySet();
@@ -250,14 +248,9 @@ public abstract class Context implements Serializable {
             	}
             }
             
-            //debug();            
-            
-        } finally {
-        	
-            lock.readLock().unlock();
-        	
-        }
-        
+    	}
+    	            
+        //debug();        
     }
     
     private void debug() {

@@ -239,12 +239,14 @@ public class Session implements Serializable {
 				
 				/**
 				 * Clean Input
-				 * TODO: howabout \n # % $ gt gte lt lte * 
+				 * TODO: howabout . \n # % $ gt gte lt lte * 
 				 */
 				String input = messageObject.toString();
 				
 				//Project injection from , <comma space>				
-				input = input.replace(",", "");				
+				input = input.replace(",", "");
+				
+				input = input.replace(".", "");//TODO: Do we need to clean?
 				
 				messageObject.setText(input);
 				

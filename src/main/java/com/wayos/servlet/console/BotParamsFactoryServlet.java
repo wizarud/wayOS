@@ -16,7 +16,7 @@ import com.wayos.context.MemoryContext;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.QuizDrawer;
-import com.wayos.drawer.ecommerce.CSVPaginationCatalogDrawer;
+import com.wayos.drawer.ecommerce.CatalogDrawer;
 import com.wayos.drawer.ecommerce.Catalog;
 import com.wayos.drawer.ecommerce.PaginationCatalogImporter;
 import com.wayos.drawer.ecommerce.Product;
@@ -213,7 +213,7 @@ public class BotParamsFactoryServlet extends ConsoleServlet {
 
 			Canvas2D canvas2D = new Canvas2D(context, brand, 100, true);
 			
-			drawer = new CSVPaginationCatalogDrawer(context.name(), paginationCatalogImporter);			
+			drawer = new CatalogDrawer(context.name(), paginationCatalogImporter);			
 
 			drawer.draw(canvas2D);
 			

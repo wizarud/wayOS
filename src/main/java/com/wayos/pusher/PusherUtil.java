@@ -17,7 +17,13 @@ public class PusherUtil {
 	
 	private Pusher pusher(String channel) {
 		
-		return (Pusher) Application.instance().get(channel);
+		Pusher pusher = (Pusher) Application.instance().get(channel);
+		
+		System.out.println("pusher:" + channel + ":" + pusher);
+		
+		//System.out.println(pusher.getClass().getName());
+		
+		return pusher;
 	}
 	
 	private SessionPool sessionPool() {
