@@ -79,6 +79,7 @@ public class GetHTTPExpression extends HTTPExpression {
 
         } catch (Exception e) {
         	
+        	System.err.println("GET:" + apiURL);
         	e.printStackTrace();
         	
             response.append(e.getMessage());

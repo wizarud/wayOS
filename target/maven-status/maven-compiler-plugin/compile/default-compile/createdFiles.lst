@@ -31,7 +31,6 @@ com/wayos/connector/http/HttpRequestObject.class
 com/wayos/command/wakeup/ContextConfigWakeupCommandNode.class
 com/wayos/database/DatastoreService$Equals.class
 com/wayos/database/DatastoreService$LowerOrEqualsThan.class
-com/wayos/drawer/ecommerce/CSVPaginationCatalogImporter.class
 com/wayos/connector/BLESessionPoolFactory$2.class
 com/wayos/experiment/command/WakeupCommandNode.class
 com/wayos/command/data/ImportJSONDataCommandNode.class
@@ -41,7 +40,6 @@ com/wayos/command/data/LoadDataCommandNode.class
 com/wayos/database/Entity.class
 com/wayos/experiment/model/ForwardResult.class
 com/wayos/drawer/basic/DataTableDrawer$GoogleSheetsAdapter.class
-com/wayos/drawer/ecommerce/CSVPaginationCatalogDrawer.class
 com/wayos/connector/ResponseConnector.class
 com/wayos/database/DatastoreService$1.class
 com/wayos/connector/RequestObject.class

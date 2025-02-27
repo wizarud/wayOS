@@ -207,7 +207,7 @@ public class Session implements Serializable {
 				
 				text = text.substring(0, text.length()-1);//Clear tail
 				
-				System.out.println("Shouting: " + text);
+				//System.out.println("Shouting: " + text);
 				
 				messageObject.setText(text);
 				
@@ -246,7 +246,7 @@ public class Session implements Serializable {
 				//Project injection from , <comma space>				
 				input = input.replace(",", "");
 				
-				input = input.replace(".", "");//TODO: Do we need to clean?
+				//input = input.replace(".", "");//TODO: Do we need to clean?
 				
 				messageObject.setText(input);
 				
@@ -532,13 +532,13 @@ public class Session implements Serializable {
         
         paramMap.put("%timehex", Long.toHexString(timestamp).toUpperCase());
 
-        paramMap.put("%dayString", new SimpleDateFormat("EEEE").format(calendar.getTime()));
+        paramMap.put("%dayString", new SimpleDateFormat("EEEE", locale).format(calendar.getTime()));
         
-        paramMap.put("%monthString", new SimpleDateFormat("MMM").format(calendar.getTime()));
+        paramMap.put("%monthString", new SimpleDateFormat("MMM", locale).format(calendar.getTime()));
         
-        paramMap.put("%monthNumber", new SimpleDateFormat("MM").format(calendar.getTime()));
+        paramMap.put("%monthNumber", new SimpleDateFormat("MM", locale).format(calendar.getTime()));
         
-        paramMap.put("%date", new SimpleDateFormat("dd").format(calendar.getTime()));
+        paramMap.put("%date", new SimpleDateFormat("dd", locale).format(calendar.getTime()));
         
         return paramMap;
     }

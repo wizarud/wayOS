@@ -87,7 +87,7 @@ public class WayDrawer extends Drawer {
         				
                 		unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "`post://" + body + "://" + url + "`", false);
         	    		canvas2D.nextColumn(200);
-        				
+        	    		
         			} else {
         				
                 		unknown = canvas2D.newEntity(new Canvas2D.Entity [] { canvas2D.UNKNOWN }, "", "", "`cmd://call://" + parentBot + " ##`", false);

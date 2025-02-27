@@ -3,15 +3,14 @@ package com.wayos.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import com.wayos.Configuration;
 import com.wayos.PathStorage;
@@ -21,17 +20,31 @@ import x.org.json.JSONObject;
 
 public class ConsoleUtil {
 		
-	static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 	
-	static final DateFormat directoryDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+	static final DateFormat directoryDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 	
-	static final DateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss.SSSSSS");
+	static final DateFormat timestampFormat = new SimpleDateFormat("HH:mm:ss.SSSSSS", Locale.US);
 	
 	private final PathStorage storage;
 	
 	public ConsoleUtil(PathStorage storage) {
 		
 		this.storage = storage;
+	}
+	
+	public void timestampIfNotExists(String accountId, String botId, String channel, String sessionId) {
+						
+		Configuration configuration = new Configuration(accountId + "/" + botId);
+		
+		String path = configuration.vars(channel, sessionId);
+		
+		if (storage.readAsJSONObject(path)==null) {
+			
+			storage.write((new JSONObject().toString()), path);
+			
+		}
+		
 	}
 	
 	public JSONArray sessionIdList(String accountId, String botId, String channel) {
@@ -63,6 +76,15 @@ public class ConsoleUtil {
 		}
 		
 		return array;
+	}
+	
+	public int sessionCount(String accountId, String botId, String channel) {
+		
+		String resourcePath = Configuration.VARS_PATH + accountId + "/" + botId + "/" + channel + "/";
+		
+		List<String> objectList = storage.listObjectsWithPrefix(resourcePath);
+		
+		return objectList.size();
 	}
 		
 	public String nowString() {
@@ -161,7 +183,7 @@ public class ConsoleUtil {
 		/**
 		 * At current date if yearAndMonth is now and not exists in array
 		 */
-		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 		
 		String nowDateString = yearAndMonthFormat.format(new Date());
 		
@@ -274,6 +296,8 @@ public class ConsoleUtil {
 			if (object.equals("vars.json")) continue; //Skip old version logs
 			
 			json = storage.readAsJSONObject(Configuration.LOGS_PATH + accountId + "/" + botId + "/" + directoryNowString + "/" + object);
+			
+			//System.out.println(json);
 			
 			array.put(json);
 
@@ -496,7 +520,7 @@ public class ConsoleUtil {
 		/**
 		 * At current year and month
 		 */
-		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM");
+		DateFormat yearAndMonthFormat = new SimpleDateFormat("yyyy-MM", Locale.US);
 		
 		String currentYearAndMonth = yearAndMonthFormat.format(new Date());
 		

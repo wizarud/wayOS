@@ -201,7 +201,7 @@ public class ResponseObject {
                 	
                     messageList.add(new Image(tokens[0]));
                     
-                } else if (tokens0LowerCase.endsWith("m4a") || tokens0LowerCase.endsWith("mp3") || tokens0LowerCase.endsWith("wav")) {
+                } else if (tokens0LowerCase.endsWith("ogg") || tokens0LowerCase.endsWith("m4a") || tokens0LowerCase.endsWith("mp3") || tokens0LowerCase.endsWith("wav")) {
                 	
                     messageList.add(new Audio(tokens[0]));
                     

@@ -102,6 +102,16 @@ public class DirectoryStorage implements PathStorage {
     		
         	resp.setHeader("Content-Type", "application/zip");
         	
+    	} else if (suffix.endsWith(".css")) {
+    		
+    		resp.setCharacterEncoding("UTF-8");
+        	resp.setHeader("Content-Type", "text/css");
+        	
+    	} else if (suffix.endsWith(".js")) {
+    		
+    		resp.setCharacterEncoding("UTF-8");
+        	resp.setHeader("Content-Type", "text/javascript");
+        	
     	} else if (suffix.endsWith(".htm") || suffix.endsWith(".html")) {
     		
     		resp.setCharacterEncoding("UTF-8");
@@ -118,8 +128,11 @@ public class DirectoryStorage implements PathStorage {
 		
 		//if (!fromFile.exists()) throw new IllegalArgumentException("File not Found! at" + path);
 		
+		resp.setBufferSize(BUFFER_SIZE);//I dont know what it is? but it need for Safari Browser to play video
+		
 		copy(new FileInputStream(fromFile), resp.getOutputStream());
-    
+		
+		//resp.flushBuffer();
 	}
 
 	@Override

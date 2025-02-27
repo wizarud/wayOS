@@ -4,3 +4,5 @@ target/classes/org/.DS_Store
 *.jar
 *.class
 /target/
+.DS_Store
+*.class

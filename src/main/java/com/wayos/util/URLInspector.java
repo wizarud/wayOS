@@ -43,7 +43,10 @@ public class URLInspector {
 	public static boolean isWidget(String url) {
 	    try {
 	    	
-	    	return url.startsWith(Configuration.domain);
+	    	return url.startsWith(Configuration.domain) && 
+	    			(url.endsWith(".htm") || url.endsWith(".html")); //Must be html widget
+	    			//!url.startsWith(Configuration.domain + "/x/");
+	    	
 	    } catch (Exception e) {
 	    	
 	    }

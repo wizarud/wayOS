@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.wayos.Application;
 import com.wayos.Configuration;
+import com.wayos.Context;
 import com.wayos.PathStorage;
 import com.wayos.MessageObject;
 import com.wayos.Session;
@@ -61,18 +62,7 @@ public class HttpRequestObject extends RequestObject {
 			if (sessionId==null && uriToContextResolver.sessionId!=null) {
 				
 				sessionId = uriToContextResolver.sessionId;				
-			}
-			
-			/**
-			 * TODO: Do we need to protect webhook API with public property? 
-			 * in case of limit access for author only
-			 * PlayServlet > WebHookServlet (Key Header chk)
-			 * 
-			 * TODO: use secret from SECRET configuration in API page!
-			 * SignatureValidator signatureValidator = new SignatureValidator(Configuration.privatePath / secret in publish);
-			 * 
-			 * show responseText as "You dont have authorize to access this content"
-			 */
+			}									
 			
 		} catch (Exception e) {
 			

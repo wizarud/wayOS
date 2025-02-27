@@ -327,7 +327,7 @@ public class CatalogDrawer extends Drawer {
 		canvas2D.nextColumn(200);
 		canvas2D.bind(new Canvas2D.Entity[] { backHomeEntity }, homeEntity);
 				
-		Canvas2D.Entity cartItemsEntity = canvas2D.newEntity(new Canvas2D.Entity[] { cartMenuEntity }, "", filledCartImageURL + " " + bundle.getString("cart.summary") + "\n#s_orders\n" +  bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency"), "", true);
+		Canvas2D.Entity cartItemsEntity = canvas2D.newEntity(new Canvas2D.Entity[] { cartMenuEntity }, "", /*filledCartImageURL + " " + bundle.getString("cart.summary") + */ "#s_orders" +  bundle.getString("cart.total") + ": #i_totalPrice " + bundle.getString("cart.currency"), "", true);
 		canvas2D.nextColumn(200);
 		
 		/**

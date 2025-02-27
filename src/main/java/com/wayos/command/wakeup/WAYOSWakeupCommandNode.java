@@ -6,10 +6,12 @@ import com.wayos.MessageObject;
 import com.wayos.Session;
 import com.wayos.command.BotCallerCommandNode;
 import com.wayos.command.CommandNode;
+import com.wayos.command.DateStringToTimestampCommandNode;
 import com.wayos.command.DebugCommandNode;
 import com.wayos.command.EchoCommandNode;
 import com.wayos.command.EntityManagerCommandNode;
 import com.wayos.command.GreetingCommandNode;
+import com.wayos.command.IsExpiredCommandNode;
 import com.wayos.command.Key;
 import com.wayos.command.WakeCommandNode;
 import com.wayos.command.admin.AdminCommandNode;
@@ -99,15 +101,16 @@ public class WAYOSWakeupCommandNode extends CommandNode {
         session.adminCommandList().add(new AdminCommandNode(new SaveDataCommandNode(session, new String[]{"บันทึกข้อมูล"})));
         session.adminCommandList().add(new AdminCommandNode(new BackupDataCommandNode(session, new String[]{"สำรองข้อมูล"})));
         */
-        session.adminCommandList().add(new AdminCommandNode(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"})));
         session.adminCommandList().add(new AdminCommandNode(new ImportWayDataCommandNode(session, new String[]{"wayos"})));
 
         session.commandList().clear();
-        //session.commandList().add(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"}, Match.Head));
+        session.commandList().add(new RegisterAdminCommandNode(session, new String[]{"ลงทะเบียนผู้ดูแล"}));
         session.commandList().add(new GreetingCommandNode(session, new String[]{"greeting", "ดีจ้า"}));
         session.commandList().add(new WakeCommandNode(session, new String[]{"silent"}));
         
         session.commandList().add(new BotCallerCommandNode(session, new String[]{"call"}, Match.Head));
+        //session.commandList().add(new DateStringToTimestampCommandNode(session, new String[]{"dateStringToTimestamp"}, Match.Head));
+        session.commandList().add(new IsExpiredCommandNode(session, new String[]{"expired"}, Match.Head));
         
         /*
         session.commandList().add(new EchoCommandNode(session, new String[]{"echo"}, Match.Head));

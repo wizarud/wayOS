@@ -347,15 +347,6 @@ public class BLESessionPoolFactory {
 						
 						/**
 						 * Only Web Support!!!
-						 * Fire message as a keyword to the current sessionId for many wayoslet instances in the same web browser
-						 */
-						if (channel.equals("web") && varChangedName.startsWith("#w_")) {
-							
-							System.out.println("Boardcasting to web for " + varChangedName + "=" + varChangedValue);
-							WebPusher.boardcast(accountId, botId, sessionId, varChangedValue);
-						}					
-						
-						/**
 						 * Fire message as a keyword to the current context and parse later
 						 */
 						if (varChangedName.startsWith("#m_")) {
@@ -376,8 +367,19 @@ public class BLESessionPoolFactory {
 						}
 						
 						/**
+						 * Only Web Support!!!
+						 * Fire message as a keyword to the current sessionId for many wayoslet instances in the same web browser
+						 */
+						if (channel.equals("web") && varChangedName.startsWith("#w_")) {
+							
+							System.out.println("Boardcasting to web for " + varChangedName + "=" + varChangedValue);
+							WebPusher.boardcast(accountId, botId, sessionId, varChangedValue);
+						}					
+						
+						
+						/**
 						 * TODO: Not test yet!!!
-						 * Fire parsed message to the target contextName
+						 * Fire parsed message of target contextName and push to sessionId
 						 */
 						if (varChangedName.startsWith("#p_")) {
 							

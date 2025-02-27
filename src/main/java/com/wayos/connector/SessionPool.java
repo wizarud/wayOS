@@ -86,19 +86,9 @@ public class SessionPool implements Serializable {
     	
     }
     
-    public String generateSessionId() {
+    public synchronized String generateSessionId() {
 		
-        lock.readLock().lock();
-        
-        try {
-        	
-        	return "" + System.nanoTime();
-
-        } finally {
-        	
-            lock.readLock().unlock();
-        	
-        }
+    	return "" + System.nanoTime();
         
 	}    
     

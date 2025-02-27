@@ -49,6 +49,10 @@ public class AdminCommandNode extends CommandNode {
              */
             String signature = (String) messageObject.attr("signature");
             
+            /**
+             * TODO: Use secret from Dashboard for each botId
+             * Ex: privates/<accountId>/<botId>.secret.json
+             */
             SignatureValidator signatureValidator = new SignatureValidator(Configuration.brainySecret.getBytes());
 
             /**

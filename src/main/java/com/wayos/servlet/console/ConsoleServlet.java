@@ -1,15 +1,12 @@
 package com.wayos.servlet.console;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +30,15 @@ public class ConsoleServlet extends HttpServlet {
 		return new Date();
 	}
 	
+	/**
+	 * For Registration new context
+	 * @param date
+	 * @return
+	 */
 	public String formatDate(Date date) {
 		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss");
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss", Locale.US);
+		//TimeZone.setDefault(TimeZone.getTimeZone("GMT+7"));
 		
 		return dateFormat.format(date);
 		

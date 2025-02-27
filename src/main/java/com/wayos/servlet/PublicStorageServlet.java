@@ -52,9 +52,15 @@ public class PublicStorageServlet extends ConsoleServlet {
 	    	 */
     		resp.setHeader("Content-Type", "image/png"); 
     		
-	    } 
-	    
-	    if (storage().exists(Configuration.PUBLIC_PATH + fileName)) {
+	    }
+
+	    /*
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        */
+        
+        if (storage().exists(Configuration.PUBLIC_PATH + fileName)) {
 	    	
 		    storage().serve(Configuration.PUBLIC_PATH + fileName, resp);
 	    }

@@ -20,25 +20,42 @@ public class PropertiesServlet extends ConsoleServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		String contextName = contextName(req.getRequestURI(), true);
+		
+		String sessionId = req.getParameter("sessionId");
 
+		String [] tokens = contextName.split("/");
+		String accountId = tokens[0];
+		String botId = tokens[1];
+		
 		try {
 			
 			Context context = sessionPool().getContext(contextName);
 			
-			context.load();//TODO: Do we need to load again?
+			context.load();//Reload for update viewCount
 
 			JSONObject properties = new JSONObject(context.prop());
+				
+			/**
+			 * New Session
+			 */
+			if (sessionId==null) {
+				
+				/**
+				 * To protect duplicate session id for multiapp in same web browser
+				 * I use contextName prefix
+				 * <contextName>-<currentTimeMS>
+				 */
+				sessionId = sessionPool().generateSessionId();
+				
+			}
+			
+			properties.put("sessionId", sessionId);
+			properties.put("viewCount", "" + consoleUtil().sessionCount(accountId, botId, "web"));
 			
 			properties.remove("greeting");
 			properties.remove("silent");
 			properties.remove("unknown");
 			
-			/**
-			 * To protect duplicate session id for multiapp in same web browser
-			 * I use contextName prefix
-			 * <contextName>-<currentTimeMS>
-			 */
-			properties.put("sessionId", sessionPool().generateSessionId());
 			
 			resp.setHeader("Access-Control-Allow-Origin", "*");
 			resp.setContentType("application/json");

@@ -51,6 +51,11 @@ public class Configuration {
 		return LIB_PATH + contextName + ".context";
 	}
 	
+	public String statsPath() {
+		
+		return PRIVATE_PATH + contextName + ".stats.json";
+	}
+	
 	public String linePath() {
 		
 		return PRIVATE_PATH + contextName + ".line.json";
