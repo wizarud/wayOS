@@ -28,6 +28,7 @@ import com.wayos.Context;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
 import com.wayos.drawer.basic.DataTableDrawer;
+import com.wayos.drawer.basic.ExtLinkMenuSupportWayDrawer;
 import com.wayos.drawer.basic.WayDrawer;
 import com.wayos.drawer.ecommerce.CatalogDrawer;
 import com.wayos.drawer.ecommerce.CatalogImporter;
@@ -172,7 +173,9 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 						        .lines()
 						        .collect(Collectors.joining("\n"));	
 						        
-		        	drawer = new WayDrawer(way);// Way use the WayDrawer
+		        	//drawer = new WayDrawer(way);// Way use the WayDrawer
+		        	
+		        	drawer = new ExtLinkMenuSupportWayDrawer(way);// Way use the WayDrawer
 		        	
 		    		String wayTxtPath = Configuration.PRIVATE_PATH + contextName + ".way.txt";
 		    		

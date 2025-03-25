@@ -16,6 +16,7 @@ import com.wayos.Hook.Match;
 import com.wayos.command.CommandNode;
 import com.wayos.drawer.Canvas2D;
 import com.wayos.drawer.Drawer;
+import com.wayos.drawer.basic.ExtLinkMenuSupportWayDrawer;
 import com.wayos.drawer.basic.WayDrawer;
 
 public class ImportWayDataCommandNode extends CommandNode {
@@ -50,7 +51,9 @@ public class ImportWayDataCommandNode extends CommandNode {
 				        .lines()
 				        .collect(Collectors.joining("\n"));	
 				        
-        	Drawer drawer = new WayDrawer(way);// Way use the WayDrawer
+        	//Drawer drawer = new WayDrawer(way);// Way use the WayDrawer
+        	
+        	Drawer drawer = new ExtLinkMenuSupportWayDrawer(way);// Way use the WayDrawer
         	
     		String wayTxtPath = Configuration.PRIVATE_PATH + contextName + ".way.txt";
     		

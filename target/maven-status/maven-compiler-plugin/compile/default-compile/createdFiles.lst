@@ -43,7 +43,6 @@ com/wayos/drawer/basic/DataTableDrawer$GoogleSheetsAdapter.class
 com/wayos/connector/ResponseConnector.class
 com/wayos/database/DatastoreService$1.class
 com/wayos/connector/RequestObject.class
-com/wayos/servlet/campaign/CatalogFactoryServlet.class
 com/wayos/command/admin/DeleteCommandNode.class
 com/wayos/servlet/SignInServlet.class
 com/wayos/database/DatastoreService$Operation.class
@@ -251,7 +250,6 @@ com/wayos/connector/speech/SpeechHttpRequestObject.class
 com/wayos/drawer/basic/WayDrawer.class
 com/wayos/drawer/ecommerce/Catalog.class
 com/wayos/connector/line/LINEAPI.class
-com/wayos/servlet/campaign/CatalogFactoryServlet$1.class
 com/wayos/command/Key.class
 com/wayos/command/EnableTeacherCommandNode.class
 com/wayos/storage/DirectoryStorage.class
