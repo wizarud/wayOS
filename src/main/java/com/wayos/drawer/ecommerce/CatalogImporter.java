@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 /**
  * 
- * @author eoss-th
+ * @author Wisarut Srisawet
  *
  */
 public class CatalogImporter extends PaginationCatalogImporter {

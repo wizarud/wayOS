@@ -7,7 +7,7 @@ import com.wayos.Hook.Match;
 
 /**
  * Delegate Command to listener implementation
- * @author eoss-th
+ * @author Wisarut Srisawet
  *
  */
 public class CustomCommandNode extends CommandNode {

@@ -16,7 +16,7 @@ import com.wayos.command.CommandNode;
 import com.wayos.util.SignatureValidator;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 @SuppressWarnings("serial")
 public class LoadDataCommandNode extends CommandNode {

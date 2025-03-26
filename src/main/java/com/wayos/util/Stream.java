@@ -3,7 +3,7 @@ package com.wayos.util;
 import java.io.InputStream;
 
 /**
- * Created by eossth on 9/21/2017 AD.
+ * Created by Wisarut Srisawet on 9/21/2017 AD.
  */
 
 public abstract class Stream {

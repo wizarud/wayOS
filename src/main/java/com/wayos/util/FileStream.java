@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Created by eossth on 8/22/2017 AD.
+ * Created by Wisarut Srisawet on 8/22/2017 AD.
  */
 public class FileStream extends Stream {
 

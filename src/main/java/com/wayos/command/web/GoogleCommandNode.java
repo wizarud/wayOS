@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 public class GoogleCommandNode extends CommandNode {
 

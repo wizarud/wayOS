@@ -17,7 +17,7 @@ import x.org.json.JSONArray;
 
 /**
  * Property / Session Variables Management Servlet
- * @author eoss-th
+ * @author Wisarut Srisawet
  *
  */
 @SuppressWarnings("serial")

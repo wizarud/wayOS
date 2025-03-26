@@ -1,7 +1,7 @@
 package com.wayos;
 
 /**
- * Created by eoss-th on 8/18/17.
+ * Created by Wisarut Srisawet on 8/18/17.
  */
 public interface MessageTemplate {
     String STICKER = "สติ๊กเกอร์:";

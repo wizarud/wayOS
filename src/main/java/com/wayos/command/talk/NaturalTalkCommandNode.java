@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 @SuppressWarnings("serial")
 public class NaturalTalkCommandNode extends CommandNode {

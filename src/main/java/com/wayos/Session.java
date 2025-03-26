@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by eossth on 7/14/2017 AD.
+ * Created by Wisarut Srisawet on 7/14/2017 AD.
  */
 @SuppressWarnings("serial")
 public class Session implements Serializable {

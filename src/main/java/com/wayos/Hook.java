@@ -18,7 +18,7 @@ import org.apache.commons.lang3.NotImplementedException;
  * Hook is like an Event Listener of node. 
  * a Node can has many hooks.
  * 
- * Created by eossth on 15/2/2018 AD.
+ * Created by Wisarut Srisawet on 15/2/2018 AD.
  */
 public class Hook implements Serializable, Comparable<Hook> {
 

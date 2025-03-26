@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 public class CreateWebIndexCommandNode extends CommandNode {
 

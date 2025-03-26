@@ -7,7 +7,7 @@ import x.org.json.JSONArray;
 import x.org.json.JSONObject;
 
 /**
- * Created by eossth on 7/14/2017 AD.
+ * Created by Wisarut Srisawet on 7/14/2017 AD.
  */
 public class Node implements Serializable, Comparable<Node> {
 	

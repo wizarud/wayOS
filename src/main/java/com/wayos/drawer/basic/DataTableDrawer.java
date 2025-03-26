@@ -23,7 +23,7 @@ import x.org.json.JSONObject;
  * Create Context from format
  * Number, Keywords, Response, Is Question, Next, Expressions, X, Y
  * 
- * @author eoss-th
+ * @author Wisarut Srisawet
  *
  */
 public class DataTableDrawer extends Drawer {

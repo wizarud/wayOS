@@ -6,7 +6,7 @@ import com.wayos.Context;
 import com.wayos.Node;
 
 /**
- * Created by eoss-th on 8/15/17.
+ * Created by Wisarut Srisawet on 8/15/17.
  */
 public class MemoryContext extends Context {
 

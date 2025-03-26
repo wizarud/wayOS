@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 @Deprecated
 public class ExportMermaidDataCommandNode extends CommandNode {

@@ -15,7 +15,7 @@ import com.wayos.command.talk.MultilineInputTalkCommandNode;
 import java.util.Arrays;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 public class MultilineInputWakeupCommandNode extends CommandNode {
 

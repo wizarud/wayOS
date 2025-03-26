@@ -14,7 +14,7 @@ import com.wayos.command.talk.ResponseFactoryCommandNode;
 import java.util.*;
 
 /**
- * Created by eossth on 7/31/2017 AD.
+ * Created by Wisarut Srisawet on 7/31/2017 AD.
  */
 @SuppressWarnings("serial")
 public class TalkCommandNode extends CommandNode {
