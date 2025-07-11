@@ -168,7 +168,7 @@ public class ResponseObject {
     	 * [br] new line
     	 */
     	
-    	responseText = responseText.replace("[br]", System.lineSeparator()); 
+    	//responseText = responseText.replace("[br]", System.lineSeparator()); 
     	
     	//TODO: For call another bot and place question result on question
     	/*
@@ -195,7 +195,7 @@ public class ResponseObject {
 
         		questionList.add(Question.build(response));
 
-            } else if (URLInspector.isValid(tokens[0])) {
+            } else if (URLInspector.isValid(tokens[0]) || tokens[0].startsWith("/public/")) {
             	            	
                 if (URLInspector.isImage(tokens[0])) {
                 	

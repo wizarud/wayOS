@@ -1,5 +1,6 @@
 package com.wayos.command;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 

@@ -106,6 +106,11 @@ public class SpeechAPI {
 		
 		String speech = sb.toString().trim();		
 		
+		/**
+		 * Clean emoji text
+		 */
+		speech = speech.replaceAll("[^\\p{IsThai}\\p{L}\\p{N}\\p{P}\\p{Z}]", "");
+		
 		return speech;
 	}
 

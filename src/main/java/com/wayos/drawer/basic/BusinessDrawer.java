@@ -143,7 +143,7 @@ public class BusinessDrawer extends Drawer {
     	/**
     	 * Log the summary with the last text edited by creator
     	 */    	    	
-		lastText = lastText.replace("\n", "[br]");
+		//lastText = lastText.replace("\n", "[br]");
 		
     	String logExpression =  "`?l_thread=" + lastText + "`";
     	

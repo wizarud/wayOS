@@ -14,6 +14,7 @@ import javax.websocket.server.ServerEndpoint;
 import com.wayos.PathStorage;
 import com.wayos.connector.ResponseObject;
 
+import x.org.json.JSONArray;
 import x.org.json.JSONObject;
 
 import javax.websocket.OnClose;
@@ -96,6 +97,14 @@ public class WebPusher extends Pusher {
 	     * TODO: overload method for send with fromSessionId..
 	     *
 	     */
+    	String type = data.optString("type");
+    	
+    	if (type!=null) {
+    		
+    	    send(accountId, botId, sessionId, message, type);
+    	    
+    		return;
+    	}
 	    
 	    send(accountId, botId, sessionId, message);
 	    
@@ -318,6 +327,74 @@ public class WebPusher extends Pusher {
             
         }    	
     }
+    
+    public static void send(String accountId, String botId, String sessionId, String message, String type) {
+    	
+        List<Session> sessionList = null;
+        
+        try {
+        	
+        	//System.out.println("Sending " + message + " to " + accountId + "/" + botId + "/" + sessionId);
+        	
+        	//ResponseObject responseObject = new ResponseObject(message);
+        	        	
+        	sessionList = connectionListMap.get(accountId + "/" + botId + "/" + sessionId);
+        	
+        	if (sessionList!=null) {
+        		
+            	for (Session session:sessionList) {
+            		
+                    synchronized (session) {
+                    	
+                    	if (type==null) {
+                    		
+                        	session.getBasicRemote().sendText(new ResponseObject(message).toJSONString());
+                    		
+                    	} else {
+                    		
+                            JSONArray array = new JSONArray();
+            		    	JSONObject data = new JSONObject();
+            		    	
+            		    	data.put("type", type);
+            		    	data.put("text", message);
+            		    	
+            		    	array.put(data);
+                    		
+                        	session.getBasicRemote().sendText(array.toString());
+                        	
+                    	} 
+                    	                    	
+                    }
+            		
+            	}
+            	
+        	}        	
+        	
+            
+        } catch (Exception e) {
+        	
+            System.out.println("Failed to send message to client :" + e);
+            
+            remove(accountId, botId, sessionId);
+            
+            try {
+            	
+            	if (sessionList!=null) {
+            		
+                	for (Session session:sessionList) {
+                		
+                        session.close();
+                        
+                	}
+            		
+            	}
+                
+            } catch (Exception e1) {
+                // Ignore
+            }
+            
+        }    	
+    }    
     
 
 }

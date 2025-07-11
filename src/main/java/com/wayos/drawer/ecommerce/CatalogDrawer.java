@@ -237,8 +237,11 @@ public class CatalogDrawer extends Drawer {
 						productEntityMap.put(emptyItemEntity, p);
 						productEntityMap.put(hasItemEntity, p);
 
-						cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "[br]");//&#10; is html unicode newline
-						cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "[br]");
+						//cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "[br]");//&#10; is html unicode newline
+						cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "\n");//&#10; is html unicode newline
+						
+						//cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "[br]");
+						cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "\n");
 						cartClearCmds.append(" `?i_" + p.sku + "=0`");
 						
 						lastY = canvas2D.getY();
@@ -398,7 +401,8 @@ public class CatalogDrawer extends Drawer {
 		/**
 		 * Generate Tracking Order Id & Clear Orders
 		 */
-		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=Order ID:#THE_ORDER[br]#contact[br][br]#s_orders[br]" + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "[br][br]%year-%monthNumber-%date %hour:%minute:%second NEW`" + " " + "`?e_.=" + bundle.getString("cart.order.notify") + " #contact,#channel/#sessionId,#THE_ORDER`";
+		//String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=Order ID:#THE_ORDER[br]#contact[br][br]#s_orders[br]" + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "[br][br]%year-%monthNumber-%date %hour:%minute:%second NEW`" + " " + "`?e_.=" + bundle.getString("cart.order.notify") + " #contact,#channel/#sessionId,#THE_ORDER`";
+		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?l_PAYMENT_#THE_ORDER=##` `?l_ORDER_#THE_ORDER=Order ID:#THE_ORDER\n#contact\n\n#s_orders\n" + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "\n\n%year-%monthNumber-%date %hour:%minute:%second NEW`" + " " + "`?e_.=" + bundle.getString("cart.order.notify") + " #contact,#channel/#sessionId,#THE_ORDER`";
 
 		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { requestPaymentEntity, payAtPaymentPointChoiceEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
 		canvas2D.nextRow(100);
@@ -421,7 +425,8 @@ public class CatalogDrawer extends Drawer {
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
-		String updateOrderStatus = "`?l_ORDER_#VIEW_ORDER=+[br]%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
+		//String updateOrderStatus = "`?l_ORDER_#VIEW_ORDER=+[br]%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
+		String updateOrderStatus = "`?l_ORDER_#VIEW_ORDER=+\n%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
 		
 		Canvas2D.Entity updateOrderStatusEntity = canvas2D.newEntity(new Canvas2D.Entity[] { updateOrderParamsEntity }, "", updateOrderStatus, false);
 		canvas2D.nextRow(200);

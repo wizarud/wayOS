@@ -180,8 +180,10 @@ public class PaginationDrawer extends Drawer {
 						productParentMap.put(emptyItemEntity, parentEntity);
 						productParentMap.put(hasItemEntity, parentEntity);
 						
-						cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "[br]");//&#10; is html unicode newline
-						cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "[br]");
+						//cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "[br]");//&#10; is html unicode newline
+						cartOrderLines.append(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " #i_" + p.sku + " " + bundle.getString("cart.unit") + "\n");//&#10; is html unicode newline
+						//cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "[br]");
+						cartZeroLines.add(p.sku.replace('-', ' ') + " " + realPrice + " " + bundle.getString("cart.currency") + " x " + " 0 " + bundle.getString("cart.unit") + "\n");
 						cartClearCmds.append(" `?i_" + p.sku + "=0`");
 						
 						lastY = canvas2D.getY();
@@ -304,7 +306,8 @@ public class PaginationDrawer extends Drawer {
 		/**
 		 * Generate Tracking Order Id & Clear Orders
 		 */
-		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
+		//String trackingOrderCmd = "`?THE_ORDER=%timehex` `?ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW[br][br]#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
+		String trackingOrderCmd = "`?THE_ORDER=%timehex` `?ORDER_#THE_ORDER=%year-%monthNumber-%date %hour:%minute:%second NEW\n\n#s_orders " + bundle.getString("cart.total") + " #i_totalPrice " + bundle.getString("cart.currency") + "`";
 
 		Canvas2D.Entity clearOrdersEntity = canvas2D.newEntity(new Canvas2D.Entity[] { yesContactEntity, answerContactEntity }, "", "", trackingOrderCmd + " " + cartClearCmds.toString().trim(), false);
 		canvas2D.nextRow(100);
@@ -331,7 +334,8 @@ public class PaginationDrawer extends Drawer {
 		canvas2D.nextRow(100);
 		canvas2D.nextColumn(200);
 		
-		String updateOrderStatus = "`?ORDER_#VIEW_ORDER=+[br]%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
+		//String updateOrderStatus = "`?ORDER_#VIEW_ORDER=+[br]%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
+		String updateOrderStatus = "`?ORDER_#VIEW_ORDER=+\n%year-%monthNumber-%date %hour:%minute:%second #STATUS`";
 		
 		Canvas2D.Entity updateOrderStatusEntity = canvas2D.newEntity(new Canvas2D.Entity[] { updateOrderParamsEntity }, "", updateOrderStatus, false);
 		canvas2D.nextRow(200);

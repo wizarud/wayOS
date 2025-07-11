@@ -347,11 +347,13 @@ public class BLESessionPoolFactory {
 						
 						/**
 						 * Only Web Support!!!
-						 * Fire message as a keyword to the current context and parse later
+						 * Fire message as a keyword to the current session of context and parse later
 						 */
 						if (varChangedName.startsWith("#m_")) {
 							
-							targetSessionId = varChangedName.substring("#m_".length());
+							//targetSessionId = varChangedName.substring("#m_".length());
+							
+							targetSessionId = sessionId;//Support Fire from API sessionId=<sessionId>&message=<key>
 							
 							WebPusher webPusher = (WebPusher) Application.instance().get("web");
 							
@@ -375,7 +377,6 @@ public class BLESessionPoolFactory {
 							System.out.println("Boardcasting to web for " + varChangedName + "=" + varChangedValue);
 							WebPusher.boardcast(accountId, botId, sessionId, varChangedValue);
 						}					
-						
 						
 						/**
 						 * TODO: Not test yet!!!

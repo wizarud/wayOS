@@ -103,7 +103,7 @@ public class FormDrawer extends Drawer {
     	 */    	    	
     	if (lastText!=null) {
 
-    		lastText = lastText.replace("\n", "[br]");
+    		//lastText = lastText.replace("\n", "[br]");
     		
         	String logExpression =  "`?l_quiz=" + lastText + "`";
         	

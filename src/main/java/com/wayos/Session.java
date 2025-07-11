@@ -1,5 +1,7 @@
 package com.wayos;
 
+import com.wayos.command.AsyncCommandNode;
+import com.wayos.command.AsyncTask;
 import com.wayos.command.CommandNode;
 import com.wayos.command.admin.AdminCommandNode;
 import com.wayos.command.talk.ProblemCommandNode;
@@ -64,6 +66,8 @@ public class Session implements Serializable {
     private final List<AdminCommandNode> adminCommandList = new ArrayList<>();
 
     private final List<CommandNode> commandList = new ArrayList<>();
+    
+    private final List<AsyncTask> asyncTaskList = new ArrayList<>();
 	
     private int routeCount;
 		
@@ -175,12 +179,32 @@ public class Session implements Serializable {
     	
     	return commandList;
     }
-        
+    
+    public List<AsyncTask> asyncTaskList() {
+    	
+    	return asyncTaskList;
+    }
+    
     public String parse(MessageObject messageObject) {
-    	    	
+    	
+    	System.out.println("Session.parse start..");
+    	
 		String result = null;
 		
 		try {
+			
+			/**
+			 * Stop Active Async Tasks
+			 */
+			for (AsyncTask asyncTask : asyncTaskList) {
+
+				if (asyncTask.isActive()) {
+					asyncTask.stop();
+				}
+				
+			}
+			
+			asyncTaskList.clear();
 			
 			/**
 			 * To parameterized hooks
@@ -296,6 +320,7 @@ public class Session implements Serializable {
 	        
     		fireVariablesChangedEvent();
 	        
+        	System.out.println("Session.parse finish!");
 		}
 		
 		return silent || result==null ? "" : result;    	    	

@@ -102,7 +102,7 @@ public class PresentationDrawer extends Drawer {
     	 */    	    	
     	if (lastText!=null) {
     		
-    		lastText = lastText.replace("\n", "[br]");
+    		//lastText = lastText.replace("\n", "[br]");
     		
         	String logExpression =  "`?l_presentation=" + lastText + "`";
         	

@@ -183,7 +183,7 @@ public class FlowTalkCommandNode extends CommandNode {
                     
                 } else {
                 	
-                	outputDelimiter = outputDelimiter.replace("[br]", "\n");
+                	//outputDelimiter = outputDelimiter.replace("[br]", "\n");
                 	
                 	StringBuilder newResponse = new StringBuilder();
                 	for (Node node:maxActiveNodeList) {

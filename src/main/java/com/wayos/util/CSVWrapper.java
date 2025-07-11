@@ -181,8 +181,8 @@ public class CSVWrapper {
         		
         	}
        	    
-       	    answer = answer.replace("\n", "[br]");
-       	    expressions = expressions.replace("\n", "[br]");
+       	    //answer = answer.replace("\n", "[br]");
+       	    //expressions = expressions.replace("\n", "[br]");
        	    
        	    Node.Type type = node.type();
        	    

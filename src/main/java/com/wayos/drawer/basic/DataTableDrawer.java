@@ -201,7 +201,8 @@ public class DataTableDrawer extends Drawer {
 				keywords = "";
 			
 			if (colList.size()>2) {
-				answer = colList.get(2).replace("[br]", "\n");
+				//answer = colList.get(2).replace("[br]", "\n");
+				answer = colList.get(2);
 			}
 			else
 				answer = "";
@@ -222,7 +223,8 @@ public class DataTableDrawer extends Drawer {
 			
 			if (colList.size()>5) {
 								
-				expressions = colList.get(5).replace("[br]", "\n");
+				//expressions = colList.get(5).replace("[br]", "\n");
+				expressions = colList.get(5);
 				
 				/**
 				 * Remove reserved chars
