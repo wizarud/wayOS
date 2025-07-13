@@ -11,12 +11,21 @@ import com.wayos.Configuration;
 public class URLInspector {
 	
 	public static boolean isValid(String url) {
+		
+	    /**
+	     * Local URI
+	     */
+	    if (url.startsWith("/public/") ||
+	    		url.startsWith("/x/"))
+	    	return true;
+		
 	    try {
 	        new URL(url).toURI();
 	        return true;
 	    } catch (Exception e) {
 	    	
 	    }
+	    	    
 	    return false;
 	}
 	

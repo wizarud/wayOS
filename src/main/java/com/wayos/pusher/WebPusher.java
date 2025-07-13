@@ -99,7 +99,7 @@ public class WebPusher extends Pusher {
 	     */
     	String type = data.optString("type");
     	
-    	if (type!=null) {
+    	if (type!=null && !type.isEmpty()) {
     		
     	    send(accountId, botId, sessionId, message, type);
     	    

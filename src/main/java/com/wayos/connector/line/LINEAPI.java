@@ -3,6 +3,7 @@ package com.wayos.connector.line;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wayos.Configuration;
 import com.wayos.command.talk.Choice;
 import com.wayos.command.talk.Question;
 import com.wayos.connector.ResponseObject;
@@ -13,9 +14,9 @@ import x.org.json.JSONObject;
 
 public class LINEAPI {
 	
-    private static final String PREVIEW_MEDIA_URL = "https://wayos.yiem.cc/images/WAYOBOT512.png";
+    private static final String PREVIEW_MEDIA_URL = Configuration.domain + "/images/WAYOBOT512.png";
     
-    private static final String thumbnailImageUrl = "https://wayos.yiem.cc/images/gigi.png";
+    private static final String thumbnailImageUrl = Configuration.domain + "/images/gigi.png";
 
 	private static LINEAPI _lineAPI;
 	
@@ -159,25 +160,31 @@ public class LINEAPI {
     }
 
     private JSONObject createImage(String imageURL) {
+    	    	
         JSONObject image = new JSONObject();
         image.put("type", "image");
+        
+    	imageURL = fixIfLocal(imageURL);
         image.put("originalContentUrl", imageURL);
         image.put("previewImageUrl", imageURL);
+        
         return image;
     }
 
     private JSONObject createAudio(String audioURL) {
+    	
         JSONObject audio = new JSONObject();
         audio.put("type", "audio");
-        audio.put("originalContentUrl", audioURL);
+        audio.put("originalContentUrl", fixIfLocal(audioURL));
         audio.put("duration", 60000);
         return audio;
     }
 
     private JSONObject createVideo(String videoURL) {
+    	
         JSONObject video = new JSONObject();
         video.put("type", "video");
-        video.put("originalContentUrl", videoURL);
+        video.put("originalContentUrl", fixIfLocal(videoURL));
         video.put("previewImageUrl", PREVIEW_MEDIA_URL);
         return video;
     }
@@ -204,8 +211,11 @@ public class LINEAPI {
             actionObj.put("displayText", choice.label);
 
             itemObj.put("type", "action");
+            
             if (choice.imageURL!=null) {
-                itemObj.put("imageUrl", choice.imageURL);
+            	
+                itemObj.put("imageUrl", fixIfLocal(choice.imageURL));
+                
             }
             itemObj.put("action", actionObj);
 
@@ -231,9 +241,11 @@ public class LINEAPI {
 
         boolean hasImage = false;
         if (question.hasImage()) {
-            template.put("thumbnailImageUrl", question.imageURL);
+        	
+            template.put("thumbnailImageUrl", fixIfLocal(question.imageURL));
             template.put("imageSize", "contain");
             hasImage = true;
+            
         }
 
         int textLimit = hasImage?60:160;
@@ -262,7 +274,8 @@ public class LINEAPI {
 
                 actionObj.put("type", "uri");
                 actionObj.put("label", label);
-                actionObj.put("uri", choice.linkURL);
+                
+                actionObj.put("uri", fixIfLocal(choice.linkURL));
 
             } else {
 
@@ -317,7 +330,9 @@ public class LINEAPI {
             column = new JSONObject();
 
             if (question.hasImage()) {
-                column.put("thumbnailImageUrl", question.imageURL);
+            	
+                column.put("thumbnailImageUrl", fixIfLocal(question.imageURL));
+                
             } else {
             	/**
             	 * Default Image
@@ -352,7 +367,7 @@ public class LINEAPI {
 
                     actionObj.put("type", "uri");
                     actionObj.put("label", label);
-                    actionObj.put("uri", choice.linkURL);
+                    actionObj.put("uri", fixIfLocal(choice.linkURL));
 
                 } else {
 
@@ -437,7 +452,14 @@ public class LINEAPI {
 		
 		return array;
 	}
-    
+	
+	private String fixIfLocal(String url) {
+		if (url.startsWith("/public/") ||
+				url.startsWith("/x/"))
+			return Configuration.domain + url;
+		
+		return url;
+	}
     
     public static void main(String[]args) {
     	

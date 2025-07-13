@@ -131,7 +131,10 @@ public class Question {
 
                     String imageURL = responses[0].trim().toLowerCase();
 
-                    if ((imageURL.startsWith("https://") || imageURL.startsWith("http://")) &&
+                    if ((imageURL.startsWith("https://") || 
+                    		imageURL.startsWith("http://") || 
+                    		imageURL.startsWith("/public/" //Internal Image
+                    		)) &&
                             (imageURL.endsWith("png") ||
                                     imageURL.endsWith("jpg") ||
                                     imageURL.endsWith("jpeg"))) {
@@ -144,8 +147,9 @@ public class Question {
 
                     if (linkURL.startsWith("https://") ||
                     		linkURL.startsWith("http://")||
+                    		linkURL.startsWith("/x/")|| //Internal Link
                     		linkURL.startsWith("tel:") || 
-                    		linkURL.startsWith("mailto:") ) {
+                    		linkURL.startsWith("mailto:")) {
                         /**
                          * Variable Supported for Link
                          */
@@ -251,6 +255,8 @@ public class Question {
 
     public static Question build(String text) {
     	
+        System.out.println(text);
+        
     	text = text.replaceFirst("Question:", "");
     	
     	String label = text.substring(0, text.indexOf("Id:"));
@@ -279,7 +285,7 @@ public class Question {
 
         parentId = parentId.isEmpty() ? null : parentId;
         imageURL = imageURL.isEmpty() ? null : imageURL;
-
+        
         return new Question(parentId, label, imageURL, choiceList);
     }
     

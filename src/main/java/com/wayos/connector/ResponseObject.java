@@ -195,7 +195,7 @@ public class ResponseObject {
 
         		questionList.add(Question.build(response));
 
-            } else if (URLInspector.isValid(tokens[0]) || tokens[0].startsWith("/public/")) {
+            } else if (URLInspector.isValid(tokens[0])) {
             	            	
                 if (URLInspector.isImage(tokens[0])) {
                 	
