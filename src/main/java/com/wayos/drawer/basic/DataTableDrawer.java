@@ -82,13 +82,14 @@ public class DataTableDrawer extends Drawer {
 							*/
 
 				//Clear Double Quotes, TODO: clear for what???
+				//Clean \\n to \n
 				
 				line = sc.nextLine();
 				
 				colList = Arrays.asList(
 							line.split(delimeter)).stream().map(
 								//s -> s.startsWith("\"") && s.endsWith("\"") ? s.substring(1, s.length()-1) : s)
-								s -> s.replace("\"", ""))
+								s -> s.replace("\"", "").replace("\\n", "\n"))
 									.collect(Collectors.toList());
 								
 				dataTable.add(colList);

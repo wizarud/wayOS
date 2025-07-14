@@ -181,8 +181,11 @@ public class CSVWrapper {
         		
         	}
        	    
-       	    //answer = answer.replace("\n", "[br]");
-       	    //expressions = expressions.replace("\n", "[br]");
+       	    /**
+       	     * Do escape line feed for TSV
+       	     */
+       	    answer = answer.replace("\n", "\\n");
+       	    expressions = expressions.replace("\n", "\\n");
        	    
        	    Node.Type type = node.type();
        	    
@@ -268,7 +271,7 @@ public class CSVWrapper {
     		property = "";
     	}
     	
-    	Map attr;
+    	Map attr = null;
     	
     	if (name.equals("greeting")) {
     		
@@ -278,9 +281,13 @@ public class CSVWrapper {
     		
     		attr = (Map)context.attr("end");    		
     		
-    	} else {
+    	} else if (name.equals("silent")) {
     		
-    		attr = (Map)context.attr("silent");  		    		
+    		attr = (Map)context.attr("silent");
+    		
+    		System.out.println(context.toJSONString());
+    		
+    		System.out.println("SILENT" + attr);
     		
     	}
     	
