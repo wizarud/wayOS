@@ -313,7 +313,10 @@ public abstract class Context implements Serializable {
         	attributeMap.put("id", jsonObject.get("id"));
         	attributeMap.put("x", jsonObject.get("x"));
         	attributeMap.put("y", jsonObject.get("y"));
-        	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	
+        	if (jsonObject.opt("isQuestion")!=null) {
+            	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	}
         	
         	contextAttributeMap.put("start", attributeMap);
         	
@@ -328,7 +331,10 @@ public abstract class Context implements Serializable {
         	attributeMap.put("id", jsonObject.get("id"));
         	attributeMap.put("x", jsonObject.get("x"));
         	attributeMap.put("y", jsonObject.get("y"));
-        	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	
+        	if (jsonObject.opt("isQuestion")!=null) {
+            	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	}
         	
         	contextAttributeMap.put("end", attributeMap);
         	
@@ -343,13 +349,20 @@ public abstract class Context implements Serializable {
         	attributeMap.put("id", jsonObject.get("id"));
         	attributeMap.put("x", jsonObject.get("x"));
         	attributeMap.put("y", jsonObject.get("y"));
-        	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	
+        	if (jsonObject.opt("isQuestion")!=null) {
+            	attributeMap.put("isQuestion", jsonObject.get("isQuestion"));
+        	}
         	
         	contextAttributeMap.put("silent", attributeMap);
         	
     	} catch (JSONException e) {
     		
+    		//e.printStackTrace();
+    		
     	}
+    	
+    	//System.out.println(contextAttributeMap.toString());
     	
 		return contextAttributeMap;
 	}
@@ -871,12 +884,19 @@ public abstract class Context implements Serializable {
             	}
             	
             }
-            
+                        
             if (isValid) {
             	
             	System.out.println("OK");
             	
             }
+            
+            if (attributes.get("silent")==null) {
+            	
+            	System.err.println(name + " missing silent.." + attributes.get("silent"));
+            	
+            }
+            
             
         } finally {
         	

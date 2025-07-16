@@ -70,25 +70,24 @@ public class SilentPusher {
 		
 		try {
 			
-			interval = Long.parseLong(silentInterval) * 60 * 1000; //Every Minutes
+			interval = Long.parseLong(silentInterval);//Every Hours
 			
-		    timer.schedule(silentPusherTask, interval);
+		    timer.schedule(silentPusherTask, interval * 60 * 60 * 1000);
 		    
 		} catch (Exception e4) {
 			
 			Random random = new Random();
 			
-			interval = (random.nextInt(25) + 1) * 60 * 60 * 1000; //Random between 1-24 Hours
+			interval = (random.nextInt(25) + 1); //Random between 1-24 Hours
 			
-		    timer.schedule(silentPusherTask, interval);
+		    timer.schedule(silentPusherTask, interval * 60 * 60 * 1000);
 		    
-		}
-		
+		}		
 
 	    /**
 	     * Save Task Name
 	     */
-		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + (interval / (60 * 1000)) + " minutes");
+		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + interval + " hours");
 		
 		JSONObject silentObj = new JSONObject();
 		silentObj.put("interval", interval);

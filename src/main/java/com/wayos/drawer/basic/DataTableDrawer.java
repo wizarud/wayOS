@@ -277,7 +277,7 @@ public class DataTableDrawer extends Drawer {
 				/**
 				 * Custom Properties
 				 */
-				if (!keywords.isEmpty() && !answer.isEmpty() && !Context.RESERVED_PROPERTIES.contains(keywords)) {
+				if (!keywords.isEmpty() /*&& !answer.isEmpty()*/ && !Context.RESERVED_PROPERTIES.contains(keywords)) {
 					
 					canvas2D.context.prop(keywords, answer);
 					
@@ -451,7 +451,16 @@ public class DataTableDrawer extends Drawer {
 							
 						canvas2D.context.prop("greeting", propertyValue + ", @" + canvas2D.GREETING.id() + canvas2D.GREETING.getMarker());
 						
-						canvas2D.context.attr("start", new JSONObject(canvas2D.GREETING.node.attr()));
+						JSONObject startObj = new JSONObject(canvas2D.GREETING.node.attr());
+						
+						if (canvas2D.context.attr("start") != null) {
+														
+							startObj.put("x", ((JSONObject) canvas2D.context.attr("start")).get("x"));
+							startObj.put("y", ((JSONObject) canvas2D.context.attr("start")).get("y"));
+							
+						}
+						
+						canvas2D.context.attr("start", startObj);
 
 					} else if (parentEntity==canvas2D.UNKNOWN) {
 
@@ -467,7 +476,16 @@ public class DataTableDrawer extends Drawer {
 						
 						canvas2D.context.prop("unknown", propertyValue + ", @" + canvas2D.UNKNOWN.id() + canvas2D.UNKNOWN.getMarker());
 
-						canvas2D.context.attr("end", new JSONObject(canvas2D.UNKNOWN.node.attr()));
+						JSONObject endObj = new JSONObject(canvas2D.UNKNOWN.node.attr());
+						
+						if (canvas2D.context.attr("end") != null) {
+														
+							endObj.put("x", ((JSONObject) canvas2D.context.attr("end")).get("x"));
+							endObj.put("y", ((JSONObject) canvas2D.context.attr("end")).get("y"));
+							
+						}
+						
+						canvas2D.context.attr("end", endObj);
 						
 					} else if (parentEntity==canvas2D.SILENT) {
 
@@ -482,8 +500,18 @@ public class DataTableDrawer extends Drawer {
 						if (propertyValue.endsWith(", @" + canvas2D.SILENT.id() + canvas2D.SILENT.getMarker())) continue;
 						
 						canvas2D.context.prop("silent",  propertyValue + ", @" + canvas2D.SILENT.id() + canvas2D.SILENT.getMarker());
+						
+						JSONObject silentObj = new JSONObject(canvas2D.SILENT.node.attr());
+						
+						if (canvas2D.context.attr("silent") != null) {
+														
+							silentObj.put("x", ((JSONObject) canvas2D.context.attr("silent")).get("x"));
+							silentObj.put("y", ((JSONObject) canvas2D.context.attr("silent")).get("y"));
+							
+						}
+						
 
-						canvas2D.context.attr("silent", new JSONObject(canvas2D.SILENT.node.attr()));
+						canvas2D.context.attr("silent", silentObj);
 						
 					} else {
 
