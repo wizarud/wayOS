@@ -9,7 +9,7 @@ public class SilentPusherTask extends TimerTask {
 	
 	private SilentPusher silentPusher;	
 	
-	private String silentInterval;
+	private double silentInterval;
 	
 	private String contextName;
 	
@@ -21,7 +21,7 @@ public class SilentPusherTask extends TimerTask {
 	
 	private String botId;
 	
-	public SilentPusherTask(SilentPusher silentPusher, String silentInterval, String contextName, String channel, String sessionId) {
+	public SilentPusherTask(SilentPusher silentPusher, double silentInterval, String contextName, String channel, String sessionId) {
 		
 		this.silentPusher = silentPusher;
 		

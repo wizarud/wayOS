@@ -16,18 +16,18 @@ public class SilentPusher {
 	
 	private PathStorage storage;
 	
+	private Timer timer;
+	
 	public SilentPusher(PathStorage storage) {
 		
 		this.storage = storage;
+		
+		timer = new Timer("Silent Timer");
 		
 	}
 	
 	public void register(Session session, String resultOfSilent) {
 		
-		/**
-		 * For silent task
-		 */	
-		String silentInterval = session.context().prop("SILENT_INTERVAL");
 		String contextName = session.context().name();
 		String channel = session.vars("#channel"); 
 		String sessionId = session.vars("#sessionId");
@@ -44,11 +44,31 @@ public class SilentPusher {
 			return;
 		}
 		
+		/**
+		 * For silent task
+		 */	
+		
+		double silentInterval;
+		
+		try {
+			
+			silentInterval = Double.parseDouble(session.context().prop("SILENT_INTERVAL"));
+		    
+		} catch (Exception e4) {
+			
+			/**
+			 * Random between 1-24 Hours
+			 */
+			Random random = new Random();
+			silentInterval = (random.nextInt(25) + 1); 
+			
+		}
+				
 		register(silentInterval, contextName, channel, sessionId, false);
 
 	}
 	
-	public void register(String silentInterval, String contextName, String channel, String sessionId, boolean run) {
+	public void register(double silentInterval, String contextName, String channel, String sessionId, boolean run) {
 		
 		SilentPusherTask silentPusherTask = new SilentPusherTask(this, silentInterval, contextName, channel, sessionId);
 		
@@ -60,49 +80,35 @@ public class SilentPusher {
 		String id = silentPusherTask.id();
 		
 		//Cancel if there is any pending task.
-		remove(id);
+		cancel(id);
 		
 		silentTaskMap.put(id, silentPusherTask);
-		
-		Timer timer = new Timer("Silent Timer");
 				
-		long interval;
-		
-		try {
-			
-			interval = Long.parseLong(silentInterval);//Every Hours
-			
-		    timer.schedule(silentPusherTask, interval * 60 * 60 * 1000);
-		    
-		} catch (Exception e4) {
-			
-			Random random = new Random();
-			
-			interval = (random.nextInt(25) + 1); //Random between 1-24 Hours
-			
-		    timer.schedule(silentPusherTask, interval * 60 * 60 * 1000);
-		    
-		}		
-
+	    timer.schedule(silentPusherTask, (int) (silentInterval * 60 * 60 * 1000));
+	    
 	    /**
 	     * Save Task Name
 	     */
-		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + interval + " hours");
+		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + silentInterval + " hours");
 		
 		JSONObject silentObj = new JSONObject();
-		silentObj.put("interval", interval);
+		silentObj.put("interval", silentInterval);
 		
 		storage.write(silentObj.toString(), "silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
 	}
 	
-	private void remove(String id) {
+	private void cancel(String id) {
 		
 		SilentPusherTask pendingSilentTask = silentTaskMap.get(id);
 		
 		if (pendingSilentTask!=null) {
 			
 			try {
+				
+				System.out.println("Cancel Task.." + id);
+				
 				pendingSilentTask.cancel();
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -110,6 +116,17 @@ public class SilentPusher {
 		
 		silentTaskMap.remove(id);
 		
+		
+	}
+	
+	public void cancelAll() {
+		
+		for (String id: silentTaskMap.keySet()) {
+			
+			cancel(id);
+		}
+		
+		timer.cancel();
 		
 	}
 	
