@@ -3,17 +3,12 @@ package com.wayos.servlet;
 import javax.servlet.annotation.WebServlet;
 
 import com.wayos.Application;
-import com.wayos.Configuration;
 import com.wayos.Context;
 import com.wayos.Session;
 import com.wayos.connector.ResponseConnector;
 import com.wayos.connector.ResponseObject;
 import com.wayos.connector.SessionPool;
 import com.wayos.connector.http.HttpRequestObject;
-import com.wayos.util.SignatureValidator;
-import com.wayos.util.SilentPusher;
-
-import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 @WebServlet("/webhooks/*")
@@ -69,17 +64,6 @@ public class WebhooksServlet extends WAYOSServlet {
 		//For logging message
 		String log = responseConnector.execute(new ResponseObject(responseText));
 				
-		/**
-		 * Register only silent message
-		 */
-		if (requestObject.messageObject().toString().equals("silent")) {
-						
-			SilentPusher silentPusher = (SilentPusher) Application.instance().get(SilentPusher.class.getName());
-			
-			silentPusher.register(session, responseText);
-			
-		}
-		    
 	}
 
 }

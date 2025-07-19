@@ -32,7 +32,7 @@ public class FlowForwardResponseCommandNode extends ResponseCommandNode {
     	
     	MessageObject forwardMessage = messageObject.forward().split();
     	
-    	System.out.println("\t" +head + "\t" + forwardMessage);    	
+    	//System.out.println("\t" +head + "\t" + forwardMessage);    	
     	
     	//Suspense flow, continue forwardMessage after finish async commands
         if (session.asyncTaskList().size() > 0) {

@@ -277,25 +277,25 @@ public class CSVWrapper {
     		
     		attr = (Map)context.attr("start");
     		
-    		System.out.println(context.toJSONString());
+    		//System.out.println(context.toJSONString());
     		
-    		System.out.println("start: " + attr);
+    		//System.out.println("start: " + attr);
     		
     	} else if (name.equals("unknown")) {
     		
     		attr = (Map)context.attr("end");    		
     		
-    		System.out.println(context.toJSONString());
+    		//System.out.println(context.toJSONString());
     		
-    		System.out.println("end: " + attr);
+    		//System.out.println("end: " + attr);
     		
     	} else if (name.equals("silent")) {
     		
     		attr = (Map)context.attr("silent");
     		
-    		System.out.println(context.toJSONString());
+    		//System.out.println(context.toJSONString());
     		
-    		System.out.println("SILENT: " + attr);
+    		//System.out.println("SILENT: " + attr);
     		
     	}
     	

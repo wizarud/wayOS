@@ -1,103 +1,89 @@
 package com.wayos.util;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 
+import com.cronutils.model.Cron;
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.model.time.ExecutionTime;
+import com.cronutils.parser.CronParser;
 import com.wayos.PathStorage;
-import com.wayos.Session;
-
-import x.org.json.JSONObject;
 
 public class SilentPusher {
 	
 	private Map<String, SilentPusherTask> silentTaskMap = new HashMap<>();
 	
-	private PathStorage storage;
-	
 	private Timer timer;
 	
 	public SilentPusher(PathStorage storage) {
-		
-		this.storage = storage;
 		
 		timer = new Timer("Silent Timer");
 		
 	}
 	
-	public void register(Session session, String resultOfSilent) {
-		
-		String contextName = session.context().name();
-		String channel = session.vars("#channel"); 
-		String sessionId = session.vars("#sessionId");
+	public ZonedDateTime register(SilentPusherTask silentPusherTask) {
 				
-		if (resultOfSilent.trim().isEmpty()) {
-			
-			/**
-			 * Delete old task if exits
-			 */
-			System.out.println("Deactivate Task: " + "silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
-			
-			storage.delete("silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
-			
-			return;
-		}
-		
-		/**
-		 * For silent task
-		 */	
-		
-		double silentInterval;
-		
-		try {
-			
-			silentInterval = Double.parseDouble(session.context().prop("SILENT_INTERVAL"));
-		    
-		} catch (Exception e4) {
-			
-			/**
-			 * Random between 1-24 Hours
-			 */
-			Random random = new Random();
-			silentInterval = (random.nextInt(25) + 1); 
-			
-		}
-				
-		register(silentInterval, contextName, channel, sessionId, false);
-
-	}
-	
-	public void register(double silentInterval, String contextName, String channel, String sessionId, boolean run) {
-		
-		SilentPusherTask silentPusherTask = new SilentPusherTask(this, silentInterval, contextName, channel, sessionId);
-		
-		if (run) {
-			
-			silentPusherTask.run();
-		}
-		
 		String id = silentPusherTask.id();
 		
 		//Cancel if there is any pending task.
 		cancel(id);
 		
 		silentTaskMap.put(id, silentPusherTask);
+		
+		silentPusherTask.repeatIfFinishBy(this);
+		
+		try {
+
+			double hours = Double.parseDouble(silentPusherTask.cronExpression());
+			
+			long delay = (long) (hours * 60 * 60 * 1000);
+
+		    timer.schedule(silentPusherTask, delay);
+		    
+	        Instant now = Instant.now();
+	        Instant future = now.plusMillis(delay);
+	        
+	        return future.atZone(ZoneId.systemDefault());
+
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+			try {
 				
-	    timer.schedule(silentPusherTask, (int) (silentInterval * 60 * 60 * 1000));
-	    
-	    /**
-	     * Save Task Name
-	     */
-		System.out.println("Save scheduled task: " + silentPusherTask.id() + " every " + silentInterval + " hours");
-		
-		JSONObject silentObj = new JSONObject();
-		silentObj.put("interval", silentInterval);
-		
-		storage.write(silentObj.toString(), "silent/" + contextName.replace("/", ".") + "." + channel + "." + sessionId);
+		        ZonedDateTime now = ZonedDateTime.now();
+				
+				CronParser parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
+		        Cron cron = parser.parse(silentPusherTask.cronExpression());
+		        cron.validate();
+		        		        
+		        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+		        
+		        ZonedDateTime next = executionTime.nextExecution(now).get();
+		        
+	            long delay = java.time.Duration.between(now, next).toMillis();
+	            
+			    timer.schedule(silentPusherTask, delay);
+			    
+			    return next.toInstant().atZone(ZoneId.systemDefault());
+			    
+			} catch (Exception cronExpressionException) {
+				
+				cronExpressionException.printStackTrace();
+				
+			}
+			
+		}		
+				
+	    return null;
 	}
 	
-	private void cancel(String id) {
+	public void cancel(String id) {
 		
 		SilentPusherTask pendingSilentTask = silentTaskMap.get(id);
 		
@@ -107,7 +93,7 @@ public class SilentPusher {
 				
 				System.out.println("Cancel Task.." + id);
 				
-				pendingSilentTask.cancel();
+				pendingSilentTask.stop();
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -115,8 +101,7 @@ public class SilentPusher {
 		}
 		
 		silentTaskMap.remove(id);
-		
-		
+				
 	}
 	
 	public void cancelAll() {
@@ -129,6 +114,5 @@ public class SilentPusher {
 		timer.cancel();
 		
 	}
-	
 
 }

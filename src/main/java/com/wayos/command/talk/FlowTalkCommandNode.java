@@ -1,5 +1,6 @@
 package com.wayos.command.talk;
 
+import com.wayos.Application;
 import com.wayos.ContextListener;
 import com.wayos.MessageObject;
 import com.wayos.Node;
@@ -7,6 +8,9 @@ import com.wayos.NodeEvent;
 import com.wayos.Session;
 import com.wayos.command.CommandNode;
 import com.wayos.command.Key;
+import com.wayos.pusher.WebPusher;
+
+import x.org.json.JSONObject;
 
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -60,7 +64,32 @@ public class FlowTalkCommandNode extends CommandNode {
                 	
             		return;
             	}
-            	            	                
+            	
+            	/**
+            	 * TODO: Notify Logic Designer for Advance Debugging
+            	 */            	
+				WebPusher webPusher = (WebPusher) Application.instance().get("web");
+				
+		    	String contextName = session.context().name();
+		    	
+		    	String [] tokens = contextName.split("/");
+		    	String toAccountId = tokens[0];
+		    	String toBotId = tokens[1];
+		    	
+		    	String fromSessionId = session.vars("#sessionId");
+		    	String targetSessionId = "logic-designer";
+		    	
+		    	JSONObject data = new JSONObject();
+		    	
+		    	data.put("type", "nodeId");
+		    	data.put("fromAccountId", toAccountId);
+		    	data.put("fromBotId", toBotId);
+		    	data.put("fromSessionId", fromSessionId);
+		    	data.put("nodeId", nodeEvent.node.id());
+		    	data.put("message", nodeEvent.messageObject.toString());
+		    					
+				webPusher.push(contextName, targetSessionId, data);
+				
                 nodeEvent.node.fast_feed(nodeEvent.messageObject);
                 
                 activeNodeList.add(nodeEvent.node);

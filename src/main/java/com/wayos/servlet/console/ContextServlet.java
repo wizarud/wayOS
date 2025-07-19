@@ -112,6 +112,8 @@ public class ContextServlet extends ConsoleServlet {
 				
 				context.load();
 				
+				//context.save();
+				
 				/**
 				 * Save to tsv
 				 */

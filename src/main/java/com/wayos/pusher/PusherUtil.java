@@ -156,26 +156,30 @@ public class PusherUtil {
     	
 		String response = session.parse(MessageObject.build(keywords));
 		
-		if (response==null || response.trim().isEmpty()) throw new IllegalArgumentException("Empty result for keyword:" + keywords);
+		//if (response==null || response.trim().isEmpty()) throw new IllegalArgumentException("Empty result for keyword:" + keywords);
+		
+		if (response!=null && !response.trim().isEmpty()) {
 			
-		new Thread(new Runnable() {
+			new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				
-				try {
+				@Override
+				public void run() {
 					
-					pusher(channel).push(contextName, sessionId, response);
-					
-				} catch (Exception e) {
-					
-					throw new RuntimeException(e + ":" + channel + "/" + sessionId);
+					try {
+						
+						pusher(channel).push(contextName, sessionId, response);
+						
+					} catch (Exception e) {
+						
+						throw new RuntimeException(e + ":" + channel + "/" + sessionId);
+						
+					}
 					
 				}
 				
-			}
+			}).start();
 			
-		}).start();
+		}
 		
 		return sessionId;
     }

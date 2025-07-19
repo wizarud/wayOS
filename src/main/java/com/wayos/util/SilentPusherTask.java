@@ -1,5 +1,6 @@
 package com.wayos.util;
 
+import java.time.ZonedDateTime;
 import java.util.TimerTask;
 
 import com.wayos.Application;
@@ -7,9 +8,9 @@ import com.wayos.pusher.PusherUtil;
 
 public class SilentPusherTask extends TimerTask {
 	
-	private SilentPusher silentPusher;	
+	private SilentPusher repeatSilentPusher;	
 	
-	private double silentInterval;
+	private String cronExpression;
 	
 	private String contextName;
 	
@@ -21,11 +22,13 @@ public class SilentPusherTask extends TimerTask {
 	
 	private String botId;
 	
-	public SilentPusherTask(SilentPusher silentPusher, double silentInterval, String contextName, String channel, String sessionId) {
-		
-		this.silentPusher = silentPusher;
-		
-		this.silentInterval = silentInterval;
+	private String messageToFire;
+	
+	private boolean repeat;
+	
+	public SilentPusherTask(String cronExpression, String contextName, String channel, String sessionId, String messageToFire) {
+				
+		this.cronExpression = cronExpression;
 		
 		this.contextName = contextName;
 		
@@ -33,39 +36,69 @@ public class SilentPusherTask extends TimerTask {
 		
 		this.sessionId = sessionId;
 		
+		this.messageToFire = messageToFire;
+		
 		String [] tokens = this.contextName.split("/");
 		
 		this.accountId = tokens[0];
 		
 		this.botId = tokens[1];
 		
+		this.repeat = true;		
 	}
 	
 	public String id() {
 		
-		return contextName + "/" + sessionId;
+		return contextName.replace("/", ".") + "." + channel + "." + sessionId + "." + messageToFire;
+	}
+	
+	public String cronExpression() {
+		
+		return cronExpression;
+	}
+	
+	public SilentPusherTask clone() {
+		
+		return new SilentPusherTask(cronExpression, contextName, channel, sessionId, messageToFire);
+	}
+	
+	public void stop() {
+		
+		this.repeat = false;
+		
 	}
 
 	@Override
 	public void run() {
-		
-		System.out.println("Do the silent event for " + id());
-		
+				
 		try {
 			
-			PusherUtil pusherUtil = (PusherUtil) Application.instance().get(PusherUtil.class.getName());
+			System.out.println("Task " + id() + " executed..");
 			
-			//Push parsed silent as message to this session
-			pusherUtil.parse(accountId, botId, channel, sessionId, "silent");
+			PusherUtil pusherUtil = Application.instance().get(PusherUtil.class);
 			
-			//Re schedule except the exception such as IllegalArgumentException
-			silentPusher.register(silentInterval, contextName, channel, sessionId, false);
+			pusherUtil.parse(accountId, botId, channel, sessionId, messageToFire);
+			
+			if (repeat && repeatSilentPusher!=null) {
+				
+				ZonedDateTime next = repeatSilentPusher.register(this.clone());
+				
+				System.out.println(id() + " will execute at " + next);
+				
+			}
+			
 			
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
 
+	}
+
+	public void repeatIfFinishBy(SilentPusher repeatSilentPusher) {
+		
+		this.repeatSilentPusher = repeatSilentPusher;		
+		
 	}
 
 }

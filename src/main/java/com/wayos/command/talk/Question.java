@@ -255,7 +255,7 @@ public class Question {
 
     public static Question build(String text) {
     	
-        System.out.println(text);
+        //System.out.println(text);
         
     	text = text.replaceFirst("Question:", "");
     	

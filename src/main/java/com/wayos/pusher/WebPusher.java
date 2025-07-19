@@ -101,7 +101,18 @@ public class WebPusher extends Pusher {
     	
     	if (type!=null && !type.isEmpty()) {
     		
-    	    send(accountId, botId, sessionId, message, type);
+    		if (type.equals("nodeId")) {
+    			
+    	    	String nodeId = data.optString("nodeId");
+    	    	
+        	    send(accountId, botId, sessionId, fromSessionId, message, nodeId); 
+    			
+    		} else {
+    			
+        	    send(accountId, botId, sessionId, message, type);
+        	    
+    		}
+    		
     	    
     		return;
     	}
@@ -278,9 +289,7 @@ public class WebPusher extends Pusher {
         List<Session> sessionList = null;
         
         try {
-        	
-        	System.out.println("Sending " + message + " to " + accountId + "/" + botId + "/" + sessionId);
-        	
+        	        	
         	//ResponseObject responseObject = new ResponseObject(message);
         	        	
         	sessionList = connectionListMap.get(accountId + "/" + botId + "/" + sessionId);
@@ -351,12 +360,15 @@ public class WebPusher extends Pusher {
                         	session.getBasicRemote().sendText(new ResponseObject(message).toJSONString());
                     		
                     	} else {
+                    		                    		
+                        	System.out.println("Sending " + type + ":" + message + " to " + accountId + "/" + botId + "/" + sessionId);
                     		
                             JSONArray array = new JSONArray();
             		    	JSONObject data = new JSONObject();
             		    	
             		    	data.put("type", type);
             		    	data.put("text", message);
+            		    	data.put("sessionId", sessionId);
             		    	
             		    	array.put(data);
                     		
@@ -395,6 +407,88 @@ public class WebPusher extends Pusher {
             
         }    	
     }    
+    
+    /**
+     * For Debugging on Logic Designer
+     * 
+     * @param accountId
+     * @param botId
+     * @param sessionId
+     * @param fromSessionId
+     * @param message
+     * @param type
+     */
+    public static void send(String accountId, String botId, String sessionId, String fromSessionId, String message, String type) {
+    	
+        List<Session> sessionList = null;
+        
+        try {
+        	
+        	//System.out.println("Sending " + message + " to " + accountId + "/" + botId + "/" + sessionId);
+        	
+        	//ResponseObject responseObject = new ResponseObject(message);
+        	        	
+        	sessionList = connectionListMap.get(accountId + "/" + botId + "/" + sessionId);
+        	
+        	if (sessionList!=null) {
+        		
+            	for (Session session:sessionList) {
+            		
+                    synchronized (session) {
+                    	
+                    	if (type==null) {
+                    		
+                        	session.getBasicRemote().sendText(new ResponseObject(message).toJSONString());
+                    		
+                    	} else {
+                    		                    		
+                        	System.out.println("Sending " + type + ":" + message + " to " + accountId + "/" + botId + "/" + sessionId);
+                    		
+                            JSONArray array = new JSONArray();
+            		    	JSONObject data = new JSONObject();
+            		    	
+            		    	data.put("type", type);
+            		    	data.put("text", message);
+            		    	data.put("sessionId", fromSessionId);
+            		    	
+            		    	array.put(data);
+                    		
+                        	session.getBasicRemote().sendText(array.toString());
+                        	
+                    	} 
+                    	                    	
+                    }
+            		
+            	}
+            	
+        	}        	
+        	
+            
+        } catch (Exception e) {
+        	
+            System.out.println("Failed to send message to client :" + e);
+            
+            remove(accountId, botId, sessionId);
+            
+            try {
+            	
+            	if (sessionList!=null) {
+            		
+                	for (Session session:sessionList) {
+                		
+                        session.close();
+                        
+                	}
+            		
+            	}
+                
+            } catch (Exception e1) {
+                // Ignore
+            }
+            
+        }
+        
+    }       
     
 
 }

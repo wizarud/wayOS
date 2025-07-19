@@ -17,21 +17,21 @@
 	</properties>
 
 	<dependencies>
-	
-	<dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<version>3.8.1</version>
-		<scope>test</scope>
-	</dependency>
-		
-	<!-- Import wayOS Runtime Dependencies library -->
-    <dependency>
-		<groupId>release</groupId>
-		<artifactId>wayOSLibs</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-    </dependency>	
-		
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Import wayOS Runtime Dependencies library -->
+		<dependency>
+			<groupId>release</groupId>
+			<artifactId>wayOSLibs</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
-	
+
 </project>

@@ -1,6 +1,5 @@
 package com.wayos;
 
-import com.wayos.command.AsyncCommandNode;
 import com.wayos.command.AsyncTask;
 import com.wayos.command.CommandNode;
 import com.wayos.command.admin.AdminCommandNode;
@@ -297,6 +296,8 @@ public class Session implements Serializable {
 						parsing = true;						
 						result = node.execute(messageObject);
 						
+						//System.out.println("Result " + result);
+						
 						break;
 						
 					}
@@ -322,7 +323,7 @@ public class Session implements Serializable {
 	        
         	System.out.println("Session.parse finish!");
 		}
-		
+				
 		return silent || result==null ? "" : result;    	    	
     }
 
