@@ -12,54 +12,57 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import com.wayos.Application;
 import com.wayos.PathStorage;
 
-public class SilentPusher {
+public class SilentFire {
 	
-	private Map<String, SilentPusherTask> silentTaskMap = new HashMap<>();
+	private Map<String, SilentFireTask> silentTaskMap = new HashMap<>();
 	
 	private Timer timer;
 	
-	public SilentPusher(PathStorage storage) {
+	public SilentFire(PathStorage storage) {
 		
 		timer = new Timer("Silent Timer");
 		
 	}
 	
-	public ZonedDateTime register(SilentPusherTask silentPusherTask) {
+	public void register(SilentFireTask silentFireTask) {
 				
-		String id = silentPusherTask.id();
+		String id = silentFireTask.id();
 		
 		//Cancel if there is any pending task.
 		cancel(id);
 		
-		silentTaskMap.put(id, silentPusherTask);
+		silentTaskMap.put(id, silentFireTask);
 		
-		silentPusherTask.repeatIfFinishBy(this);
+		silentFireTask.repeatIfFinishBy(this);
 		
 		try {
 
-			double hours = Double.parseDouble(silentPusherTask.cronExpression());
+			double hours = Double.parseDouble(silentFireTask.cronExpression());
 			
 			long delay = (long) (hours * 60 * 60 * 1000);
 
-		    timer.schedule(silentPusherTask, delay);
+		    timer.schedule(silentFireTask, delay);
 		    
 	        Instant now = Instant.now();
 	        Instant future = now.plusMillis(delay);
 	        
-	        return future.atZone(ZoneId.systemDefault());
+	        ZonedDateTime next = future.atZone(ZoneId.systemDefault());
+	        
+		    silentFireTask.setNextExecute(next);
 
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			//e.printStackTrace();
 			
 			try {
 				
 		        ZonedDateTime now = ZonedDateTime.now();
 				
 				CronParser parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
-		        Cron cron = parser.parse(silentPusherTask.cronExpression());
+		        Cron cron = parser.parse(silentFireTask.cronExpression());
 		        cron.validate();
 		        		        
 		        ExecutionTime executionTime = ExecutionTime.forCron(cron);
@@ -68,9 +71,11 @@ public class SilentPusher {
 		        
 	            long delay = java.time.Duration.between(now, next).toMillis();
 	            
-			    timer.schedule(silentPusherTask, delay);
+			    timer.schedule(silentFireTask, delay);
 			    
-			    return next.toInstant().atZone(ZoneId.systemDefault());
+			    next = next.toInstant().atZone(ZoneId.systemDefault());
+			    
+			    silentFireTask.setNextExecute(next);
 			    
 			} catch (Exception cronExpressionException) {
 				
@@ -78,14 +83,23 @@ public class SilentPusher {
 				
 			}
 			
-		}		
-				
-	    return null;
+		} finally {
+						
+			/**
+			 * Save for reexecute after restart and show status in dashboard
+			 */
+			
+			PathStorage storage = Application.instance().get(PathStorage.class);
+			
+			storage.write(silentFireTask.toJSONObject().toString(), "silent/" + silentFireTask.id() + ".json");
+
+		}
+
 	}
 	
 	public void cancel(String id) {
 		
-		SilentPusherTask pendingSilentTask = silentTaskMap.get(id);
+		SilentFireTask pendingSilentTask = silentTaskMap.get(id);
 		
 		if (pendingSilentTask!=null) {
 			

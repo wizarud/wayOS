@@ -36,6 +36,8 @@ public class Configuration {
 	
 	public static final String DATASTORE_PATH = "datastore/";
 	
+	public static final String SILENT_PATH = "silent/";
+	
 	/**
 	 * contextName = <accountId>/<botId>
 	 */
@@ -59,6 +61,11 @@ public class Configuration {
 	public String linePath() {
 		
 		return PRIVATE_PATH + contextName + ".line.json";
+	}
+	
+	public String silentPath() {
+		
+		return SILENT_PATH + contextName + ".json";
 	}
 	
 	public String adminIdPath() {

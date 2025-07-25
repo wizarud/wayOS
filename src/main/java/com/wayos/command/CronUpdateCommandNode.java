@@ -10,8 +10,8 @@ import com.wayos.Session;
 import x.org.json.JSONObject;
 
 import com.wayos.Hook.Match;
-import com.wayos.util.SilentPusher;
-import com.wayos.util.SilentPusherTask;
+import com.wayos.util.SilentFire;
+import com.wayos.util.SilentFireTask;
 
 public class CronUpdateCommandNode extends CommandNode {
 
@@ -45,37 +45,30 @@ public class CronUpdateCommandNode extends CommandNode {
 		PathStorage storage = Application.instance().get(PathStorage.class);
 		
 		String contextName = session.context().name();		
-		String channel = session.vars("#channel");		
-		String sessionId = session.vars("#sessionId");
 				
-		SilentPusherTask silentPusherTask = new SilentPusherTask(cronExpression, contextName, channel, sessionId, messageToFire);
+		SilentFireTask silentFireTask = new SilentFireTask(cronExpression, contextName, messageToFire);
 		
-		SilentPusher silentPusher = Application.instance().get(SilentPusher.class);
-				
+		SilentFire silentFire = Application.instance().get(SilentFire.class);
+
 		/**
 		 * Delete Cron
 		 */
 		if (cronExpression.equals("delete")) {
 			
-			String taskId = silentPusherTask.id();
-									
-			silentPusher.cancel(taskId);
+			String taskId = silentFireTask.id();
+
+			silentFire.cancel(taskId);
 			
 			System.out.println("Deleteing Cron.." + taskId);
 			
-			storage.delete("silent/" + taskId);
+			storage.delete("silent/" + taskId + ".json");
 			
 			return taskId + " deleted";
 		}
 		
-		ZonedDateTime next = silentPusher.register(silentPusherTask);
+		silentFire.register(silentFireTask);
 		
-		JSONObject cronObj = new JSONObject();
-		cronObj.put("interval", cronExpression);
-		
-		storage.write(cronObj.toString(), "silent/" + silentPusherTask.id());
-
-		return next.toString();
+		return silentFireTask.nextExecute().toString();
 			
 	}
 
