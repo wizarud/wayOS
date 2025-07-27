@@ -63,7 +63,7 @@ public class WebhooksServlet extends WAYOSServlet {
 				
 		//For logging message
 		String log = responseConnector.execute(new ResponseObject(responseText));
-				
+						
 	}
 
 }

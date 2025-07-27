@@ -35,7 +35,7 @@ public class SilentFireTask extends TimerTask {
 	
 	private ZonedDateTime nextExecute;	
 	
-	private boolean repeat;
+	private boolean available;
 	
 	public SilentFireTask(String cronExpression, String contextName, String messageToFire) {
 				
@@ -45,7 +45,7 @@ public class SilentFireTask extends TimerTask {
 				
 		this.messageToFire = messageToFire;
 				
-		this.repeat = true;		
+		this.available = true;		
 	}
 	
 	public static SilentFireTask build(String contextName, JSONObject cronObj) {
@@ -91,7 +91,7 @@ public class SilentFireTask extends TimerTask {
 	
 	public void stop() {
 		
-		this.repeat = false;
+		this.available = false;
 		
 	}
 	
@@ -171,6 +171,8 @@ public class SilentFireTask extends TimerTask {
 
 		try {
 			
+			if (!available) return;
+			
 			String apiURL = Configuration.domain + "/webhooks/" + contextName;
 			Map<String, String> headerMap = new HashMap<>();
 			headerMap.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -180,7 +182,7 @@ public class SilentFireTask extends TimerTask {
 
 			System.out.println("Task " + id() + " executed..");			
 			
-			if (repeat && repeatSilentFire!=null) {
+			if (repeatSilentFire!=null) {
 				
 				repeatSilentFire.register(this.clone());
 				
