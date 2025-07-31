@@ -19,6 +19,8 @@ public class StartProcessCommandNode extends CommandNode {
     @Override
     public String execute(MessageObject messageObject) {
     	
+    	System.out.println("Start Process Command: " + messageObject);
+    	
 		String params = cleanHooksFrom(messageObject.toString());
 		
 		String [] arguments = params.split(" ");
