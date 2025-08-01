@@ -361,7 +361,7 @@ public class WebPusher extends Pusher {
                     		
                     	} else {
                     		                    		
-                        	System.out.println("Sending " + type + ":" + message + " to " + accountId + "/" + botId + "/" + sessionId);
+                        	//System.out.println("Sending " + type + ":" + message + " to " + accountId + "/" + botId + "/" + sessionId);
                     		
                             JSONArray array = new JSONArray();
             		    	JSONObject data = new JSONObject();
