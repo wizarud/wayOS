@@ -22,24 +22,53 @@ public class BotCallerCommandNode extends CommandNode {
 		
 		String params = cleanHooksFrom(messageObject.toString());
 		
+		/*
 		String [] tokens = params.split(" ", 2);
 		
 		if (tokens.length!=2) {
 			System.out.println("BotCallerCommand (Tokens.length!=2):" + messageObject);
 			return "";
 		}
+		*/
 		
-		String sessionId = session.vars().get("#sessionId");
-		String botName = tokens[0];
-		String sendMessage = tokens[1].trim();
+		/**
+		 * TODO: To support other sessionId
+		 * <botName> <sessionId> <message>
+		 * Check tokens.length >= 3
+		 * Or
+		 * <botName> <message>
+		 * tokens.length >= 2
+		 */
+		
+		String [] tokens = params.split(" ", 3);
+		
+		String botName, sessionId, sendMessage;
+		
+		if (tokens.length >= 3 ) {
+			
+			botName = tokens[0];
+			sessionId = tokens[1];
+			sendMessage = tokens[2].trim();
+			
+		} else if (tokens.length == 2 ) {
+			
+			botName = tokens[0];
+			sessionId = session.vars().get("#sessionId");
+			sendMessage = tokens[1].trim();
+			
+		} else {
+			
+			System.out.println("BotCallerCommand (Tokens.length!=2):" + messageObject);
+			return "";
+			
+		}
+				
 		String toContextName = session.context().name().split("/")[0] + "/" + botName;
 		
-		/*
 		System.out.println("BotCallerCommandNode");
 		System.out.println("sessionId: " + sessionId);
 		System.out.println("toContextName: " + toContextName);
 		System.out.println("sendMessage: " + sendMessage);
-		*/
 		
 		RequestObject requestObject = RequestObject.create("http", sessionId, toContextName);
 		

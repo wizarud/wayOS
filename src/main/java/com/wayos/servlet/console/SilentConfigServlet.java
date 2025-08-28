@@ -95,11 +95,11 @@ public class SilentConfigServlet extends ConsoleServlet {
 				return;
 			}
 			
-			JSONObject cronObj = storage().readAsJSONObject(jsonPath);
+			JSONObject taskObj = storage().readAsJSONObject(jsonPath);
 			
-			if (cronObj==null) {
+			if (taskObj==null) {
 				
-				cronObj = new JSONObject();
+				taskObj = new JSONObject();
 			}
 			
 			/**
@@ -107,14 +107,14 @@ public class SilentConfigServlet extends ConsoleServlet {
 			 */
 			for (Map.Entry<String, String> entry:propertyMap.entrySet()) {
 				
-				cronObj.put(entry.getKey(), entry.getValue());
+				taskObj.put(entry.getKey(), entry.getValue());
 			}
 			
 			/**
 			 * Reschedule
 			 */
 			
-			silentFire.register(SilentFireTask.build(contextName, cronObj));
+			silentFire.register(SilentFireTask.build(contextName, taskObj));
 						
 			resp.setContentType("text/plain");
 

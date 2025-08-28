@@ -5,7 +5,7 @@ import com.wayos.MessageObject;
 import com.wayos.Session;
 import com.wayos.command.BotCallerCommandNode;
 import com.wayos.command.CommandNode;
-import com.wayos.command.CronUpdateCommandNode;
+import com.wayos.command.TaskUpdateCommandNode;
 import com.wayos.command.GreetingCommandNode;
 import com.wayos.command.IsExpiredCommandNode;
 import com.wayos.command.Key;
@@ -20,7 +20,9 @@ import com.wayos.command.talk.FlowTalkCommandNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -47,7 +49,24 @@ public class ExtensionSupportWakeupCommandNode extends CommandNode {
 			}
 			
 			newSessionListenerList.add(this);
+			
 			sce.getServletContext().setAttribute("ExtensionSupportWakeupCommandNode.NewSessionListener", newSessionListenerList);
+			
+			/**
+			 * For Ext Entity Tool in Logic Designer
+			 */
+			Map<String, Map<String, String>> logicDesignerExtToolMap = 
+					(Map<String, Map<String, String>>)sce.getServletContext().getAttribute("logicDesignerExtToolMap");
+					
+			if (logicDesignerExtToolMap==null) {
+				
+				System.out.println("New logicDesignerExtToolMap");
+				
+				logicDesignerExtToolMap = new HashMap<>();
+				
+			}
+			
+			sce.getServletContext().setAttribute("logicDesignerExtToolMap", logicDesignerExtToolMap);
 			
 		}
 
@@ -114,9 +133,7 @@ public class ExtensionSupportWakeupCommandNode extends CommandNode {
         session.commandList().add(new BotCallerCommandNode(session, new String[]{"call"}, Match.Head));
         //session.commandList().add(new DateStringToTimestampCommandNode(session, new String[]{"dateStringToTimestamp"}, Match.Head));
         session.commandList().add(new IsExpiredCommandNode(session, new String[]{"expired"}, Match.Head));
-        
-        session.commandList().add(new CronUpdateCommandNode(session, new String[]{"crons"}, Match.Head));
-                
+                        
         session.commandList().add(new FlowTalkCommandNode(session, KEY));
 
         return "\\(^o^)ๆ";

@@ -1,9 +1,12 @@
 package com.wayos.util;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 
@@ -40,7 +43,7 @@ public class SilentFire {
 		
 		try {
 
-			double hours = Double.parseDouble(silentFireTask.cronExpression());
+			double hours = Double.parseDouble(silentFireTask.timeExpression());
 			
 			long delay = (long) (hours * 60 * 60 * 1000);
 
@@ -59,29 +62,46 @@ public class SilentFire {
 			
 			try {
 				
-		        ZonedDateTime now = ZonedDateTime.now();
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
 				
-				CronParser parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
-		        Cron cron = parser.parse(silentFireTask.cronExpression());
-		        cron.validate();
-		        		        
-		        ExecutionTime executionTime = ExecutionTime.forCron(cron);
-		        
-		        ZonedDateTime next = executionTime.nextExecution(now).get();
-		        
-	            long delay = java.time.Duration.between(now, next).toMillis();
-	            
-			    timer.schedule(silentFireTask, delay);
-			    
-			    next = next.toInstant().atZone(ZoneId.systemDefault());
-			    
+				Date date = df.parse(silentFireTask.timeExpression());
+				
+				timer.schedule(silentFireTask, date);
+				
+				ZonedDateTime next = date.toInstant().atZone(ZoneId.systemDefault());
+				
 			    silentFireTask.setNextExecute(next);
-			    
-			} catch (Exception cronExpressionException) {
 				
-				cronExpressionException.printStackTrace();
+			} catch (Exception HHmmFormatException) {
+				
+				try {
+					
+			        ZonedDateTime now = ZonedDateTime.now();
+					
+					CronParser parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
+			        Cron cron = parser.parse(silentFireTask.timeExpression());
+			        cron.validate();
+			        		        
+			        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+			        
+			        ZonedDateTime next = executionTime.nextExecution(now).get();
+			        
+		            long delay = java.time.Duration.between(now, next).toMillis();
+		            
+				    timer.schedule(silentFireTask, delay);
+				    
+				    next = next.toInstant().atZone(ZoneId.systemDefault());
+				    
+				    silentFireTask.setNextExecute(next);
+				    
+				} catch (Exception cronExpressionException) {
+					
+					cronExpressionException.printStackTrace();
+					
+				}				
 				
 			}
+			
 			
 		} finally {
 						

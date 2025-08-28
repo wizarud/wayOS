@@ -23,7 +23,7 @@ public class SilentFireTask extends TimerTask {
 	
 	private SilentFire repeatSilentFire;	
 	
-	private String cronExpression;
+	private String timeExpression;
 	
 	private String contextName;
 		
@@ -37,9 +37,9 @@ public class SilentFireTask extends TimerTask {
 	
 	private boolean available;
 	
-	public SilentFireTask(String cronExpression, String contextName, String messageToFire) {
+	public SilentFireTask(String timeExpression, String contextName, String messageToFire) {
 				
-		this.cronExpression = cronExpression;
+		this.timeExpression = timeExpression;
 		
 		this.contextName = contextName;
 				
@@ -48,19 +48,19 @@ public class SilentFireTask extends TimerTask {
 		this.available = true;		
 	}
 	
-	public static SilentFireTask build(String contextName, JSONObject cronObj) {
+	public static SilentFireTask build(String contextName, JSONObject taskObj) {
 		
-		String cronExpression = cronObj.getString("interval");
-		String messageToFire = cronObj.optString("message");
+		String timeExpression = taskObj.getString("interval");
+		String messageToFire = taskObj.optString("message");
 		
 		if (messageToFire==null || messageToFire.isEmpty()) {
 			messageToFire = "silent";
 		}
 		
-		String lastExecute = cronObj.optString("lastExecute");
-		String lastResponseText = cronObj.optString("lastResponseText");
+		String lastExecute = taskObj.optString("lastExecute");
+		String lastResponseText = taskObj.optString("lastResponseText");
 		
-		SilentFireTask silentFireTask = new SilentFireTask(cronExpression, contextName, messageToFire);
+		SilentFireTask silentFireTask = new SilentFireTask(timeExpression, contextName, messageToFire);
 		
 		silentFireTask.lastExecute = lastExecute;
 		silentFireTask.lastResponseText = lastResponseText;		
@@ -74,14 +74,14 @@ public class SilentFireTask extends TimerTask {
 		return contextName;
 	}
 	
-	public String cronExpression() {
+	public String timeExpression() {
 		
-		return cronExpression;
+		return timeExpression;
 	}
 	
 	public SilentFireTask clone() {
 		
-		SilentFireTask silentFireTask = new SilentFireTask(cronExpression, contextName, messageToFire);
+		SilentFireTask silentFireTask = new SilentFireTask(timeExpression, contextName, messageToFire);
 		
 		silentFireTask.lastExecute = Instant.now().atZone(ZoneId.systemDefault()).format(dateTimeFormatter);
 		silentFireTask.lastResponseText = lastResponseText;
@@ -144,26 +144,26 @@ public class SilentFireTask extends TimerTask {
 	
 	public JSONObject toJSONObject() {
 		
-		JSONObject cronObj = new JSONObject();
+		JSONObject taskObj = new JSONObject();
 		
-		cronObj.put("interval", cronExpression);
-		cronObj.put("message", messageToFire);
+		taskObj.put("interval", timeExpression);
+		taskObj.put("message", messageToFire);
 				
 		if (lastExecute!=null) {
-			cronObj.put("lastExecute", lastExecute);			
+			taskObj.put("lastExecute", lastExecute);
 		} else {
-			cronObj.put("lastExecute", "-");		
+			taskObj.put("lastExecute", "-");		
 		}
 		
 		if (lastResponseText!=null) {
-			cronObj.put("lastResponseText", lastResponseText);			
+			taskObj.put("lastResponseText", lastResponseText);			
 		} else {
-			cronObj.put("lastResponseText", "-");			
+			taskObj.put("lastResponseText", "-");			
 		}
 		
-		cronObj.put("nextExecute", nextExecute.format(dateTimeFormatter));
+		taskObj.put("nextExecute", nextExecute.format(dateTimeFormatter));
 
-		return cronObj;
+		return taskObj;
 	}
 
 	@Override

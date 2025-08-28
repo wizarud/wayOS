@@ -1,25 +1,21 @@
 package com.wayos.command;
 
-import java.time.ZonedDateTime;
-
 import com.wayos.Application;
 import com.wayos.MessageObject;
 import com.wayos.PathStorage;
 import com.wayos.Session;
 
-import x.org.json.JSONObject;
-
 import com.wayos.Hook.Match;
 import com.wayos.util.SilentFire;
 import com.wayos.util.SilentFireTask;
 
-public class CronUpdateCommandNode extends CommandNode {
+public class TaskUpdateCommandNode extends CommandNode {
 
-	public CronUpdateCommandNode(Session session, String[] hooks) {
+	public TaskUpdateCommandNode(Session session, String[] hooks) {
 		super(session, hooks);
 	}
 	
-	public CronUpdateCommandNode(Session session, String[] hooks, Match match) {
+	public TaskUpdateCommandNode(Session session, String[] hooks, Match match) {
 		super(session, hooks, match);
 	}
 
@@ -32,34 +28,34 @@ public class CronUpdateCommandNode extends CommandNode {
 		
 		if (tokens.length!=2) {
 			
-			System.out.println("CronUpdateCommandNode: Invalid parameters! " + messageObject);
+			System.out.println("TaskUpdateCommandNode: Invalid parameters! " + messageObject);
 			
-			return "Invalid Parameters Keyword, Cron Expression";
+			return "Invalid Parameters <Time Expression> <Keywords> to fire";
 			
 		}
 		
-		String messageToFire = tokens[0];
+		String timeExpression = tokens[0];
 		
-		String cronExpression = tokens[1];
-				
+		String messageToFire = tokens[1];
+
 		PathStorage storage = Application.instance().get(PathStorage.class);
 		
-		String contextName = session.context().name();		
-				
-		SilentFireTask silentFireTask = new SilentFireTask(cronExpression, contextName, messageToFire);
+		String contextName = session.context().name();
+
+		SilentFireTask silentFireTask = new SilentFireTask(timeExpression, contextName, messageToFire);
 		
 		SilentFire silentFire = Application.instance().get(SilentFire.class);
 
 		/**
-		 * Delete Cron
+		 * Delete Task
 		 */
-		if (cronExpression.equals("delete")) {
+		if (timeExpression.equals("delete")) {
 			
 			String taskId = silentFireTask.id();
 
 			silentFire.cancel(taskId);
 			
-			System.out.println("Deleteing Cron.." + taskId);
+			System.out.println("Deleteing Task.." + taskId);
 			
 			storage.delete("silent/" + taskId + ".json");
 			
