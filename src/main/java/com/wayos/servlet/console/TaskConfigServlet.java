@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.wayos.Application;
 import com.wayos.Configuration;
 import com.wayos.PathStorage;
-import com.wayos.util.SilentFire;
-import com.wayos.util.SilentFireTask;
+import com.wayos.util.MessageTimer;
+import com.wayos.util.MessageTimerTask;
 
 import x.org.json.JSONObject;
 
 @SuppressWarnings("serial")
-@WebServlet("/console/silent/*")
-public class SilentConfigServlet extends ConsoleServlet {
+@WebServlet("/console/task/*")
+public class TaskConfigServlet extends ConsoleServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -75,7 +75,7 @@ public class SilentConfigServlet extends ConsoleServlet {
 
 		try {
 			
-			SilentFire silentFire = Application.instance().get(SilentFire.class);
+			MessageTimer silentFire = Application.instance().get(MessageTimer.class);
 			
 			/**
 			 * Delete if parameters (message and interval) are empty
@@ -114,7 +114,7 @@ public class SilentConfigServlet extends ConsoleServlet {
 			 * Reschedule
 			 */
 			
-			silentFire.register(SilentFireTask.build(contextName, taskObj));
+			silentFire.register(MessageTimerTask.build(contextName, taskObj));
 						
 			resp.setContentType("text/plain");
 

@@ -17,16 +17,18 @@ import com.wayos.Configuration;
 
 import x.org.json.JSONObject;
 
-public class SilentFireTask extends TimerTask {
+public class MessageTimerTask extends TimerTask {
 	
 	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss");
 	
-	private SilentFire repeatSilentFire;	
+	private MessageTimer repeatSilentFire;	
 	
 	private String timeExpression;
 	
 	private String contextName;
-		
+	
+	private String sessionId;
+	
 	private String messageToFire;
 	
 	private String lastExecute;
@@ -37,22 +39,29 @@ public class SilentFireTask extends TimerTask {
 	
 	private boolean available;
 	
-	public SilentFireTask(String timeExpression, String contextName, String messageToFire) {
+	public MessageTimerTask(String timeExpression, String contextName, String sessionId, String messageToFire) {
 				
 		this.timeExpression = timeExpression;
 		
 		this.contextName = contextName;
+		
+		this.sessionId = sessionId;
 				
 		this.messageToFire = messageToFire;
 				
 		this.available = true;		
 	}
 	
-	public static SilentFireTask build(String contextName, JSONObject taskObj) {
+	public static MessageTimerTask build(String contextName, JSONObject taskObj) {
 		
 		String timeExpression = taskObj.getString("interval");
-		String messageToFire = taskObj.optString("message");
 		
+		String sessionId = taskObj.optString("sessionId");
+		if (sessionId==null || sessionId.isEmpty()) {
+			sessionId = "dashboard";
+		}
+		
+		String messageToFire = taskObj.optString("message");		
 		if (messageToFire==null || messageToFire.isEmpty()) {
 			messageToFire = "silent";
 		}
@@ -60,12 +69,12 @@ public class SilentFireTask extends TimerTask {
 		String lastExecute = taskObj.optString("lastExecute");
 		String lastResponseText = taskObj.optString("lastResponseText");
 		
-		SilentFireTask silentFireTask = new SilentFireTask(timeExpression, contextName, messageToFire);
+		MessageTimerTask messageTimerTask = new MessageTimerTask(timeExpression, contextName, sessionId, messageToFire);
 		
-		silentFireTask.lastExecute = lastExecute;
-		silentFireTask.lastResponseText = lastResponseText;		
+		messageTimerTask.lastExecute = lastExecute;
+		messageTimerTask.lastResponseText = lastResponseText;		
 		
-		return silentFireTask;
+		return messageTimerTask;
 
 	}
 	
@@ -79,14 +88,14 @@ public class SilentFireTask extends TimerTask {
 		return timeExpression;
 	}
 	
-	public SilentFireTask clone() {
+	public MessageTimerTask clone() {
 		
-		SilentFireTask silentFireTask = new SilentFireTask(timeExpression, contextName, messageToFire);
+		MessageTimerTask messageTimerTask = new MessageTimerTask(timeExpression, contextName, sessionId, messageToFire);
 		
-		silentFireTask.lastExecute = Instant.now().atZone(ZoneId.systemDefault()).format(dateTimeFormatter);
-		silentFireTask.lastResponseText = lastResponseText;
+		messageTimerTask.lastExecute = Instant.now().atZone(ZoneId.systemDefault()).format(dateTimeFormatter);
+		messageTimerTask.lastResponseText = lastResponseText;
 		
-		return silentFireTask;
+		return messageTimerTask;
 	}
 	
 	public void stop() {
@@ -147,18 +156,29 @@ public class SilentFireTask extends TimerTask {
 		JSONObject taskObj = new JSONObject();
 		
 		taskObj.put("interval", timeExpression);
+		
+		taskObj.put("sessionId", sessionId);
+		
 		taskObj.put("message", messageToFire);
-				
+		
 		if (lastExecute!=null) {
+			
 			taskObj.put("lastExecute", lastExecute);
+			
 		} else {
-			taskObj.put("lastExecute", "-");		
+			
+			taskObj.put("lastExecute", "-");
+			
 		}
 		
 		if (lastResponseText!=null) {
-			taskObj.put("lastResponseText", lastResponseText);			
+			
+			taskObj.put("lastResponseText", lastResponseText);
+			
 		} else {
-			taskObj.put("lastResponseText", "-");			
+			
+			taskObj.put("lastResponseText", "-");
+		
 		}
 		
 		taskObj.put("nextExecute", nextExecute.format(dateTimeFormatter));
@@ -177,7 +197,7 @@ public class SilentFireTask extends TimerTask {
 			Map<String, String> headerMap = new HashMap<>();
 			headerMap.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 			
-			String body = "sessionId=dashboard&message=" + messageToFire;			
+			String body = "sessionId=" + sessionId + "&message=" + messageToFire;
 			lastResponseText = post(apiURL, headerMap, body);
 
 			System.out.println("Task " + id() + " executed..");			
@@ -195,7 +215,7 @@ public class SilentFireTask extends TimerTask {
 
 	}
 
-	public void repeatIfFinishBy(SilentFire repeatSilentFire) {
+	public void repeatIfFinishBy(MessageTimer repeatSilentFire) {
 		
 		this.repeatSilentFire = repeatSilentFire;		
 		

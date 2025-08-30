@@ -1,12 +1,14 @@
 package com.wayos.util;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 
@@ -18,68 +20,86 @@ import com.cronutils.parser.CronParser;
 import com.wayos.Application;
 import com.wayos.PathStorage;
 
-public class SilentFire {
+public class MessageTimer {
 	
-	private Map<String, SilentFireTask> silentTaskMap = new HashMap<>();
+	private Map<String, MessageTimerTask> messageTimerTaskMap = new HashMap<>();
 	
 	private Timer timer;
 	
-	public SilentFire(PathStorage storage) {
+	public MessageTimer(PathStorage storage) {
 		
-		timer = new Timer("Silent Timer");
+		timer = new Timer("Message Timer");
 		
 	}
 	
-	public void register(SilentFireTask silentFireTask) {
+	public void register(MessageTimerTask messageTimerTask) {
 				
-		String id = silentFireTask.id();
+		String id = messageTimerTask.id();
 		
 		//Cancel if there is any pending task.
 		cancel(id);
 		
-		silentTaskMap.put(id, silentFireTask);
-		
-		silentFireTask.repeatIfFinishBy(this);
-		
+		messageTimerTaskMap.put(id, messageTimerTask);
+				
 		try {
 
-			double hours = Double.parseDouble(silentFireTask.timeExpression());
+			/**
+			 * Parse Interval for interger in hours
+			 */
+			
+			double hours = Double.parseDouble(messageTimerTask.timeExpression());
 			
 			long delay = (long) (hours * 60 * 60 * 1000);
 
-		    timer.schedule(silentFireTask, delay);
+		    timer.schedule(messageTimerTask, delay);
 		    
 	        Instant now = Instant.now();
 	        Instant future = now.plusMillis(delay);
 	        
 	        ZonedDateTime next = future.atZone(ZoneId.systemDefault());
 	        
-		    silentFireTask.setNextExecute(next);
+		    messageTimerTask.setNextExecute(next);
 
+			messageTimerTask.repeatIfFinishBy(this);
+			
 		} catch (Exception e) {
 			
 			//e.printStackTrace();
 			
 			try {
 				
-				SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+				/**
+				 * Parse Current Date at HH:mm, Do only one time
+				 */
 				
-				Date date = df.parse(silentFireTask.timeExpression());
+		        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		        
+		        LocalTime time = LocalTime.parse(messageTimerTask.timeExpression(), timeFormatter);
+
+		        LocalDateTime todayWithTime = LocalDate.now().atTime(time);
+
+		        Date date = Date.from(todayWithTime.atZone(ZoneId.systemDefault()).toInstant());				
 				
-				timer.schedule(silentFireTask, date);
+				timer.schedule(messageTimerTask, date);
 				
 				ZonedDateTime next = date.toInstant().atZone(ZoneId.systemDefault());
 				
-			    silentFireTask.setNextExecute(next);
+			    messageTimerTask.setNextExecute(next);// Just information
+			    
+				messageTimerTask.repeatIfFinishBy(null); //null means no repeat!!!
 				
 			} catch (Exception HHmmFormatException) {
 				
 				try {
 					
+					/**
+					 * Parse Cron format for long running task
+					 */
+					
 			        ZonedDateTime now = ZonedDateTime.now();
 					
 					CronParser parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
-			        Cron cron = parser.parse(silentFireTask.timeExpression());
+			        Cron cron = parser.parse(messageTimerTask.timeExpression());
 			        cron.validate();
 			        		        
 			        ExecutionTime executionTime = ExecutionTime.forCron(cron);
@@ -88,12 +108,14 @@ public class SilentFire {
 			        
 		            long delay = java.time.Duration.between(now, next).toMillis();
 		            
-				    timer.schedule(silentFireTask, delay);
+				    timer.schedule(messageTimerTask, delay);
 				    
 				    next = next.toInstant().atZone(ZoneId.systemDefault());
 				    
-				    silentFireTask.setNextExecute(next);
+				    messageTimerTask.setNextExecute(next);
 				    
+					messageTimerTask.repeatIfFinishBy(this);
+					
 				} catch (Exception cronExpressionException) {
 					
 					cronExpressionException.printStackTrace();
@@ -111,7 +133,7 @@ public class SilentFire {
 			
 			PathStorage storage = Application.instance().get(PathStorage.class);
 			
-			storage.write(silentFireTask.toJSONObject().toString(), "silent/" + silentFireTask.id() + ".json");
+			storage.write(messageTimerTask.toJSONObject().toString(), "silent/" + messageTimerTask.id() + ".json");
 
 		}
 
@@ -119,28 +141,28 @@ public class SilentFire {
 	
 	public void cancel(String id) {
 		
-		SilentFireTask pendingSilentTask = silentTaskMap.get(id);
+		MessageTimerTask pendingMessageTimerTask = messageTimerTaskMap.get(id);
 		
-		if (pendingSilentTask!=null) {
+		if (pendingMessageTimerTask!=null) {
 			
 			try {
 				
 				System.out.println("Cancel Task.." + id);
 				
-				pendingSilentTask.stop();
+				pendingMessageTimerTask.stop();
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
-		silentTaskMap.remove(id);
+		messageTimerTaskMap.remove(id);
 				
 	}
 	
 	public void cancelAll() {
 		
-		for (String id: silentTaskMap.keySet()) {
+		for (String id: messageTimerTaskMap.keySet()) {
 			
 			cancel(id);
 		}
