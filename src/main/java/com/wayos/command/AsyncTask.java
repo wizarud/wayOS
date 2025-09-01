@@ -36,7 +36,7 @@ public final class AsyncTask implements Runnable {
 		
 		private boolean active;
 		
-		public void run (MessageObject messageObject) {}
+		public void run (MessageObject messageObject) {}//Do nothing!
 		
 		public void setFinishListener(FinishListener finishListener, String generatedOutput) {
 			

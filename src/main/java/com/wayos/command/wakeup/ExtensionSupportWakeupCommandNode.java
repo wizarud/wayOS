@@ -125,14 +125,10 @@ public class ExtensionSupportWakeupCommandNode extends CommandNode {
         for (NewSessionListener newSessionListener:newSessionListenerList) {
         	newSessionListener.wakup(session);
         }
-        
-        session.commandList().add(new StartProcessCommandNode(session, new String[]{"start"}));
-        session.commandList().add(new WaitCommandNode(session, new String[]{"wait"}));
-        session.commandList().add(new StopProcessCommandNode(session, new String[]{"stop"}));
-        
+                
         session.commandList().add(new BotCallerCommandNode(session, new String[]{"call"}, Match.Head));
         //session.commandList().add(new DateStringToTimestampCommandNode(session, new String[]{"dateStringToTimestamp"}, Match.Head));
-        session.commandList().add(new IsExpiredCommandNode(session, new String[]{"expired"}, Match.Head));
+        //session.commandList().add(new IsExpiredCommandNode(session, new String[]{"expired"}, Match.Head));
                         
         session.commandList().add(new FlowTalkCommandNode(session, KEY));
 
