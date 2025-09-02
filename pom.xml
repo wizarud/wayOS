@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wayos</groupId>
 	<artifactId>runtime</artifactId>
-	<version>2025.8.8</version>
+	<version>2025.9.2.1</version>
 	<name>runtime</name>
 	<packaging>jar</packaging>
 
