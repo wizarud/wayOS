@@ -1,7 +1,5 @@
 package com.wayos.command.talk;
 
-import java.util.Set;
-
 import com.wayos.Application;
 import com.wayos.MessageObject;
 import com.wayos.Session;
@@ -84,6 +82,10 @@ public class FlowForwardResponseCommandNode extends ResponseCommandNode {
 				
 				String sessionId = session.vars("#sessionId");
 				    						
+				/**
+				 * Push forward signal to make x parse that message.
+				 * Like Redirect in HttpResponse
+				 */
 		    	WebPusher.send(accountId, botId, sessionId, nextMessage.toString(), "forward");				
 			}
 			

@@ -110,47 +110,6 @@ public class MessageTimerTask extends TimerTask {
 		
 	}
 	
-    private final String post(String apiURL, Map<String, String> headerMap, String body) {
-
-        StringBuffer response = new StringBuffer();
-        
-        try {
-        	
-            URL url = new URL(apiURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            
-            if (headerMap!=null) {
-                for (Map.Entry<String, String> entry:headerMap.entrySet()) {
-                    conn.setRequestProperty(entry.getKey(), entry.getValue());                    
-                }
-            }
-            
-            OutputStream outputStream = conn.getOutputStream();
-            outputStream.write(body.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
-
-            int respCode = conn.getResponseCode();  // New items get NOT_FOUND on PUT
-            String line;
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-                response.append(System.lineSeparator());
-            }
-            reader.close();
-
-        } catch (Exception e) {
-        	e.printStackTrace();
-            response.append(/*apiURL + ":" + */ e.getMessage());
-        }
-        
-        return response.toString().trim();
-        
-    }	
-	
 	public JSONObject toJSONObject() {
 		
 		JSONObject taskObj = new JSONObject();
@@ -193,14 +152,9 @@ public class MessageTimerTask extends TimerTask {
 			
 			if (!available) return;
 			
-			String apiURL = Configuration.domain + "/webhooks/" + contextName;
-			Map<String, String> headerMap = new HashMap<>();
-			headerMap.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-			
-			String body = "sessionId=" + sessionId + "&message=" + messageToFire;
-			lastResponseText = post(apiURL, headerMap, body);
+			lastResponseText = API.call(Configuration.domain, contextName, sessionId, messageToFire);
 
-			System.out.println("Task " + id() + " executed..");			
+			System.out.println("Task " + id() + " executed!, Response=" + lastResponseText);			
 			
 			if (repeatSilentFire!=null) {
 				

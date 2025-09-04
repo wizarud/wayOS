@@ -59,8 +59,12 @@ public class MessageTimer {
 	        ZonedDateTime next = future.atZone(ZoneId.systemDefault());
 	        
 		    messageTimerTask.setNextExecute(next);
-
-			messageTimerTask.repeatIfFinishBy(this);
+		    
+		    if (hours>0) {
+		    	
+				messageTimerTask.repeatIfFinishBy(this);
+		    	
+		    }
 			
 		} catch (Exception e) {
 			
@@ -114,7 +118,7 @@ public class MessageTimer {
 				    
 				    messageTimerTask.setNextExecute(next);
 				    
-					messageTimerTask.repeatIfFinishBy(this);
+					messageTimerTask.repeatIfFinishBy(this); //Do repeat for Cron Job
 					
 				} catch (Exception cronExpressionException) {
 					

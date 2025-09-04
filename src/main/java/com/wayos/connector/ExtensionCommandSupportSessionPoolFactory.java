@@ -16,7 +16,6 @@ import com.wayos.PathStorage;
 import com.wayos.NodeEvent;
 import com.wayos.Session;
 import com.wayos.SessionListener;
-import com.wayos.command.CommandNode;
 import com.wayos.command.admin.AdminCommandNode;
 import com.wayos.command.wakeup.ExtensionSupportWakeupCommandNode;
 import com.wayos.connector.SessionPool.ContextFactory;
@@ -388,6 +387,20 @@ public class ExtensionCommandSupportSessionPoolFactory {
 							
 						}
 						
+						/**
+						 * 
+						 * TODO: #f_xxx
+						 * Fun Var!
+						 * Push forward signal to make x parse that message.
+						 * Like Redirect in HttpResponse
+						 * 
+						 */
+						if (varChangedName.startsWith("#f_")) {
+							
+					    	WebPusher.send(accountId, botId, sessionId, varChangedValue, "forward");
+							
+						}
+				    											
 					}
 										
 				} catch (Exception e) {
