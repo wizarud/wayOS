@@ -63,7 +63,11 @@ public class PublicStorageServlet extends ConsoleServlet {
         if (storage().exists(Configuration.PUBLIC_PATH + fileName)) {
 	    	
 		    storage().serve(Configuration.PUBLIC_PATH + fileName, resp);
-	    }
+		    
+	    } 
+        /**
+         * TODO: throws content not found error!
+         */
 	    
 	}
 	

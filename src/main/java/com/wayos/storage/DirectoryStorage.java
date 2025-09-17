@@ -21,7 +21,10 @@ import x.org.json.JSONObject;
 
 public class DirectoryStorage implements PathStorage {
 	
-	private static final int BUFFER_SIZE = 5 * 1024 * 1024;
+	/**
+	 * TODO: Calculate the size dynamically base on target file!!!
+	 */
+	private static final int BUFFER_SIZE = 10 * 1024 * 1024; //10 MB
 	
 	private final File home;
 	
