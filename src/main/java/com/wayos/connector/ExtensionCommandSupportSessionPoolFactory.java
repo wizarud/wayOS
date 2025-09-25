@@ -279,55 +279,27 @@ public class ExtensionCommandSupportSessionPoolFactory {
 					
 					JSONObject adminConfigObject;
 					
-					String toAccountId, toBotId, toChannel, toSessionId;
-					
-					toChannel = null;
-					
-					toSessionId = null;
-					
-					//Check that called from other context or not?
-					String callerContextName = session.vars("#caller.context.name");
-					
-					//Use this accountId, botId as adminAccountId and adminBotId
-					if (callerContextName.isEmpty()) {
+					String adminChannel, adminSessionId;
+										
+					adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
+																	
+					if (adminConfigObject!=null) {
 						
-						toAccountId = accountId;
+						adminChannel = adminConfigObject.getString("channel");
 						
-						toBotId = botId;
-						
-						adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
+						adminSessionId = adminConfigObject.getString("sessionId");
 						
 					} else {
 						
-						tokens = callerContextName.split("/");
+						adminChannel = null;
 						
-						toAccountId = tokens[0];
-						
-						toBotId = tokens[1];
-						
-						configuration = new Configuration(callerContextName);
-						
-						adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
-						
-					}
-												
-					if (adminConfigObject!=null) {
-						
-						toChannel = adminConfigObject.getString("channel");
-						
-						toSessionId = adminConfigObject.getString("sessionId");
+						adminSessionId = null;
 						
 					}
 					
 					Set<String> varChangedNameSet = session.getVariableChangedNameSet();
 					
 					String varChangedValue;
-					
-					String targetContextName;
-					
-					String targetAccountId, targetBotId;
-					
-					String targetChannel, targetSessionId;
 					
 					for (String varChangedName:varChangedNameSet) {
 						
@@ -336,69 +308,50 @@ public class ExtensionCommandSupportSessionPoolFactory {
 						if (varChangedValue.trim().isEmpty()) continue;
 						
 						/**
-						 * Broadcast to all sessions that involve this contextName
-						 */
-						if (varChangedName.startsWith("#b_")) {
-							
-							pusherUtil.push(toAccountId, toBotId, varChangedValue);
-							
-						}
-						
-						/**
-						 * Log it for reporting
+						 * Log and Push to admin session
+						 * Also Support LINE channel too
 						 */
 						if (varChangedName.startsWith("#l_")) {
 							
 							consoleUtil.appendLogVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
 							
-							/**
-							 * Notify to registered admin channel / sessionId to notify if this session is not from admin
-							 */							
-							if (toSessionId!=null && !toSessionId.equals(sessionId)) {
+							if (adminSessionId!=null && !adminSessionId.equals(sessionId)) {
 								
-								//System.out.println("Try to push message to admin " + toChannel + "/" + toSessionId);
-								
-								pusherUtil.push(toAccountId, toBotId, toChannel, toSessionId, varChangedValue);
+								pusherUtil.push(accountId, botId, adminChannel, adminSessionId, varChangedValue);
 								
 							}
 														
 						}
+												
 						
 						/**
-						 * Only Web Support!!!
-						 * Fire message as a keyword to the current session of context and parse later
+						 * Push notification to this session
 						 */
-						if (varChangedName.startsWith("#m_")) {
-														
-							//targetSessionId = varChangedName.substring("#m_".length());
-							
-							targetSessionId = sessionId;//Support Fire from API sessionId=<sessionId>&message=<key>
-							
-							WebPusher webPusher = (WebPusher) Application.instance().get("web");
-							
-					    	JSONObject data = new JSONObject();
+						if (varChangedName.startsWith("#n_")) {
+																					
+					    	WebPusher.send(accountId, botId, sessionId, varChangedValue, null);
 					    	
-					    	data.put("fromAccountId", toAccountId);
-					    	data.put("fromBotId", toBotId);
-					    	data.put("fromSessionId", sessionId);
-					    	data.put("message", varChangedValue);
+						}
+						
+						/**
+						 * Push message to this session and forward at x.jsp client
+						 */
+						if (varChangedName.startsWith("#k_")) {
 							
-							webPusher.push(toAccountId + "/" + toBotId, targetSessionId, data);
+					    	WebPusher.send(accountId, botId, sessionId, varChangedValue, "forward");
 							
 						}
 						
 						/**
-						 * 
-						 * TODO: #f_xxx
-						 * Fun Var!
-						 * Push forward signal to make x parse that message.
-						 * Like Redirect in HttpResponse
-						 * 
-						 */
-						if (varChangedName.startsWith("#f_")) {
+						 * Push Message to admin session
+						 */							
+						if (varChangedName.startsWith("#a_")) {
 							
-					    	WebPusher.send(accountId, botId, sessionId, varChangedValue, "forward");
-							
+							if (adminSessionId!=null && !adminSessionId.equals(sessionId)) {
+								
+						    	WebPusher.send(accountId, botId, adminSessionId, varChangedValue, "forward");
+							}
+														
 						}
 				    											
 					}

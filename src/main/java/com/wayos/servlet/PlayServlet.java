@@ -29,10 +29,12 @@ public class PlayServlet extends ConsoleServlet {
 		req.setAttribute("botId", botId);
 		
 		//URL contains override sessionId
+		/* Use ?sessionId=<custom SessionId> instead
 		if (tokens.length>2) {
 			contextName = accountId + "/" + botId;
 			req.setAttribute("sessionId", tokens[2]);
 		}
+		*/
 		
 		try {
 			

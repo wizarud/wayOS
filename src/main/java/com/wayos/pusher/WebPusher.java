@@ -101,6 +101,9 @@ public class WebPusher extends Pusher {
     	
     	if (type!=null && !type.isEmpty()) {
     		
+    		/**
+    		 * nodeId use For Logic Designer Debugging
+    		 */
     		if (type.equals("nodeId")) {
     			
     	    	String nodeId = data.optString("nodeId");

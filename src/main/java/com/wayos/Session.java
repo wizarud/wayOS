@@ -153,7 +153,9 @@ public class Session implements Serializable {
     
     public Set<String> getVariableChangedNameSet() {
     	
-    	return variableChangedNameSet;
+    	//return variableChangedNameSet;
+    	//return new HashSet<>(variableChangedNameSet); 
+    	return new HashSet<>(Collections.synchronizedSet(variableChangedNameSet)); // To protect from ConcurrentModificationException!
     }
     
     public void removeVariable(String name) {
@@ -514,6 +516,8 @@ public class Session implements Serializable {
         /**
          * Result from REST or Unknown
          */
+        paramMap.put("%0", messageObject.lastResult());
+        
         List<String> resultList = messageObject.resultList();
         
         if (resultList!=null) {
@@ -525,7 +529,7 @@ public class Session implements Serializable {
             }
             
         }
-        
+                
         /**
          * Build-In Current Date & Time Expressions
          */

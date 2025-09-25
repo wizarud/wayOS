@@ -326,7 +326,20 @@ public class MessageObject implements Serializable {
         //System.out.println("Expression RESULT:" + result);
         //System.out.println("Expression resultList:" + resultList);
         
-    
+        attributes.put("lastResult", result);
+           
+	}
+	
+	public String lastResult() {
+		
+        String lastResult = (String) attributes.get("lastResult");
+        
+        if (lastResult!=null) {
+        	return lastResult;
+        }
+        
+        return "";
+        
 	}
 
 }

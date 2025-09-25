@@ -83,8 +83,9 @@ public class VarExpression extends Expression {
         
         /**
          * Check there is prefix operand or not?
+         * TODO: Try to support Mod with opt %, Lets test again!
          */
-        if (newValue.startsWith("+") || newValue.startsWith("-") || newValue.startsWith("*") || newValue.startsWith("/") || newValue.startsWith("^") || newValue.startsWith("|")) {
+        if (newValue.startsWith("+") || newValue.startsWith("-") || newValue.startsWith("*") || newValue.startsWith("/") || newValue.startsWith("^") || newValue.startsWith("%") || newValue.startsWith("|")) {
 
             try {
             	
@@ -120,6 +121,10 @@ public class VarExpression extends Expression {
 
                     if (opt.equals("^"))
                         return formatter.format(Math.pow(oldNumber, newNumber));
+                    
+                    //TODO: Try to support Mod %, Lets test again!
+                    if (opt.equals("%"))
+                        return formatter.format(oldNumber % newNumber);
 
                 } else if (isNumeric(oldValue)) {
 
