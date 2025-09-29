@@ -78,7 +78,7 @@ public class BotCallerCommandNode extends CommandNode {
 			 * For BLESessionPoolFactory, assign caller's context name.
 			 */
 	        //requestObject.prepare(toSession);
-	        toSession.vars("#caller.context.name", session.context().name());
+	        //toSession.vars("#caller.context.name", session.context().name());
 	        
 			String responseText = toSession.parse(MessageObject.build(sendMessage)).trim();
 			
