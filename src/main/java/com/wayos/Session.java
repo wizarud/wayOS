@@ -529,7 +529,13 @@ public class Session implements Serializable {
             }
             
         }
-                
+        
+        /**
+         * System Constants
+         */
+        paramMap.put("%domain", "" + Configuration.api_domain);
+        paramMap.put("%context", "" + context.name());
+
         /**
          * Build-In Current Date & Time Expressions
          */
@@ -569,7 +575,7 @@ public class Session implements Serializable {
         paramMap.put("%monthNumber", new SimpleDateFormat("MM", locale).format(calendar.getTime()));
         
         paramMap.put("%date", new SimpleDateFormat("dd", locale).format(calendar.getTime()));
-        
+                
         return paramMap;
     }
     

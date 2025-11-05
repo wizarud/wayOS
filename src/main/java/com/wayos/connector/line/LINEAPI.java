@@ -14,9 +14,9 @@ import x.org.json.JSONObject;
 
 public class LINEAPI {
 	
-    private static final String PREVIEW_MEDIA_URL = Configuration.domain + "/images/WAYOBOT512.png";
+    private static final String PREVIEW_MEDIA_URL = Configuration.api_domain + "/images/WAYOBOT512.png";
     
-    private static final String thumbnailImageUrl = Configuration.domain + "/images/gigi.png";
+    private static final String thumbnailImageUrl = Configuration.api_domain + "/images/gigi.png";
 
 	private static LINEAPI _lineAPI;
 	
@@ -456,7 +456,7 @@ public class LINEAPI {
 	private String fixIfLocal(String url) {
 		if (url.startsWith("/public/") ||
 				url.startsWith("/x/"))
-			return Configuration.domain + url;
+			return Configuration.api_domain + url;
 		
 		return url;
 	}

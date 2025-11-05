@@ -167,7 +167,7 @@ public class FacebookPublisherServlet extends ConsoleServlet {
                     	/**
                     	 * Default Image
                     	 */
-                        imageURL = Configuration.domain + "/images/muay_smiling.png";
+                        imageURL = /*Configuration.domain + */ "/images/muay_smiling.png";
                     }
                 	
                 	imageList.add(new ImageWithCaption(imageURL, choices));

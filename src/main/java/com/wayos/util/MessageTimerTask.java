@@ -152,7 +152,7 @@ public class MessageTimerTask extends TimerTask {
 			
 			if (!available) return;
 			
-			lastResponseText = API.call(Configuration.domain, contextName, sessionId, messageToFire);
+			lastResponseText = API.call(Configuration.api_domain, contextName, sessionId, messageToFire);
 
 			System.out.println("Task " + id() + " executed!, Response=" + lastResponseText);			
 			

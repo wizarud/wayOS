@@ -56,6 +56,15 @@ public class ConsoleServlet extends HttpServlet {
 	
 	protected final HttpServletResponse setRespHead(HttpServletResponse resp, String domain) {
 		
+		/**
+		 * For empty domain
+		 */
+		/*
+		if (domain.isEmpty()) {
+			domain = "*";
+		}
+		*/
+		
 		resp.setHeader("Access-Control-Allow-Origin", domain);
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("UTF-8");

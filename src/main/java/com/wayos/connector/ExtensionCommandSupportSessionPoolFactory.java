@@ -230,72 +230,14 @@ public class ExtensionCommandSupportSessionPoolFactory {
 				Configuration configuration = new Configuration(contextName);
 				
 				String path = configuration.vars(channel, sessionId);
+				
+				boolean hasPersistantVariables = false;
 								
 				try {
-					
-			        /**
-			         * Merged to variable file
-			         */
-					
-					//Load session variables from json file
-					Map<String, Object> prop;
-
-			        JSONObject varsObject = storage.readAsJSONObject(path);
-			        
-			        if (varsObject!=null) {
-			        	
-			        	prop = varsObject.toMap();
-			        	
-			        } else {
-			        	
-			        	prop = new HashMap<>();
-			        	
-			        }
-					
-					//Remove Removed Variables					
-		        	Set<String> variablesSet = session.vars().keySet();
-		        	Set<String> propVarsSet = new HashSet<>(prop.keySet());
-		        	for (String varName:propVarsSet) {
-		        		if (!variablesSet.contains(varName)) {
-		        			prop.remove(varName);
-		        		}
-		        	}
-					
-		        	//Update Variable
-					Map<String, String> variableMap = session.vars();
-					for (Map.Entry<String, String> entry:variableMap.entrySet()) {
-						
-						prop.put(entry.getKey(), entry.getValue());
-						
-					}
-					
-					//Save current state					
-					//System.out.println("Save " + (new JSONObject(prop).toString()) + " to.." + path);					
-					storage.write((new JSONObject(prop).toString()), path);
-					
+										
 					/**
 					 * Process Action Variables!
 					 */					
-					
-					JSONObject adminConfigObject;
-					
-					String adminChannel, adminSessionId;
-										
-					adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
-																	
-					if (adminConfigObject!=null) {
-						
-						adminChannel = adminConfigObject.getString("channel");
-						
-						adminSessionId = adminConfigObject.getString("sessionId");
-						
-					} else {
-						
-						adminChannel = null;
-						
-						adminSessionId = null;
-						
-					}
 					
 					Set<String> varChangedNameSet = session.getVariableChangedNameSet();
 					
@@ -303,15 +245,50 @@ public class ExtensionCommandSupportSessionPoolFactory {
 					
 					for (String varChangedName:varChangedNameSet) {
 						
-						varChangedValue = session.vars(varChangedName);
+						/**
+						 * Check is Persistant Variable #xxxx, #yyyy skip it
+						 */
+						if (
+								varChangedName.charAt(2)!='_' ||
+								varChangedName.startsWith("#s_") ||
+								varChangedName.startsWith("#i_")
+								) {
+							
+							hasPersistantVariables = true;
+							
+							continue;
+							
+						}
 						
-						if (varChangedValue.trim().isEmpty()) continue;
+						varChangedValue = session.vars(varChangedName).trim();
+						
+						if (varChangedValue.isEmpty()) continue;
 						
 						/**
 						 * Log and Push to admin session
 						 * Also Support LINE channel too
 						 */
 						if (varChangedName.startsWith("#l_")) {
+							
+							JSONObject adminConfigObject;
+							
+							String adminChannel, adminSessionId;
+												
+							adminConfigObject = storage.readAsJSONObject(configuration.adminIdPath());
+																			
+							if (adminConfigObject!=null) {
+								
+								adminChannel = adminConfigObject.getString("channel");
+								
+								adminSessionId = adminConfigObject.getString("sessionId");
+								
+							} else {
+								
+								adminChannel = null;
+								
+								adminSessionId = null;
+								
+							}							
 							
 							consoleUtil.appendLogVars(null, accountId, botId, channel, sessionId, varChangedValue, "|");
 							
@@ -321,9 +298,8 @@ public class ExtensionCommandSupportSessionPoolFactory {
 								
 							}
 														
-						}
+						} 
 												
-						
 						/**
 						 * Push notification to this session
 						 */
@@ -342,25 +318,65 @@ public class ExtensionCommandSupportSessionPoolFactory {
 							
 						}
 						
-						/**
-						 * Push Message to admin session
-						 */							
-						if (varChangedName.startsWith("#a_")) {
-							
-							if (adminSessionId!=null && !adminSessionId.equals(sessionId)) {
-								
-						    	WebPusher.send(accountId, botId, adminSessionId, varChangedValue, "forward");
-							}
-														
-						}
-				    											
 					}
-										
+															
 				} catch (Exception e) {
 					
 					e.printStackTrace();
 					
 					//throw new RuntimeException(e);
+					
+				} finally {
+					
+			        /**
+			         * Merged to variable file in another thread
+			         */
+					if (hasPersistantVariables) {
+						
+						new Thread() {
+							public void run() {
+								
+								//Load session variables from json file
+								Map<String, Object> prop;
+
+						        JSONObject varsObject = storage.readAsJSONObject(path);
+						        
+						        if (varsObject!=null) {
+						        	
+						        	prop = varsObject.toMap();
+						        	
+						        } else {
+						        	
+						        	prop = new HashMap<>();
+						        	
+						        }
+								
+								//Remove Removed Variables					
+					        	Set<String> variablesSet = session.vars().keySet();
+					        	Set<String> propVarsSet = new HashSet<>(prop.keySet());
+					        	for (String varName:propVarsSet) {
+					        		if (!variablesSet.contains(varName)) {
+					        			prop.remove(varName);
+					        		}
+					        	}
+								
+					        	//Update Variable
+								Map<String, String> variableMap = session.vars();
+								for (Map.Entry<String, String> entry:variableMap.entrySet()) {
+									
+									prop.put(entry.getKey(), entry.getValue());
+									
+								}
+								
+								//Save current state					
+								//System.out.println("Save " + (new JSONObject(prop).toString()) + " to.." + path);					
+								storage.write((new JSONObject(prop).toString()), path);							
+							}
+							
+						}.start();						
+					}
+
+					
 				}
 				
 			}

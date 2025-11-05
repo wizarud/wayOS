@@ -16,7 +16,8 @@ public class URLInspector {
 	     * Local URI
 	     */
 	    if (url.startsWith("/public/") ||
-	    		url.startsWith("/x/"))
+	    	url.startsWith("/x/") ||
+    		url.startsWith("/qrcode?")) //Add new local service here!
 	    	return true;
 		
 	    try {

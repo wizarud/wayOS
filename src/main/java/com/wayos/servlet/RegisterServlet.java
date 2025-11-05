@@ -84,7 +84,7 @@ public class RegisterServlet extends ConsoleServlet {
 	    	
 	    }
 		
-		resp = setRespHead(resp, Configuration.domain);
+		resp = setRespHead(resp, Configuration.domain(req));
 		resp.getWriter().write(status);			
 	}
 	

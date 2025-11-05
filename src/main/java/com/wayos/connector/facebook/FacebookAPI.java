@@ -14,6 +14,7 @@ import com.restfb.types.send.PostbackButton;
 import com.restfb.types.send.QuickReply;
 import com.restfb.types.send.TemplateAttachment;
 import com.restfb.types.send.WebButton;
+import com.wayos.Configuration;
 import com.wayos.command.talk.Choice;
 import com.wayos.command.talk.Question;
 import com.wayos.connector.ResponseObject;
@@ -21,9 +22,7 @@ import com.wayos.util.SimpleHTMLDecoder;
 
 public class FacebookAPI {
 		
-    private static final String domain = System.getenv("domain");
-    
-    private static final String thumbnailImageUrl = "https://wayos.yiem.cc/images/gigi.png";
+    private static final String thumbnailImageUrl = Configuration.api_domain + "/images/gigi.png";
     
 	private static FacebookAPI _facebookAPI;
 	

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.wayos.Configuration;
 import com.wayos.Context;
 import com.wayos.context.MemoryContext;
 import com.wayos.drawer.Canvas2D;
@@ -26,7 +27,7 @@ import com.wayos.drawer.ecommerce.Product;
 @Deprecated
 public class BotParamsFactoryServlet extends ConsoleServlet {
 
-	private static final String domain = System.getenv("domain");
+	private static final String domain = Configuration.api_domain;
 
 	final List<Map<String, String>> createMapList(HttpServletRequest request, String...keys) {
 

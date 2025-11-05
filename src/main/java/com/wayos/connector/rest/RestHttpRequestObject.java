@@ -90,7 +90,7 @@ public class RestHttpRequestObject extends HttpRequestObject {
 				
 				String contextRoot = request.getContextPath();
 				
-				lines.append(Configuration.domain + contextRoot + "/public/" + accountId + "/" + fileName);
+				lines.append(Configuration.domain(request) + contextRoot + "/public/" + accountId + "/" + fileName);
 				
 				lines.append(" ");
 			}

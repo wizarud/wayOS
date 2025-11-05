@@ -1,11 +1,13 @@
 package com.wayos;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class Configuration {
 		
 	/**
 	 * Environment configuration
 	 */
-    public static final String domain = System.getenv("domain");
+    public static final String api_domain = System.getenv("api_domain");
         
 	public static final String brainySecret = System.getenv("brainySecret");    
 	
@@ -97,5 +99,25 @@ public class Configuration {
 		
 		return VARS_PATH + contextName + "/" + channel + "/" + sessionId + ".json";
 	}
+	
+	public static String domain(HttpServletRequest request) {
+		
+	    String fullUrl = request.getRequestURL().toString();
+	    String requestURI = request.getRequestURI();
+	    
+	    if (requestURI != null && !requestURI.isEmpty()) {
+	        int index = fullUrl.indexOf(requestURI);
+	        if (index > 0) {
+	            fullUrl = fullUrl.substring(0, index);
+	        }
+	    }
+	    // Remove trailing slash if any
+	    if (fullUrl.endsWith("/")) {
+	        fullUrl = fullUrl.substring(0, fullUrl.length() - 1);
+	    }
+	    
+	    return fullUrl;
+	}
+	
 
 }

@@ -137,11 +137,11 @@ public class BotUploadFactoryServlet extends ConsoleServlet {
 					
 		        	drawer = new CatalogDrawer(contextName, catalogImporter);
 		        	
-					((CatalogDrawer) drawer).setMorePicURL(Configuration.domain + request.getContextPath() + "/images/More.png");
+					((CatalogDrawer) drawer).setMorePicURL(Configuration.domain(request) + request.getContextPath() + "/images/More.png");
 					
-					((CatalogDrawer) drawer).setEmptyCartImageURL(Configuration.domain + request.getContextPath() + "/images/EmptyCart.png");
+					((CatalogDrawer) drawer).setEmptyCartImageURL(Configuration.domain(request) + request.getContextPath() + "/images/EmptyCart.png");
 					
-					((CatalogDrawer) drawer).setFilledCartImageURL(Configuration.domain + request.getContextPath() + "/images/FilledCart.png");
+					((CatalogDrawer) drawer).setFilledCartImageURL(Configuration.domain(request) + request.getContextPath() + "/images/FilledCart.png");
 					
 		        	/**
 		        	 * Incase of catalog, We save the TSV file for reuse the SKUs, Desc information

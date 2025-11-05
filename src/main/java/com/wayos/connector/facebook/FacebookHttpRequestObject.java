@@ -274,7 +274,7 @@ public class FacebookHttpRequestObject extends HttpRequestObject {
 						
 						String contextRoot = request.getContextPath();
 						
-						relocatedContents.append(Configuration.domain + contextRoot + "/" + contentName);
+						relocatedContents.append(Configuration.domain(request) + contextRoot + "/" + contentName);
 						relocatedContents.append("\n\n\n");
 					}
 					

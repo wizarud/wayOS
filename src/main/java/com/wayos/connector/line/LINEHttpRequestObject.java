@@ -257,7 +257,7 @@ public class LINEHttpRequestObject extends HttpRequestObject {
 					
 					String contextRoot = request.getContextPath();
 					
-					message = Configuration.domain + contextRoot + "/" + contentName;					
+					message = Configuration.domain(request) + contextRoot + "/" + contentName;					
 					
 				} else {
 					
