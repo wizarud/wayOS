@@ -103,6 +103,16 @@ public class Configuration {
 	public static String domain(HttpServletRequest request) {
 		
 	    String fullUrl = request.getRequestURL().toString();
+	    
+	    /**
+	     * TODO: Hotfix!!!, find the better solutions!
+	     */
+	    if (fullUrl.contains("ngrok-free.app")) {
+	    	fullUrl = fullUrl.replace("http:", "https:");
+	    }
+	    
+	    System.out.println("Request>>" + fullUrl);
+	    
 	    String requestURI = request.getRequestURI();
 	    
 	    if (requestURI != null && !requestURI.isEmpty()) {
