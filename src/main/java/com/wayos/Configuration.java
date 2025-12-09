@@ -107,11 +107,12 @@ public class Configuration {
 	    /**
 	     * TODO: Hotfix!!!, find the better solutions!
 	     */
-	    if (fullUrl.contains("ngrok-free.app")) {
+	    if (fullUrl.contains("yiem.cc") ||
+	    		fullUrl.contains("ngrok-free.app")) {
 	    	fullUrl = fullUrl.replace("http:", "https:");
 	    }
 	    
-	    System.out.println("Request>>" + fullUrl);
+	    //System.out.println("Request>>" + fullUrl);
 	    
 	    String requestURI = request.getRequestURI();
 	    
