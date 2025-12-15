@@ -104,14 +104,24 @@ public class Configuration {
 		
 	    String fullUrl = request.getRequestURL().toString();
 	    
-	    /**
+	    /*
 	     * TODO: Hotfix!!!, find the better solutions!
-	     */
 	    if (fullUrl.contains("yiem.cc") ||
 	    		fullUrl.contains("ngrok-free.app")) {
 	    	fullUrl = fullUrl.replace("http:", "https:");
 	    }
+	    */
 	    
+	    /**
+	     * Use https for public address
+	     */
+		String api_domain = System.getenv("api_domain");		
+		if (api_domain.startsWith("https://")) {
+			
+	    	fullUrl = fullUrl.replace("http:", "https:");
+			
+		}
+	    	
 	    //System.out.println("Request>>" + fullUrl);
 	    
 	    String requestURI = request.getRequestURI();
