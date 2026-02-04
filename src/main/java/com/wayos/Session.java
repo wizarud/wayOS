@@ -188,7 +188,7 @@ public class Session implements Serializable {
     
     public String parse(MessageObject messageObject) {
     	
-    	System.out.println("Session.parse start..");
+    	//System.out.println("Session.parse start..");
     	
 		String result = null;
 		
@@ -323,7 +323,7 @@ public class Session implements Serializable {
 	        
     		fireVariablesChangedEvent();
 	        
-        	System.out.println("Session.parse finish!");
+        	//System.out.println("Session.parse finish!");
 		}
 				
 		return silent || result==null ? "" : result;    	    	
